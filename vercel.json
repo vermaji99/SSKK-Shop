@@ -2,6 +2,10 @@
   "installCommand": "npm install --prefix client",
   "buildCommand": "npm run build --prefix client",
   "outputDirectory": "client/dist",
+  "env": {
+    "VITE_API_URL": "https://sskk-api.onrender.com/api",
+    "VITE_SITE_URL": "https://sskk-shop.vercel.app"
+  },
   "rewrites": [
     { "source": "/((?!assets/).*)", "destination": "/index.html" }
   ]

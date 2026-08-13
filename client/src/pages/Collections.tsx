@@ -302,7 +302,7 @@ const Collections = () => {
       <SEO
         title="Jewelry Collections"
         description="Browse 22K gold rings, bridal sets, earrings, bangles, nath, chains, and diamond pendants at Shubham Swarn Kala Kendra, Doharighat, Mau, Uttar Pradesh."
-        canonical={`${import.meta.env.VITE_SITE_URL || 'https://shubhamswarnkalakendra.com'}/collections`}
+        canonical={`${import.meta.env.VITE_SITE_URL || 'https://sskk-shop.vercel.app'}/collections`}
       />
       <section className="relative min-h-[40vh] flex items-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-purple-800/90 to-purple-900" />

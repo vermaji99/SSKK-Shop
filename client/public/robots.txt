@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/
 
-Sitemap: https://shubhamswarnkalakendra.com/sitemap.xml
+Sitemap: https://sskk-shop.vercel.app/sitemap.xml

@@ -20,10 +20,26 @@ const app = express();
 
 connectDB();
 
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'https://sskk-shop.vercel.app',
+  ...(process.env.FRONTEND_URL || '')
+    .split(',')
+    .map((url) => url.trim())
+    .filter(Boolean),
+];
+
 app.use(helmet());
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(null, false);
+    }
+  },
   credentials: true,
 }));
 

@@ -19,7 +19,7 @@ export const BUSINESS = {
   address: "Sabji Mandi Road, Near Main Market, Doharighat, Mau, UP - 275303",
   hours: "Monday – Sunday: 10:00 AM – 8:30 PM",
   googleMapsEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14349.52402123!2d83.5042!3d26.0465!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3991f24d10f8b89d%3A0x6b30f878f7e9140!2sDoharighat%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin",
-  siteUrl: "https://shubhamswarnkalakendra.com",
+  siteUrl: import.meta.env.VITE_SITE_URL || 'https://sskk-shop.vercel.app',
   socials: {
     instagram: "https://instagram.com/shubhamswarnkalakendra",
     facebook: "https://facebook.com/shubhamswarnkalakendra",
