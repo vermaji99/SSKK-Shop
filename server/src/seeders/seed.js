@@ -5,6 +5,9 @@ import connectDB from '../config/db.js';
 import User from '../models/User.js';
 import Category from '../models/Category.js';
 import Product from '../models/Product.js';
+import Order from '../models/Order.js';
+import Inquiry from '../models/Inquiry.js';
+import Wishlist from '../models/Wishlist.js';
 import { JEWELRY_IMAGES, img } from '../config/assets.js';
 
 dotenv.config();
@@ -260,6 +263,9 @@ const seed = async () => {
     await User.deleteMany({});
     await Product.deleteMany({});
     await Category.deleteMany({});
+    await Order.deleteMany({});
+    await Inquiry.deleteMany({});
+    await Wishlist.deleteMany({});
 
     console.log('Creating admin user...');
     const hashedPassword = await bcrypt.hash('admin123', 10);
