@@ -1,9 +1,14 @@
 import SEO from '@/components/common/SEO';
+import { PAGE_SEO } from '@/config/seo';
 import { BUSINESS } from '@/config/business';
 
 const PrivacyPolicy = () => (
   <>
-    <SEO title="Privacy Policy" description={`Privacy policy for ${BUSINESS.name}`} />
+    <SEO
+      title={PAGE_SEO.privacy.title}
+      description={PAGE_SEO.privacy.description}
+      canonical={PAGE_SEO.privacy.canonical}
+    />
     <div className="min-h-screen bg-background pt-32 pb-20">
       <div className="container max-w-3xl">
         <h1 className="heading-serif text-4xl text-gold-gradient font-bold mb-8">Privacy Policy</h1>

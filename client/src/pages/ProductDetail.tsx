@@ -14,6 +14,7 @@ import InquiryModal from '@/components/common/InquiryModal';
 import SEO from '@/components/common/SEO';
 import ErrorState from '@/components/common/ErrorState';
 import { BUSINESS } from '@/config/business';
+import { absoluteUrl } from '@/config/seo';
 
 const ProductDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -159,7 +160,7 @@ const ProductDetail = () => {
   if (isError || !product) {
     return (
       <>
-        <SEO title="Product Not Found" description="The requested jewelry piece could not be found." />
+        <SEO title="Product Not Found" description="The requested jewelry piece could not be found." noIndex />
         <div className="min-h-screen bg-background pt-28">
           <ErrorState type="product-not-found" />
         </div>
@@ -172,10 +173,12 @@ const ProductDetail = () => {
     '@type': 'Product',
     name: product.name,
     description: product.description,
-    image: product.images?.map((img) => img.url),
+    image: product.images?.map((img) => absoluteUrl(img.url)),
+    sku: product.slug,
     brand: { '@type': 'Brand', name: BUSINESS.name },
     offers: {
       '@type': 'Offer',
+      url: absoluteUrl(`/product/${product.slug}`),
       priceCurrency: 'INR',
       price: product.discountPrice || product.price,
       availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
@@ -190,7 +193,7 @@ const ProductDetail = () => {
         description={product.description?.slice(0, 160)}
         ogImage={product.images?.[0]?.url}
         ogType="product"
-        canonical={`${BUSINESS.siteUrl}/product/${product.slug}`}
+        canonical={absoluteUrl(`/product/${product.slug}`)}
         schema={productSchema}
       />
     <div className="min-h-screen bg-background">

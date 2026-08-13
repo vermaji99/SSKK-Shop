@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Gem, Shield, Hand, Sparkles, ArrowRight, Award, Users, Palette, Crown } from 'lucide-react';
 import { Button, SectionTitle, AnimatedCounter, GoldDivider } from '@/components/ui';
+import SEO from '@/components/common/SEO';
+import { PAGE_SEO } from '@/config/seo';
 import { cn } from '@/lib/utils';
 
 const stats = [
@@ -39,6 +41,12 @@ const fadeInUp = {
 
 const About = () => {
   return (
+    <>
+      <SEO
+        title={PAGE_SEO.about.title}
+        description={PAGE_SEO.about.description}
+        canonical={PAGE_SEO.about.canonical}
+      />
     <div className="min-h-screen bg-background">
       <section className="relative min-h-[50vh] flex items-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-purple-900 via-purple-800/80 to-background" />
@@ -362,6 +370,7 @@ const About = () => {
         </motion.div>
       </section>
     </div>
+    </>
   );
 };
 

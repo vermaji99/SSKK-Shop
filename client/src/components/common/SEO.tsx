@@ -1,6 +1,11 @@
 import React, { useEffect } from 'react';
 import { BUSINESS } from '@/config/business';
-import { SEO_OG_IMAGE } from '@/config/assets';
+import {
+  DEFAULT_KEYWORDS,
+  GOOGLE_SITE_VERIFICATION,
+  buildDefaultSchemaGraph,
+  resolveOgImage,
+} from '@/config/seo';
 
 interface SEOProps {
   title?: string;
@@ -10,168 +15,104 @@ interface SEOProps {
   ogImage?: string;
   ogType?: string;
   schema?: object;
+  noIndex?: boolean;
 }
+
+const upsertMeta = (
+  selector: string,
+  attributes: Record<string, string>,
+  content: string
+) => {
+  let element = document.querySelector(selector) as HTMLMetaElement | null;
+  if (!element) {
+    element = document.createElement('meta');
+    Object.entries(attributes).forEach(([key, value]) => {
+      element!.setAttribute(key, value);
+    });
+    document.head.appendChild(element);
+  }
+  element.setAttribute('content', content);
+};
+
+const upsertLink = (rel: string, href: string) => {
+  let element = document.querySelector(`link[rel="${rel}"]`) as HTMLLinkElement | null;
+  if (!element) {
+    element = document.createElement('link');
+    element.setAttribute('rel', rel);
+    document.head.appendChild(element);
+  }
+  element.setAttribute('href', href);
+};
 
 export const SEO: React.FC<SEOProps> = ({
   title,
   description = BUSINESS.description,
-  keywords = 'gold jewelry, 22K gold rings, bridal necklaces, bangles, nath, Doharighat, Mau, Uttar Pradesh, Shubham Swarn Kala Kendra',
+  keywords = DEFAULT_KEYWORDS,
   canonical = BUSINESS.siteUrl,
-  ogImage = SEO_OG_IMAGE,
+  ogImage,
   ogType = 'website',
   schema,
+  noIndex = false,
 }) => {
   const fullTitle = title
     ? `${title} | ${BUSINESS.name}`
     : `${BUSINESS.name} | Crafted In Gold | Doharighat, Mau`;
 
+  const resolvedOgImage = resolveOgImage(ogImage);
+  const robotsContent = noIndex
+    ? 'noindex, nofollow'
+    : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+
   useEffect(() => {
     document.title = fullTitle;
+    document.documentElement.lang = 'en-IN';
 
-    // Meta description
-    let metaDesc = document.querySelector('meta[name="description"]');
-    if (!metaDesc) {
-      metaDesc = document.createElement('meta');
-      metaDesc.setAttribute('name', 'description');
-      document.head.appendChild(metaDesc);
-    }
-    metaDesc.setAttribute('content', description);
+    upsertMeta('meta[name="description"]', { name: 'description' }, description);
+    upsertMeta('meta[name="keywords"]', { name: 'keywords' }, keywords);
+    upsertMeta('meta[name="robots"]', { name: 'robots' }, robotsContent);
+    upsertMeta('meta[name="googlebot"]', { name: 'googlebot' }, robotsContent);
+    upsertMeta(
+      'meta[name="google-site-verification"]',
+      { name: 'google-site-verification' },
+      GOOGLE_SITE_VERIFICATION
+    );
 
-    // Meta keywords
-    let metaKeywords = document.querySelector('meta[name="keywords"]');
-    if (!metaKeywords) {
-      metaKeywords = document.createElement('meta');
-      metaKeywords.setAttribute('name', 'keywords');
-      document.head.appendChild(metaKeywords);
-    }
-    metaKeywords.setAttribute('content', keywords);
+    upsertMeta('meta[property="og:title"]', { property: 'og:title' }, fullTitle);
+    upsertMeta('meta[property="og:description"]', { property: 'og:description' }, description);
+    upsertMeta('meta[property="og:image"]', { property: 'og:image' }, resolvedOgImage);
+    upsertMeta('meta[property="og:image:alt"]', { property: 'og:image:alt' }, `${BUSINESS.name} jewelry`);
+    upsertMeta('meta[property="og:type"]', { property: 'og:type' }, ogType);
+    upsertMeta('meta[property="og:url"]', { property: 'og:url' }, canonical);
+    upsertMeta('meta[property="og:site_name"]', { property: 'og:site_name' }, BUSINESS.name);
+    upsertMeta('meta[property="og:locale"]', { property: 'og:locale' }, 'en_IN');
 
-    // OpenGraph Title
-    let ogTitle = document.querySelector('meta[property="og:title"]');
-    if (!ogTitle) {
-      ogTitle = document.createElement('meta');
-      ogTitle.setAttribute('property', 'og:title');
-      document.head.appendChild(ogTitle);
-    }
-    ogTitle.setAttribute('content', fullTitle);
+    upsertMeta('meta[name="twitter:card"]', { name: 'twitter:card' }, 'summary_large_image');
+    upsertMeta('meta[name="twitter:title"]', { name: 'twitter:title' }, fullTitle);
+    upsertMeta('meta[name="twitter:description"]', { name: 'twitter:description' }, description);
+    upsertMeta('meta[name="twitter:image"]', { name: 'twitter:image' }, resolvedOgImage);
 
-    // OpenGraph Description
-    let ogDesc = document.querySelector('meta[property="og:description"]');
-    if (!ogDesc) {
-      ogDesc = document.createElement('meta');
-      ogDesc.setAttribute('property', 'og:description');
-      document.head.appendChild(ogDesc);
-    }
-    ogDesc.setAttribute('content', description);
+    upsertLink('canonical', canonical);
 
-    // OpenGraph Image
-    let ogImg = document.querySelector('meta[property="og:image"]');
-    if (!ogImg) {
-      ogImg = document.createElement('meta');
-      ogImg.setAttribute('property', 'og:image');
-      document.head.appendChild(ogImg);
-    }
-    ogImg.setAttribute('content', ogImage);
+    const structuredData = schema || buildDefaultSchemaGraph();
 
-    // OpenGraph Type
-    let ogTypeMeta = document.querySelector('meta[property="og:type"]');
-    if (!ogTypeMeta) {
-      ogTypeMeta = document.createElement('meta');
-      ogTypeMeta.setAttribute('property', 'og:type');
-      document.head.appendChild(ogTypeMeta);
-    }
-    ogTypeMeta.setAttribute('content', ogType);
-
-    // OpenGraph URL
-    let ogUrl = document.querySelector('meta[property="og:url"]');
-    if (!ogUrl) {
-      ogUrl = document.createElement('meta');
-      ogUrl.setAttribute('property', 'og:url');
-      document.head.appendChild(ogUrl);
-    }
-    ogUrl.setAttribute('content', canonical);
-
-    // OpenGraph Site Name
-    let ogSite = document.querySelector('meta[property="og:site_name"]');
-    if (!ogSite) {
-      ogSite = document.createElement('meta');
-      ogSite.setAttribute('property', 'og:site_name');
-      document.head.appendChild(ogSite);
-    }
-    ogSite.setAttribute('content', BUSINESS.name);
-
-    // Twitter Card
-    const setTwitterMeta = (name: string, content: string) => {
-      let el = document.querySelector(`meta[name="${name}"]`);
-      if (!el) {
-        el = document.createElement('meta');
-        el.setAttribute('name', name);
-        document.head.appendChild(el);
-      }
-      el.setAttribute('content', content);
-    };
-    setTwitterMeta('twitter:card', 'summary_large_image');
-    setTwitterMeta('twitter:title', fullTitle);
-    setTwitterMeta('twitter:description', description);
-    setTwitterMeta('twitter:image', ogImage);
-
-    // Canonical link
-    let canonicalLink = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
-    if (!canonicalLink) {
-      canonicalLink = document.createElement('link');
-      canonicalLink.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonicalLink);
-    }
-    canonicalLink.setAttribute('href', canonical);
-
-    // Structured Data JSON-LD
-    const storeSchema = schema || {
-      '@context': 'https://schema.org',
-      '@type': 'JewelryStore',
-      name: BUSINESS.name,
-      image: ogImage,
-      telephone: BUSINESS.phonePrimary,
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: 'Sabji Mandi Road',
-        addressLocality: BUSINESS.city,
-        addressRegion: BUSINESS.state,
-        postalCode: BUSINESS.pincode,
-        addressCountry: 'IN',
-      },
-      geo: {
-        '@type': 'GeoCoordinates',
-        latitude: '26.0465',
-        longitude: '83.5042',
-      },
-      priceRange: '₹₹₹₹',
-      openingHoursSpecification: [
-        {
-          '@type': 'OpeningHoursSpecification',
-          dayOfWeek: [
-            'Monday',
-            'Tuesday',
-            'Wednesday',
-            'Thursday',
-            'Friday',
-            'Saturday',
-            'Sunday',
-          ],
-          opens: '10:00',
-          closes: '20:30',
-        },
-      ],
-    };
-
-    let scriptTag = document.getElementById('jsonld-schema');
+    let scriptTag = document.getElementById('jsonld-schema') as HTMLScriptElement | null;
     if (!scriptTag) {
       scriptTag = document.createElement('script');
       scriptTag.id = 'jsonld-schema';
-      scriptTag.setAttribute('type', 'application/ld+json');
+      scriptTag.type = 'application/ld+json';
       document.head.appendChild(scriptTag);
     }
-    scriptTag.textContent = JSON.stringify(storeSchema);
-  }, [fullTitle, description, keywords, canonical, ogImage, ogType, schema]);
+    scriptTag.textContent = JSON.stringify(structuredData);
+  }, [
+    fullTitle,
+    description,
+    keywords,
+    canonical,
+    resolvedOgImage,
+    ogType,
+    schema,
+    robotsContent,
+  ]);
 
   return null;
 };

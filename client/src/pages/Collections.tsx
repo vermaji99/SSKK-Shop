@@ -16,6 +16,7 @@ import { cn, formatCurrencyINR } from '@/lib/utils';
 import type { Product, Category, ApiResponse } from '@/lib/types';
 import { Button, ProductCard } from '@/components/ui';
 import SEO from '@/components/common/SEO';
+import { PAGE_SEO } from '@/config/seo';
 import ErrorState from '@/components/common/ErrorState';
 
 const sortOptions = [
@@ -300,9 +301,9 @@ const Collections = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEO
-        title="Jewelry Collections"
-        description="Browse 22K gold rings, bridal sets, earrings, bangles, nath, chains, and diamond pendants at Shubham Swarn Kala Kendra, Doharighat, Mau, Uttar Pradesh."
-        canonical={`${import.meta.env.VITE_SITE_URL || 'https://sskk-shop.vercel.app'}/collections`}
+        title={PAGE_SEO.collections.title}
+        description={PAGE_SEO.collections.description}
+        canonical={PAGE_SEO.collections.canonical}
       />
       <section className="relative min-h-[40vh] flex items-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-purple-800/90 to-purple-900" />

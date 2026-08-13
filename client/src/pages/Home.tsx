@@ -14,6 +14,7 @@ import { HomeInquiry } from '@/components/sections/HomeInquiry';
 import SEO from '@/components/common/SEO';
 import InquiryModal from '@/components/common/InquiryModal';
 import { BUSINESS } from '@/config/business';
+import { PAGE_SEO } from '@/config/seo';
 import { Product } from '@/lib/types';
 
 export const Home: React.FC = () => {
@@ -23,8 +24,9 @@ export const Home: React.FC = () => {
   return (
     <>
       <SEO
-        title="Shubham Swarn Kala Kendra | Premium 22K Gold Showroom Doharighat"
-        description="Experience royal 22K gold rings, bridal necklaces, bangles, nath, chains, and custom crafted Indian jewelry at Shubham Swarn Kala Kendra, Doharighat, Mau."
+        title={PAGE_SEO.home.title}
+        description={PAGE_SEO.home.description}
+        canonical={PAGE_SEO.home.canonical}
       />
 
       <CinematicHero />

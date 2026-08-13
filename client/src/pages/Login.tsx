@@ -44,7 +44,7 @@ export const Login: React.FC = () => {
 
   return (
     <>
-      <SEO title={isRegister ? 'Register Account' : 'Sign In | Shubham Swarn Kala Kendra'} />
+      <SEO title={isRegister ? 'Register Account' : 'Sign In'} noIndex />
 
       <div className="min-h-screen pt-32 pb-20 bg-background flex items-center justify-center relative overflow-hidden px-4">
         {/* Background glow effects */}

@@ -32,8 +32,9 @@ const Wishlist = () => {
   return (
     <>
       <SEO
-        title="Wishlist | Shubham Swarn Kala Kendra"
+        title="Wishlist"
         description="Your saved jewelry pieces at Shubham Swarn Kala Kendra."
+        noIndex
       />
 
       <section className="section-padding pt-32 min-h-screen">

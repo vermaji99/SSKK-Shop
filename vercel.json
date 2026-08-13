@@ -7,6 +7,9 @@
     "VITE_SITE_URL": "https://sskk-shop.vercel.app"
   },
   "rewrites": [
-    { "source": "/((?!assets/).*)", "destination": "/index.html" }
+    {
+      "source": "/((?!assets/|google21e02a1655dd9e96\\.html|robots\\.txt|sitemap\\.xml|site\\.webmanifest|favicon\\.svg).*)",
+      "destination": "/index.html"
+    }
   ]
 }

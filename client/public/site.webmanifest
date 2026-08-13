@@ -1,0 +1,17 @@
+{
+  "name": "Shubham Swarn Kala Kendra",
+  "short_name": "SSKK Jewelry",
+  "description": "Premium 22K gold and diamond jewelry in Doharighat, Mau, Uttar Pradesh.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#140827",
+  "theme_color": "#c9a227",
+  "lang": "en-IN",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

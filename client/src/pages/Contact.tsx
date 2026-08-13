@@ -15,6 +15,8 @@ import api from '@/lib/api';
 import { cn } from '@/lib/utils';
 import type { ApiResponse, Inquiry } from '@/lib/types';
 import { Button, SectionTitle, Input, GoldDivider } from '@/components/ui';
+import SEO from '@/components/common/SEO';
+import { PAGE_SEO } from '@/config/seo';
 import { BUSINESS } from '@/config/business';
 
 const contactInfo = [
@@ -128,6 +130,12 @@ const Contact = () => {
   };
 
   return (
+    <>
+      <SEO
+        title={PAGE_SEO.contact.title}
+        description={PAGE_SEO.contact.description}
+        canonical={PAGE_SEO.contact.canonical}
+      />
     <div className="min-h-screen bg-background">
       <section className="relative min-h-[45vh] flex items-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-purple-900 via-purple-800/80 to-background" />
@@ -370,6 +378,7 @@ const Contact = () => {
         </motion.div>
       </section>
     </div>
+    </>
   );
 };
 
