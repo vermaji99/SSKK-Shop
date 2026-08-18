@@ -39,7 +39,7 @@ export const Home: React.FC = () => {
       <BridalCollection />
       <BestsellersCarousel />
 
-      <section className="py-24 bg-[#140827] relative border-t border-gold-500/20">
+      <section className="section-padding bg-[#140827] relative border-t border-gold-500/20">
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">

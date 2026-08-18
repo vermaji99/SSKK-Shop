@@ -76,6 +76,14 @@ function AppRoutes() {
             }
           />
           <Route
+            path="/collections/:category"
+            element={
+              <Layout>
+                <Collections />
+              </Layout>
+            }
+          />
+          <Route
             path="/jewelry"
             element={
               <Layout>

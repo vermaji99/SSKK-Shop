@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Lock, Mail, User as UserIcon, Shield, ArrowRight } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import SEO from '@/components/common/SEO';
+import { PAGE_SEO } from '@/config/seo';
 import toast from 'react-hot-toast';
 
 export const Login: React.FC = () => {
@@ -44,7 +45,12 @@ export const Login: React.FC = () => {
 
   return (
     <>
-      <SEO title={isRegister ? 'Register Account' : 'Sign In'} noIndex />
+      <SEO
+        title={isRegister ? 'Register Account' : PAGE_SEO.login.title}
+        description={PAGE_SEO.login.description}
+        canonical={PAGE_SEO.login.canonical}
+        noIndex={PAGE_SEO.login.noIndex}
+      />
 
       <div className="min-h-screen pt-32 pb-20 bg-background flex items-center justify-center relative overflow-hidden px-4">
         {/* Background glow effects */}

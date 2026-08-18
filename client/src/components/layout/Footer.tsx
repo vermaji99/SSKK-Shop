@@ -12,12 +12,14 @@ const navigationLinks = [
 ];
 
 const categoryLinks = [
-  { name: 'Rings', path: '/collections?category=rings' },
-  { name: 'Necklaces', path: '/collections?category=necklaces' },
-  { name: 'Earrings', path: '/collections?category=earrings' },
-  { name: 'Bangles', path: '/collections?category=bangles' },
-  { name: 'Chains', path: '/collections?category=chains' },
-  { name: 'Bridal', path: '/collections?category=bridal' },
+  { name: 'Rings', path: '/collections/rings' },
+  { name: 'Earrings', path: '/collections/earrings' },
+  { name: 'Necklaces', path: '/collections/necklaces' },
+  { name: 'Chains', path: '/collections/chains' },
+  { name: 'Bangles', path: '/collections/bangles' },
+  { name: 'Bridal', path: '/collections/bridal' },
+  { name: 'Nath', path: '/collections/nath' },
+  { name: 'Pendants', path: '/collections/pendants' },
 ];
 
 export function Footer() {

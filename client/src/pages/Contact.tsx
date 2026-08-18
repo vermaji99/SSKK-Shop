@@ -135,6 +135,7 @@ const Contact = () => {
         title={PAGE_SEO.contact.title}
         description={PAGE_SEO.contact.description}
         canonical={PAGE_SEO.contact.canonical}
+        noIndex={PAGE_SEO.contact.noIndex}
       />
     <div className="min-h-screen bg-background">
       <section className="relative min-h-[45vh] flex items-center overflow-hidden">

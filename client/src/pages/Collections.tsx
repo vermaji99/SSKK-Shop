@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useState, useEffect, useMemo } from 'react';
+import { Link, useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -16,7 +16,15 @@ import { cn, formatCurrencyINR } from '@/lib/utils';
 import type { Product, Category, ApiResponse } from '@/lib/types';
 import { Button, ProductCard } from '@/components/ui';
 import SEO from '@/components/common/SEO';
-import { PAGE_SEO } from '@/config/seo';
+import {
+  PAGE_SEO,
+  CATEGORY_META,
+  CATEGORY_SLUGS,
+  SITE_URL,
+  absoluteUrl,
+  buildCategoryPageSchema,
+  type CategorySlug,
+} from '@/config/seo';
 import ErrorState from '@/components/common/ErrorState';
 
 const sortOptions = [
@@ -27,11 +35,18 @@ const sortOptions = [
 ];
 
 const Collections = () => {
+  const navigate = useNavigate();
+  const { category: routeCategoryParam } = useParams<{ category?: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const categoryParam = searchParams.get('category') || '';
+  const queryCategoryParam = searchParams.get('category') || '';
   const bestsellerParam = searchParams.get('bestseller') === 'true';
   const featuredParam = searchParams.get('featured') === 'true';
   const searchParam = searchParams.get('search') || searchParams.get('keyword') || '';
+
+  const categoryParam = routeCategoryParam || queryCategoryParam;
+  const isCategoryPage = !!routeCategoryParam;
+  const isValidCategorySlug =
+    isCategoryPage && CATEGORY_SLUGS.includes(routeCategoryParam as CategorySlug);
 
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedPurity, setSelectedPurity] = useState<string>('');
@@ -56,6 +71,21 @@ const Collections = () => {
   });
 
   const categories = categoriesData?.data || [];
+
+  const categorySEO = useMemo(() => {
+    if (!isCategoryPage || !isValidCategorySlug) return null;
+    return CATEGORY_META[routeCategoryParam as CategorySlug];
+  }, [isCategoryPage, isValidCategorySlug, routeCategoryParam]);
+
+  const pageTitle = categorySEO?.title ?? PAGE_SEO.collections.title;
+  const pageDescription = categorySEO?.description ?? PAGE_SEO.collections.description;
+  const pageCanonical = isCategoryPage
+    ? absoluteUrl(`/collections/${routeCategoryParam}`)
+    : PAGE_SEO.collections.canonical;
+  const pageSchema =
+    isCategoryPage && isValidCategorySlug
+      ? buildCategoryPageSchema(routeCategoryParam as CategorySlug)
+      : undefined;
 
   useEffect(() => {
     if (!categoryParam || categories.length === 0) return;
@@ -126,6 +156,9 @@ const Collections = () => {
     setPage(1);
     setMobileFiltersOpen(false);
     setSearchParams({});
+    if (isCategoryPage) {
+      navigate('/collections', { replace: true });
+    }
     try {
       refetch();
     } catch {
@@ -172,7 +205,12 @@ const Collections = () => {
         </h4>
         <div className="space-y-2">
           <button
-            onClick={() => setSelectedCategory('')}
+            onClick={() => {
+              setSelectedCategory('');
+              setPage(1);
+              if (isCategoryPage) navigate('/collections', { replace: true });
+              else setSearchParams({});
+            }}
             className={cn(
               'w-full text-left px-3 py-2 text-sm transition-all duration-200 border',
               !selectedCategory
@@ -188,8 +226,10 @@ const Collections = () => {
                 key={cat._id}
                 onClick={() => {
                   setSelectedCategory(cat._id);
-                  setSearchParams({ category: cat.slug });
                   setPage(1);
+                  navigate(`/collections/${cat.slug.toLowerCase()}`, {
+                    replace: isCategoryPage,
+                  });
                 }}
                 className={cn(
                   'w-full text-left px-3 py-2 text-sm transition-all duration-200 border',
@@ -301,9 +341,11 @@ const Collections = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEO
-        title={PAGE_SEO.collections.title}
-        description={PAGE_SEO.collections.description}
-        canonical={PAGE_SEO.collections.canonical}
+        title={pageTitle}
+        description={pageDescription}
+        canonical={pageCanonical}
+        schema={pageSchema}
+        noIndex={isCategoryPage && !isValidCategorySlug}
       />
       <section className="relative min-h-[40vh] flex items-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-purple-800/90 to-purple-900" />
@@ -320,7 +362,7 @@ const Collections = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
-            <nav className="flex items-center gap-2 text-sm text-text-muted mb-6" aria-label="Breadcrumb">
+            <nav className="flex items-center gap-2 text-sm text-text-muted mb-6 flex-wrap" aria-label="Breadcrumb">
               <Link
                 to="/"
                 className="flex items-center gap-1 hover:text-gold-300 transition-colors"
@@ -329,14 +371,32 @@ const Collections = () => {
                 Home
               </Link>
               <span className="text-gold-400">/</span>
-              <span className="text-gold-300 font-medium">Collections</span>
+              <Link
+                to="/collections"
+                className={cn(
+                  'hover:text-gold-300 transition-colors',
+                  isCategoryPage ? '' : 'text-gold-300 font-medium'
+                )}
+              >
+                Collections
+              </Link>
+              {categorySEO && (
+                <>
+                  <span className="text-gold-400">/</span>
+                  <span className="text-gold-300 font-medium">
+                    {categorySEO.name}
+                  </span>
+                </>
+              )}
             </nav>
             <h1 className="heading-serif font-bold text-gold-gradient" style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)' }}>
-              Discover Our Exquisite Collections
+              {categorySEO
+                ? `Explore Our ${categorySEO.name}`
+                : 'Discover Our Exquisite Collections'}
             </h1>
             <p className="mt-6 text-text-muted text-base md:text-lg max-w-2xl leading-relaxed">
-              Explore our handpicked curation of timeless jewelry pieces, each crafted
-              with unmatched artistry and the finest materials.
+              {categorySEO?.description ??
+                'Explore our handpicked curation of timeless jewelry pieces, each crafted with unmatched artistry and the finest materials.'}
             </p>
           </motion.div>
         </div>

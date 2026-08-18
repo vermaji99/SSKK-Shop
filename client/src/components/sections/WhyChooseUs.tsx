@@ -4,6 +4,7 @@ import { useInView } from 'react-intersection-observer';
 import { Shield, Award, HeartHandshake, MapPin, LucideIcon } from 'lucide-react';
 import { SectionTitle } from '@/components/ui';
 import { cn } from '@/lib/utils';
+import { BUSINESS } from '@/config/business';
 
 interface Feature {
   icon: LucideIcon;
@@ -14,27 +15,27 @@ interface Feature {
 const features: Feature[] = [
   {
     icon: Shield,
-    title: 'Authentic Gold',
+    title: '22K Gold Jewellery',
     description:
-      'Carefully crafted jewelry with a focus on purity and quality. Every piece is BIS hallmarked for your complete trust and peace of mind.',
+      'Carefully crafted gold jewellery with a focus on purity and lasting quality. Each piece is made with attention to detail and finish.',
   },
   {
     icon: Award,
-    title: 'Timeless Craftsmanship',
+    title: 'Elegant Craftsmanship',
     description:
-      'Traditional artistry combined with contemporary design. Our master artisans bring generations of heritage to every intricate detail.',
+      'Traditional artistry combined with refined design. Our artisans bring years of experience to every detail of each creation.',
   },
   {
     icon: HeartHandshake,
     title: 'Personalized Service',
     description:
-      'Helping customers find jewelry for their most important moments. From weddings to milestones, we guide you with warmth and expertise.',
+      'Guiding customers to find jewellery for their most important moments. From weddings to milestones — warm, attentive, and thoughtful.',
   },
   {
     icon: MapPin,
-    title: 'Trusted Local Jewellery',
+    title: 'Local Jewellery Store',
     description:
-      'Serving customers in Doharighat with care and dedication for years. A name synonymous with trust, quality, and enduring relationships.',
+      `A trusted ${BUSINESS.city} (${BUSINESS.district}) showroom offering hands-on selection, custom designs, and direct showroom support.`,
   },
 ];
 

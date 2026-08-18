@@ -36,11 +36,12 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
       className={cn('group relative w-full h-full', className)}
     >
       <Link
-        to={`/collections?category=${slug}`}
+        to={`/collections/${slug.toLowerCase()}`}
         className={cn(
           'relative block w-full overflow-hidden bg-background-tertiary border border-transparent transition-all duration-500 ease-out group-hover:border-gold-400/60 group-hover:shadow-gold-glow',
           featured ? 'aspect-[3/4]' : 'aspect-[4/5]'
         )}
+        aria-label={`Explore ${name} collection`}
       >
         <div className="absolute inset-0 overflow-hidden">
           <img

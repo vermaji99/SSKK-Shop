@@ -5,6 +5,7 @@ import { Heart, ArrowRight, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { ProductCard, Button, SectionTitle } from '@/components/ui';
 import SEO from '@/components/common/SEO';
+import { PAGE_SEO } from '@/config/seo';
 import { useWishlistStore } from '@/store/wishlistStore';
 import { useAuthStore } from '@/store/authStore';
 
@@ -32,9 +33,10 @@ const Wishlist = () => {
   return (
     <>
       <SEO
-        title="Wishlist"
-        description="Your saved jewelry pieces at Shubham Swarn Kala Kendra."
-        noIndex
+        title={PAGE_SEO.wishlist.title}
+        description={PAGE_SEO.wishlist.description}
+        canonical={PAGE_SEO.wishlist.canonical}
+        noIndex={PAGE_SEO.wishlist.noIndex}
       />
 
       <section className="section-padding pt-32 min-h-screen">

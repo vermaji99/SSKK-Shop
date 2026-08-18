@@ -46,6 +46,7 @@ const About = () => {
         title={PAGE_SEO.about.title}
         description={PAGE_SEO.about.description}
         canonical={PAGE_SEO.about.canonical}
+        noIndex={PAGE_SEO.about.noIndex}
       />
     <div className="min-h-screen bg-background">
       <section className="relative min-h-[50vh] flex items-center overflow-hidden">

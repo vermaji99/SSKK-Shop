@@ -37,13 +37,13 @@ const BrandIntro: React.FC = () => {
   const features = [
     {
       icon: Crown,
-      title: 'Heritage Craftsmanship',
-      desc: 'Generations of skilled artisans bringing royal Indian designs to life with meticulous attention to detail.',
+      title: 'Detailed Craftsmanship',
+      desc: 'Skilled artisans bring elegant Indian designs to life with meticulous attention to detail and finishing.',
     },
     {
       icon: Gem,
-      title: 'Certified Purity',
-      desc: 'Every piece of 22K gold jewelry is hallmarked and sourced with complete transparency for your trust.',
+      title: 'Fine Materials',
+      desc: 'Each piece is crafted from 22K or 18K gold and carefully selected gemstones, with attention to quality and finish.',
     },
   ];
 
@@ -89,7 +89,7 @@ const BrandIntro: React.FC = () => {
             <SectionTitle
               label="Our Story"
               title="Where Tradition Meets Timeless Design"
-              subtitle="Shubham Swarn Kala Kendra is a trusted destination for beautifully crafted jewelry, combining traditional Indian craftsmanship with contemporary elegance."
+              subtitle="Shubham Swarn Kala Kendra is a Doharighat showroom for beautifully crafted jewelry, combining Indian craftsmanship with elegant contemporary design."
               align="left"
               className="mb-10"
             />
@@ -117,9 +117,9 @@ const BrandIntro: React.FC = () => {
 
             <motion.ul variants={itemVariants} className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[
-                'Trusted since generations',
+                'Personalized service',
                 'Custom design services',
-                'Hallmarked 22K gold',
+                '22K & 18K gold pieces',
                 'Personalized consultation',
               ].map((item, i) => (
                 <li key={i} className="flex items-center gap-3 text-cream/80 text-sm">

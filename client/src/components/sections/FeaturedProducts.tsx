@@ -19,36 +19,10 @@ const ProductSkeleton: React.FC = () => (
   </div>
 );
 
-const EmptyState: React.FC = () => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6 }}
-    className="col-span-full flex flex-col items-center justify-center py-20 px-6 text-center border border-purple-700/40 bg-background-tertiary/50"
-  >
-    <div className="w-16 h-16 mb-6 flex items-center justify-center border border-gold-400/40 rounded-full">
-      <Sparkles className="w-7 h-7 text-gold-400" strokeWidth={1.5} />
-    </div>
-    <h3 className="heading-serif text-2xl md:text-3xl font-bold text-cream mb-3">
-      Featured Collection Coming Soon
-    </h3>
-    <p className="text-text-muted text-base max-w-lg mb-8">
-      Our artisans are crafting exquisite pieces to be featured here. Explore our full collection in the meantime.
-    </p>
-    <Button asChild variant="primary">
-      <Link to="/collections">
-        Browse All Collections
-        <ArrowRight className="w-4 h-4" />
-      </Link>
-    </Button>
-  </motion.div>
-);
-
 const FeaturedProducts: React.FC = () => {
   const {
-    data: response,
-    isLoading,
-    isError,
+    data: featuredResponse,
+    isLoading: featuredLoading,
   } = useQuery({
     queryKey: ['products', 'featured'],
     queryFn: async () => {
@@ -61,9 +35,47 @@ const FeaturedProducts: React.FC = () => {
     retry: 1,
   });
 
-  const products =
-    response?.data ??
-    (isError || !response?.success ? [] : []);
+  const featuredProducts = featuredResponse?.data ?? [];
+
+  const {
+    data: allProductsResponse,
+    isLoading: allLoading,
+  } = useQuery({
+    queryKey: ['products', 'all-homepage'],
+    queryFn: async () => {
+      if (featuredProducts.length >= 4) return { data: [] as Product[], success: true };
+      const res = await api.get<ApiResponse<Product[]>>('/products', {
+        params: { limit: 8, sort: '-featured' },
+      });
+      return res.data;
+    },
+    staleTime: 5 * 60 * 1000,
+    retry: 1,
+    enabled: featuredProducts.length < 4,
+  });
+
+  const allProducts = allProductsResponse?.data ?? [];
+
+  const displayProducts = React.useMemo(() => {
+    const seen = new Set<string>();
+    const result: Product[] = [];
+    for (const p of featuredProducts) {
+      if (!seen.has(p._id)) {
+        seen.add(p._id);
+        result.push(p);
+      }
+    }
+    for (const p of allProducts) {
+      if (!seen.has(p._id) && result.length < 8) {
+        seen.add(p._id);
+        result.push(p);
+      }
+    }
+    return result.slice(0, 8);
+  }, [featuredProducts, allProducts]);
+
+  const isLoading = featuredLoading || (allLoading && featuredProducts.length < 4);
+  const hasProducts = displayProducts.length > 0;
 
   return (
     <section className="section-padding relative overflow-hidden">
@@ -73,42 +85,72 @@ const FeaturedProducts: React.FC = () => {
       />
 
       <div className="container relative">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14 md:mb-16">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5 sm:gap-6 mb-10 sm:mb-12 md:mb-14">
           <SectionTitle
             label="Featured"
-            title="Featured Creations"
-            subtitle="Handpicked pieces that define luxury — our most cherished designs crafted with exceptional artistry."
+            title="Featured Jewellery"
+            subtitle="Handpicked pieces that define luxury — our most cherished designs crafted with exceptional artistry and attention to detail by master artisans."
             align="left"
             className="mb-0"
           />
           <Link
             to="/collections"
             className="group inline-flex items-center gap-2 text-gold-400 uppercase tracking-[0.2em] text-xs md:text-sm font-semibold shrink-0 self-start md:self-end"
+            aria-label="View all jewellery collections"
           >
-            View All
+            View All Jewellery
             <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </div>
 
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
             {Array.from({ length: 8 }).map((_, i) => (
               <ProductSkeleton key={i} />
             ))}
           </div>
-        ) : products.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-6">
-            {products.map((product: Product) => (
-              <ProductCard
+        ) : hasProducts ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
+            {displayProducts.map((product: Product, idx) => (
+              <motion.div
                 key={product._id}
-                product={product}
-                className=""
-              />
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{
+                  duration: 0.55,
+                  delay: idx * 0.04,
+                  ease: [0.25, 0.46, 0.45, 0.94],
+                }}
+              >
+                <ProductCard product={product} />
+              </motion.div>
             ))}
           </div>
         ) : (
           <div className="grid grid-cols-1">
-            <EmptyState />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="col-span-full flex flex-col items-center justify-center py-12 sm:py-16 md:py-20 px-6 text-center border border-purple-700/40 bg-background-tertiary/50"
+            >
+              <div className="w-14 h-14 sm:w-16 sm:h-16 mb-5 sm:mb-6 flex items-center justify-center border border-gold-400/40 rounded-full">
+                <Sparkles className="w-6 h-6 sm:w-7 sm:h-7 text-gold-400" strokeWidth={1.5} />
+              </div>
+              <h3 className="heading-serif text-xl sm:text-2xl md:text-3xl font-bold text-cream mb-3">
+                Explore Our Jewellery Collection
+              </h3>
+              <p className="text-text-muted text-sm sm:text-base max-w-lg mb-7 sm:mb-8">
+                Browse our complete catalogue of beautifully crafted gold and diamond pieces. Each design is hand-finished by our master artisans in Doharighat.
+              </p>
+              <Button asChild variant="primary">
+                <Link to="/collections">
+                  Browse All Jewellery
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </Button>
+            </motion.div>
           </div>
         )}
       </div>

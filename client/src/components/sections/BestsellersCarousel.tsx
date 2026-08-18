@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
@@ -13,18 +13,45 @@ const BestsellersCarousel: React.FC = () => {
   const [canScrollLeft, setCanScrollLeft] = React.useState(false);
   const [canScrollRight, setCanScrollRight] = React.useState(true);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['products', 'bestsellers'],
-    queryFn: async () => {
-      const res = await api.get<ApiResponse<Product[]>>('/products', {
-        params: { bestseller: true, limit: 8 },
-      });
-      return res.data;
-    },
-    staleTime: 5 * 60 * 1000,
+  const [bestsellersQuery, popularQuery] = useQueries({
+    queries: [
+      {
+        queryKey: ['products', 'bestsellers'],
+        queryFn: async () => {
+          const res = await api.get<ApiResponse<Product[]>>('/products', {
+            params: { bestseller: true, limit: 8 },
+          });
+          return res.data;
+        },
+        staleTime: 5 * 60 * 1000,
+      },
+      {
+        queryKey: ['products', 'popular-fallback'],
+        queryFn: async () => {
+          const res = await api.get<ApiResponse<Product[]>>('/products', {
+            params: { limit: 8, sort: '-featured' },
+          });
+          return res.data;
+        },
+        staleTime: 5 * 60 * 1000,
+      },
+    ],
   });
 
-  const products = data?.data ?? [];
+  const bestsellerProducts = bestsellersQuery.data?.data ?? [];
+  const hasRealBestsellers = bestsellerProducts.length > 0;
+  const popularProducts = popularQuery.data?.data ?? [];
+
+  const seen = new Set<string>();
+  const merged: Product[] = [];
+  for (const p of [...bestsellerProducts, ...popularProducts]) {
+    if (seen.has(p._id)) continue;
+    seen.add(p._id);
+    merged.push(p);
+    if (merged.length >= 8) break;
+  }
+  const products = merged;
+  const isLoading = bestsellersQuery.isLoading || popularQuery.isLoading;
 
   const updateScrollButtons = React.useCallback(() => {
     const el = scrollRef.current;
@@ -57,9 +84,13 @@ const BestsellersCarousel: React.FC = () => {
       <div className="container relative">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
           <SectionTitle
-            label="Most Loved"
-            title="Bestselling Creations"
-            subtitle="Cherished by generations — our most sought-after gold and diamond pieces from Doharighat."
+            label={hasRealBestsellers ? 'Most Loved' : 'Our Favorites'}
+            title={hasRealBestsellers ? 'Bestselling Creations' : 'Popular Creations'}
+            subtitle={
+              hasRealBestsellers
+                ? 'Cherished selections — our most sought-after gold and diamond pieces from Doharighat.'
+                : 'A handpicked selection of signature gold and diamond jewellery from our Doharighat showroom.'
+            }
             align="left"
             className="mb-0"
           />
@@ -89,7 +120,7 @@ const BestsellersCarousel: React.FC = () => {
               <ChevronRight className="w-5 h-5" />
             </button>
             <Link
-              to="/collections?bestseller=true"
+              to={hasRealBestsellers ? '/collections?bestseller=true' : '/collections'}
               className="hidden sm:inline-flex items-center gap-2 text-gold-400 uppercase tracking-[0.2em] text-xs font-semibold ml-2"
             >
               View All <ArrowRight className="w-4 h-4" />
@@ -128,7 +159,7 @@ const BestsellersCarousel: React.FC = () => {
           </div>
         ) : (
           <p className="text-center text-text-muted py-16 font-serif">
-            Bestsellers will appear here once products are marked in the admin dashboard.
+            Explore our complete jewellery collection to discover signature pieces from Doharighat.
           </p>
         )}
       </div>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
-import { Heart, ChevronLeft, ChevronRight, ShoppingCart, MessageCircle, Loader2 } from 'lucide-react';
+import { Heart, ChevronLeft, ChevronRight, ShoppingCart, MessageCircle, Loader2, Home } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '@/lib/api';
 import { cn, formatCurrencyINR } from '@/lib/utils';
@@ -14,7 +14,15 @@ import InquiryModal from '@/components/common/InquiryModal';
 import SEO from '@/components/common/SEO';
 import ErrorState from '@/components/common/ErrorState';
 import { BUSINESS } from '@/config/business';
-import { absoluteUrl } from '@/config/seo';
+import {
+  absoluteUrl,
+  categoryUrl,
+  productUrl,
+  buildBreadcrumbSchema,
+  CATEGORY_META,
+  CATEGORY_SLUGS,
+  type CategorySlug,
+} from '@/config/seo';
 
 const ProductDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -56,6 +64,16 @@ const ProductDetail = () => {
     product && typeof product.category === 'object' && product.category !== null
       ? (product.category as Category).name
       : '';
+
+  const categorySlug =
+    product && typeof product.category === 'object' && product.category !== null
+      ? (product.category as Category).slug
+      : '';
+
+  const categoryMeta =
+    categorySlug && CATEGORY_SLUGS.includes(categorySlug.toLowerCase() as CategorySlug)
+      ? CATEGORY_META[categorySlug.toLowerCase() as CategorySlug]
+      : null;
 
   const { data: relatedData } = useQuery({
     queryKey: ['related-products', categoryId, product?._id],
@@ -168,22 +186,40 @@ const ProductDetail = () => {
     );
   }
 
+  const breadcrumbItems = [
+    { name: 'Home', url: absoluteUrl('/') },
+    { name: 'Collections', url: absoluteUrl('/collections') },
+    ...(categoryMeta
+      ? [{ name: categoryMeta.name, url: categoryUrl(categorySlug as CategorySlug) }]
+      : categoryName
+      ? [{ name: categoryName, url: absoluteUrl('/collections') }]
+      : []),
+    { name: product.name, url: productUrl(product.slug) },
+  ];
+
+  const breadcrumbSchema = buildBreadcrumbSchema(breadcrumbItems);
+
   const productSchema = {
     '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: product.name,
-    description: product.description,
-    image: product.images?.map((img) => absoluteUrl(img.url)),
-    sku: product.slug,
-    brand: { '@type': 'Brand', name: BUSINESS.name },
-    offers: {
-      '@type': 'Offer',
-      url: absoluteUrl(`/product/${product.slug}`),
-      priceCurrency: 'INR',
-      price: product.discountPrice || product.price,
-      availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
-      seller: { '@type': 'JewelryStore', name: BUSINESS.name },
-    },
+    '@graph': [
+      breadcrumbSchema,
+      {
+        '@type': 'Product',
+        name: product.name,
+        description: product.description,
+        image: product.images?.map((img) => absoluteUrl(img.url)),
+        sku: product.slug,
+        brand: { '@type': 'Brand', name: BUSINESS.name },
+        offers: {
+          '@type': 'Offer',
+          url: productUrl(product.slug),
+          priceCurrency: 'INR',
+          price: product.discountPrice || product.price,
+          availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+          seller: { '@type': 'JewelryStore', name: BUSINESS.name },
+        },
+      },
+    ],
   };
 
   return (
@@ -193,11 +229,49 @@ const ProductDetail = () => {
         description={product.description?.slice(0, 160)}
         ogImage={product.images?.[0]?.url}
         ogType="product"
-        canonical={absoluteUrl(`/product/${product.slug}`)}
+        canonical={productUrl(product.slug)}
         schema={productSchema}
       />
     <div className="min-h-screen bg-background">
-      <section className="container section-padding pt-32">
+      <section className="container section-padding pt-28">
+        <nav
+          className="flex items-center gap-2 text-sm text-text-muted mb-8 flex-wrap"
+          aria-label="Breadcrumb"
+        >
+          <Link
+            to="/"
+            className="flex items-center gap-1 hover:text-gold-300 transition-colors"
+          >
+            <Home className="w-4 h-4" />
+            Home
+          </Link>
+          <span className="text-gold-400">/</span>
+          <Link
+            to="/collections"
+            className="hover:text-gold-300 transition-colors"
+          >
+            Collections
+          </Link>
+          {categoryName && (
+            <>
+              <span className="text-gold-400">/</span>
+              <Link
+                to={
+                  categoryMeta
+                    ? `/collections/${categorySlug.toLowerCase()}`
+                    : '/collections'
+                }
+                className="hover:text-gold-300 transition-colors"
+              >
+                {categoryMeta?.name || categoryName}
+              </Link>
+            </>
+          )}
+          <span className="text-gold-400">/</span>
+          <span className="text-gold-300 font-medium line-clamp-1">
+            {product.name}
+          </span>
+        </nav>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
