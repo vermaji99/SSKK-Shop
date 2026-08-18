@@ -32,6 +32,18 @@ export interface FramePlayerSettings {
       | 'trailIntensity'
     >
   >;
+  desktop?: Partial<
+    Pick<
+      ResolvedPlayback,
+      | 'autoPlaySpeed'
+      | 'playbackSmoothing'
+      | 'idleReturnSpeed'
+      | 'scrubIdleMs'
+      | 'maxDpr'
+      | 'driftIntensity'
+      | 'trailIntensity'
+    >
+  >;
 }
 
 export interface DeviceRenderTuning {
@@ -55,7 +67,8 @@ export const resolveDevicePlayback = (
   profile: DeviceProfile,
   isTouch: boolean
 ): ResolvedPlayback => {
-  const tierOverrides = profile === 'mobile' ? config.mobile : profile === 'tablet' ? config.tablet : undefined;
+  const tierOverrides =
+    profile === 'mobile' ? config.mobile : profile === 'tablet' ? config.tablet : config.desktop;
   const renderDefaults = DEFAULT_RENDER[profile];
 
   const maxDpr =
