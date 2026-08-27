@@ -16,19 +16,51 @@ const navLinks = [
   { name: 'Contact', path: '/contact' },
 ];
 
+const IconButton: React.FC<{
+  children: React.ReactNode;
+  onClick?: () => void;
+  ariaLabel: string;
+  badge?: number | string;
+  asChild?: boolean;
+  className?: string;
+}> = ({ children, onClick, ariaLabel, badge, className }) => {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={ariaLabel}
+      className={cn(
+        'touch-target relative p-2 sm:p-2.5',
+        'text-text/90 hover:text-gold transition-all duration-300 ease-out',
+        'rounded-md hover:bg-gold-400/[0.06] active:bg-gold-400/10',
+        className
+      )}
+      data-cursor="hover"
+    >
+      {children}
+      {badge != null && badge !== 0 && (
+        <span className="absolute -top-0.5 -right-0.5 h-4 w-4 sm:h-[18px] sm:w-[18px] flex items-center justify-center rounded-full bg-gold-400 text-purple-900 text-[9px] sm:text-[10px] font-bold shadow-[0_2px_8px_-2px_rgba(212,175,55,0.6)] ring-1 ring-purple-900/40">
+          {typeof badge === 'number' && badge > 99 ? '99+' : badge}
+        </span>
+      )}
+    </button>
+  );
+};
+
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const { mobileMenuOpen, toggleMobileMenu, toggleSearch, setMobileMenuOpen } =
     useUIStore();
-  const { items: cartItems, openCart, getTotalItems } = useCartStore();
+  const { openCart, getTotalItems } = useCartStore();
   const { items: wishlistItems } = useWishlistStore();
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      setScrolled(window.scrollY > 40);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -42,96 +74,86 @@ export function Navbar() {
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
+        transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
         className={cn(
-          'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+          'fixed top-0 left-0 right-0 z-50 transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)]',
           scrolled
-            ? 'glass border-b border-gold/30 py-3 shadow-lg shadow-black/20'
-            : 'bg-transparent py-4 sm:py-5 border-b border-transparent'
+            ? 'glass border-b border-gold-400/[0.28] py-2.5 sm:py-3 shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)]'
+            : 'bg-transparent py-3.5 sm:py-4 sm:py-5 border-b border-transparent'
         )}
         style={{
-          paddingTop: scrolled ? 'calc(env(safe-area-inset-top) + 0.75rem)' : 'calc(env(safe-area-inset-top) + 1rem)',
+          paddingTop: scrolled
+            ? 'max(calc(env(safe-area-inset-top) + 0.625rem), 0.625rem)'
+            : 'max(calc(env(safe-area-inset-top) + 0.875rem), 0.875rem)',
         }}
       >
         <nav className="container flex items-center justify-between gap-2 sm:gap-4">
           <Link
             to="/"
-            className="flex-shrink-0 min-w-0 pr-2"
+            className="flex-shrink-0 min-w-0 pr-1.5"
             data-cursor="hover"
             onClick={closeMobileMenu}
+            aria-label="SSKK — Shubham Swarn Kala Kendra"
           >
-            <h1 className="font-serif text-gold-gradient tracking-wide leading-tight whitespace-nowrap">
-              <span className="hidden sm:inline text-xl md:text-2xl">
+            <h1 className="font-serif text-gold-gradient tracking-wide leading-tight whitespace-nowrap transition-transform duration-300 hover:scale-[1.01]">
+              <span className="hidden sm:inline text-[1.05rem] md:text-xl lg:text-2xl">
                 Shubham Swarn Kala Kendra
               </span>
               <span className="sm:hidden text-2xl font-semibold">SSKK</span>
             </h1>
           </Link>
 
-          <div className="hidden lg:flex items-center justify-center gap-10">
+          <div className="hidden lg:flex items-center justify-center gap-8 xl:gap-10">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 to={link.path}
                 data-cursor="hover"
-                className="group relative text-text/90 hover:text-gold transition-colors duration-300 text-sm uppercase tracking-wider font-medium"
+                className="nav-underline relative text-text/90 hover:text-gold transition-colors duration-300 ease-out text-[12.5px] md:text-sm uppercase tracking-[0.18em] md:tracking-[0.22em] font-medium py-2"
               >
-                <span className="relative inline-block">
-                  {link.name}
-                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-gold transition-all duration-300 group-hover:w-full" />
-                </span>
+                <span className="relative inline-block">{link.name}</span>
               </Link>
             ))}
           </div>
 
-          <div className="flex items-center gap-1 sm:gap-2 md:gap-4 shrink-0">
-            <button
-              onClick={toggleSearch}
-              data-cursor="hover"
-              className="p-1.5 sm:p-2 text-text/90 hover:text-gold transition-colors duration-300"
-              aria-label="Search"
-            >
-              <Search size={18} strokeWidth={1.5} />
-            </button>
+          <div className="flex items-center gap-0.5 sm:gap-1 md:gap-2 shrink-0 pl-1">
+            <IconButton ariaLabel="Search" onClick={toggleSearch}>
+              <Search size={18} strokeWidth={1.5} className="sm:w-[19px] sm:h-[19px]" />
+            </IconButton>
 
             <Link
               to="/wishlist"
               data-cursor="hover"
-              className="relative p-1.5 sm:p-2 text-text/90 hover:text-gold transition-colors duration-300"
-              aria-label="Wishlist"
               onClick={closeMobileMenu}
+              className={cn(
+                'touch-target relative p-2 sm:p-2.5',
+                'text-text/90 hover:text-gold transition-all duration-300 ease-out',
+                'rounded-md hover:bg-gold-400/[0.06] active:bg-gold-400/10'
+              )}
+              aria-label="Wishlist"
             >
-              <Heart size={18} strokeWidth={1.5} />
+              <Heart size={18} strokeWidth={1.5} className="sm:w-[19px] sm:h-[19px]" />
               {wishlistCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 h-3.5 w-3.5 sm:h-4 sm:w-4 flex items-center justify-center rounded-full bg-gold text-purple-900 text-[9px] sm:text-[10px] font-bold">
+                <span className="absolute -top-0.5 -right-0.5 h-4 w-4 sm:h-[18px] sm:w-[18px] flex items-center justify-center rounded-full bg-gold-400 text-purple-900 text-[9px] sm:text-[10px] font-bold shadow-[0_2px_8px_-2px_rgba(212,175,55,0.6)] ring-1 ring-purple-900/40">
                   {wishlistCount > 99 ? '99+' : wishlistCount}
                 </span>
               )}
             </Link>
 
-            <button
-              onClick={openCart}
-              data-cursor="hover"
-              className="relative p-1.5 sm:p-2 text-text/90 hover:text-gold transition-colors duration-300"
-              aria-label="Cart"
-            >
-              <ShoppingBag size={18} strokeWidth={1.5} />
-              {cartCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 h-3.5 w-3.5 sm:h-4 sm:w-4 flex items-center justify-center rounded-full bg-gold text-purple-900 text-[9px] sm:text-[10px] font-bold">
-                  {cartCount > 99 ? '99+' : cartCount}
-                </span>
-              )}
-            </button>
+            <IconButton ariaLabel="Cart" onClick={openCart} badge={cartCount}>
+              <ShoppingBag size={18} strokeWidth={1.5} className="sm:w-[19px] sm:h-[19px]" />
+            </IconButton>
 
-            <div className="w-px h-5 mx-1 sm:mx-2 bg-gold-400/20 hidden sm:block" />
+            <div className="w-px h-5 mx-0.5 sm:mx-1 md:mx-2 bg-gold-400/[0.18] hidden sm:block" />
 
             <button
+              type="button"
               onClick={toggleMobileMenu}
               data-cursor="hover"
               className={cn(
-                'p-2 sm:p-2.5 text-text/90 hover:text-gold transition-all duration-300 rounded-md',
-                'border border-gold-400/30 bg-gold-400/5 hover:bg-gold-400/10 hover:border-gold-400/60',
-                'lg:hidden flex items-center justify-center'
+                'touch-target p-2 sm:p-2.5 text-text/90 hover:text-gold transition-all duration-300 ease-out',
+                'border border-gold-400/[0.28] bg-gold-400/[0.05] hover:bg-gold-400/10 hover:border-gold-400/[0.58]',
+                'rounded-md lg:hidden flex items-center justify-center shrink-0'
               )}
               aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileMenuOpen}
@@ -146,34 +168,43 @@ export function Navbar() {
         </nav>
       </motion.header>
 
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ y: '-100%' }}
-            animate={{ y: 0 }}
-            exit={{ y: '-100%' }}
-            transition={{ duration: 0.45, ease: [0.77, 0, 0.175, 1] }}
-            className="fixed inset-0 z-40 glass lg:hidden"
-            style={{ paddingTop: 'calc(env(safe-area-inset-top) + 5rem)' }}
+            initial={{ y: '-100%', opacity: 0.92 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: '-100%', opacity: 0.92 }}
+            transition={{
+              duration: 0.48,
+              ease: [0.77, 0, 0.175, 1],
+            }}
+            className="fixed inset-0 z-40 glass lg:hidden overflow-y-auto"
+            style={{
+              paddingTop: 'max(calc(env(safe-area-inset-top) + 5rem), 5rem)',
+            }}
           >
-            <div className="flex flex-col h-full px-6 pb-8">
-              <nav className="flex flex-col gap-2">
+            <div className="flex flex-col min-h-[calc(100dvh-5rem)] px-5 sm:px-6 pb-8">
+              <nav className="flex flex-col gap-0.5">
                 {navLinks.map((link, index) => (
                   <motion.div
                     key={link.name}
                     initial={{ opacity: 0, y: 18 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -18 }}
-                    transition={{ delay: 0.12 + index * 0.09, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                    exit={{ opacity: 0, y: -16 }}
+                    transition={{
+                      delay: 0.12 + index * 0.085,
+                      duration: 0.46,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
                   >
                     <Link
                       to={link.path}
                       onClick={closeMobileMenu}
-                      className="group font-serif text-2xl sm:text-3xl text-cream/90 hover:text-gold-gradient transition-colors duration-300 block py-3.5 border-b border-gold-400/10"
+                      className="group font-serif text-[1.55rem] sm:text-2xl md:text-3xl text-cream/92 hover:text-gold-gradient transition-colors duration-300 block py-3.5 sm:py-4 border-b border-gold-400/[0.11] min-h-[56px] flex items-center"
                     >
-                      <span className="flex items-center justify-between">
+                      <span className="flex items-center justify-between w-full">
                         <span>{link.name}</span>
-                        <span className="text-gold-400/60 text-base transform -translate-x-2 group-hover:translate-x-0 transition-transform duration-300 opacity-0 group-hover:opacity-100">
+                        <span className="text-gold-400/60 text-base sm:text-lg transform -translate-x-3 group-hover:translate-x-0 transition-transform duration-400 ease-out opacity-0 group-hover:opacity-100">
                           →
                         </span>
                       </span>
@@ -183,33 +214,43 @@ export function Navbar() {
               </nav>
 
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 22 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ delay: 0.7, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                className="mt-8 grid grid-cols-3 gap-3"
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ delay: 0.68, duration: 0.52, ease: [0.22, 1, 0.36, 1] }}
+                className="mt-7 sm:mt-8 grid grid-cols-3 gap-2.5 sm:gap-3"
               >
                 <Link
                   to="/wishlist"
                   onClick={closeMobileMenu}
-                  className="flex flex-col items-center justify-center gap-2 p-4 glass hover:border-gold-400/40 transition-all"
+                  className="flex flex-col items-center justify-center gap-1.5 sm:gap-2 p-3.5 sm:p-4 glass-soft hover:border-gold-400/[0.42] transition-all duration-300 min-h-[84px] active:scale-[0.98]"
                 >
                   <Heart size={20} strokeWidth={1.5} className="text-gold-400" />
-                  <span className="text-[10px] uppercase tracking-wider text-text-muted">Wishlist</span>
+                  <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-text-muted font-medium">
+                    Wishlist
+                  </span>
                 </Link>
                 <button
-                  onClick={() => { openCart(); closeMobileMenu(); }}
-                  className="flex flex-col items-center justify-center gap-2 p-4 glass hover:border-gold-400/40 transition-all"
+                  type="button"
+                  onClick={() => {
+                    openCart();
+                    closeMobileMenu();
+                  }}
+                  className="flex flex-col items-center justify-center gap-1.5 sm:gap-2 p-3.5 sm:p-4 glass-soft hover:border-gold-400/[0.42] transition-all duration-300 min-h-[84px] active:scale-[0.98]"
                 >
                   <ShoppingBag size={20} strokeWidth={1.5} className="text-gold-400" />
-                  <span className="text-[10px] uppercase tracking-wider text-text-muted">Cart</span>
+                  <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-text-muted font-medium">
+                    Cart
+                  </span>
                 </button>
                 <a
                   href={`tel:+91${BUSINESS.phonePrimary}`}
-                  className="flex flex-col items-center justify-center gap-2 p-4 glass hover:border-gold-400/40 transition-all"
+                  className="flex flex-col items-center justify-center gap-1.5 sm:gap-2 p-3.5 sm:p-4 glass-soft hover:border-gold-400/[0.42] transition-all duration-300 min-h-[84px] active:scale-[0.98]"
                 >
                   <Phone size={20} strokeWidth={1.5} className="text-gold-400" />
-                  <span className="text-[10px] uppercase tracking-wider text-text-muted">Call</span>
+                  <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-text-muted font-medium">
+                    Call
+                  </span>
                 </a>
               </motion.div>
 
@@ -217,20 +258,26 @@ export function Navbar() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ delay: 0.85, duration: 0.4 }}
-                className="mt-auto pt-8 border-t border-gold/20"
+                transition={{ delay: 0.84, duration: 0.42 }}
+                className="mt-auto pt-7 sm:pt-8 border-t border-gold-400/[0.18]"
               >
-                <p className="text-text-muted text-xs uppercase tracking-[0.2em] mb-3">
+                <p className="text-text-muted text-[11px] sm:text-xs uppercase tracking-[0.22em] mb-3 sm:mb-3.5">
                   Contact
                 </p>
-                <div className="space-y-1.5 text-text/80 text-sm">
-                  <a href={`tel:+91${BUSINESS.phonePrimary}`} className="block hover:text-gold transition-colors">
+                <div className="space-y-1.5 sm:space-y-2 text-text/82 text-[13px] sm:text-sm">
+                  <a
+                    href={`tel:+91${BUSINESS.phonePrimary}`}
+                    className="block hover:text-gold transition-colors duration-200 min-h-[32px] flex items-center"
+                  >
                     {BUSINESS.phonePrimaryFormatted}
                   </a>
-                  <a href={`tel:+91${BUSINESS.phoneSecondary}`} className="block hover:text-gold transition-colors">
+                  <a
+                    href={`tel:+91${BUSINESS.phoneSecondary}`}
+                    className="block hover:text-gold transition-colors duration-200 min-h-[32px] flex items-center"
+                  >
                     {BUSINESS.phoneSecondaryFormatted}
                   </a>
-                  <p className="pt-2 text-text-muted text-xs leading-relaxed">
+                  <p className="pt-1.5 sm:pt-2 text-text-muted text-[12px] sm:text-xs leading-relaxed">
                     {BUSINESS.address}
                   </p>
                 </div>

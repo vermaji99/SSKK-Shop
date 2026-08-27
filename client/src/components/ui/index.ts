@@ -14,3 +14,5 @@ export * from './GoldDivider';
 export { default as GoldDivider } from './GoldDivider';
 export * from './Badge';
 export { default as Badge } from './Badge';
+export * from './BlurImage';
+export { default as BlurImage } from './BlurImage';

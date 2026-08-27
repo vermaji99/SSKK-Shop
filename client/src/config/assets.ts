@@ -17,6 +17,26 @@ export const JEWELRY_IMAGES = {
 export const DEFAULT_PRODUCT_IMAGE = JEWELRY_IMAGES.ring;
 export const SEO_OG_IMAGE = JEWELRY_IMAGES.necklace;
 
+export const HERO_VIDEO = {
+  desktop: {
+    webm: '/hero-video/hero-desktop.webm',
+    mp4: '/hero-video/hero-desktop.mp4',
+    poster: {
+      webp: '/hero-video/hero-desktop-poster.webp',
+      jpg: '/hero-video/hero-desktop-poster.jpg',
+    },
+  },
+  mobile: {
+    webm: '/hero-video/hero-mobile.webm',
+    mp4: '/hero-video/hero-mobile.mp4',
+    poster: {
+      webp: '/hero-video/hero-mobile-poster.webp',
+      jpg: '/hero-video/hero-mobile-poster.jpg',
+    },
+  },
+  fallbackPoster: publicAsset('hero-frames/frame_006.jpg'),
+} as const;
+
 export const CATEGORY_IMAGE_BY_SLUG: Record<string, string> = {
   rings: JEWELRY_IMAGES.ring,
   earrings: JEWELRY_IMAGES.jhumka,

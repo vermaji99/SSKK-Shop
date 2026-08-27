@@ -9,6 +9,7 @@ export interface DeviceProfileState {
   isDesktop: boolean;
   isTouch: boolean;
   isCoarsePointer: boolean;
+  prefersHover: boolean;
   width: number;
   height: number;
 }
@@ -20,6 +21,10 @@ const getTouchCapable = () =>
 const getCoarsePointer = () =>
   typeof window !== 'undefined' &&
   window.matchMedia('(pointer: coarse)').matches;
+
+const getPrefersHover = () =>
+  typeof window !== 'undefined' &&
+  window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
 const resolveProfile = (width: number): DeviceProfile => {
   if (width < 768) return 'mobile';
@@ -39,6 +44,7 @@ const readProfile = (): DeviceProfileState => {
     isDesktop: profile === 'desktop',
     isTouch: getTouchCapable(),
     isCoarsePointer: getCoarsePointer(),
+    prefersHover: getPrefersHover(),
     width,
     height,
   };
@@ -56,11 +62,14 @@ export const useDeviceProfile = (): DeviceProfileState => {
 
     const coarseMq = window.matchMedia('(pointer: coarse)');
     coarseMq.addEventListener('change', update);
+    const hoverMq = window.matchMedia('(hover: hover) and (pointer: fine)');
+    hoverMq.addEventListener('change', update);
 
     return () => {
       window.removeEventListener('resize', update);
       window.removeEventListener('orientationchange', update);
       coarseMq.removeEventListener('change', update);
+      hoverMq.removeEventListener('change', update);
     };
   }, []);
 

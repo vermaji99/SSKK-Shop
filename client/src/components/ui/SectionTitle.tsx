@@ -2,6 +2,7 @@ import * as React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { cn } from '@/lib/utils';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 
 type SectionTitleAlign = 'left' | 'center';
 
@@ -21,27 +22,28 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
   className,
 }) => {
   const { ref, inView } = useInView({
-    threshold: 0.2,
+    threshold: 0.18,
     triggerOnce: true,
+    rootMargin: '-40px 0px',
   });
 
   const containerVariants = {
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: 0.15,
+        staggerChildren: 0.16,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 28 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.7,
-        ease: [0.25, 0.46, 0.45, 0.94],
+        duration: 0.78,
+        ease: [0.22, 1, 0.36, 1],
       },
     },
   };
@@ -59,17 +61,20 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
       )}
     >
       <motion.div variants={itemVariants}>
-        <span className="inline-block text-gold uppercase tracking-[0.3em] text-xs md:text-sm font-medium mb-4">
+        <span
+          className="inline-block eyebrow text-gold-400 mb-3 sm:mb-4"
+          style={{ fontSize: 'clamp(0.6rem, 0.92vw, 0.72rem)', letterSpacing: '0.34em' }}
+        >
           {label}
         </span>
       </motion.div>
 
       <motion.h2
         variants={itemVariants}
-        className="heading-serif text-gold-gradient font-bold leading-tight"
+        className="heading-serif text-gold-gradient font-medium leading-[1.08]"
         style={{
-          fontSize: 'clamp(2rem, 5vw, 3.75rem)',
-          lineHeight: 1.1,
+          fontSize: 'clamp(1.9rem, 4.6vw, 3.6rem)',
+          letterSpacing: '-0.012em',
         }}
       >
         {title}
@@ -79,8 +84,9 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
         <motion.p
           variants={itemVariants}
           className={cn(
-            'mt-6 text-text-muted text-base md:text-lg leading-relaxed max-w-2xl',
-            align === 'center' ? 'mx-auto' : 'mx-0'
+            'mt-5 sm:mt-6 text-text-muted/92 leading-[1.62] font-light max-w-2xl',
+            align === 'center' ? 'mx-auto' : 'mx-0',
+            'text-[13.5px] sm:text-sm md:text-[15.5px]'
           )}
         >
           {subtitle}
