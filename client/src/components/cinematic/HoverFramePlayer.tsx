@@ -52,7 +52,9 @@ export const HoverFramePlayer: React.FC<HoverFramePlayerProps> = ({
 
   const targetRef = React.useRef(0);
   const displayRef = React.useRef(0);
+  const displaySmoothRef = React.useRef(0);
   const velocityRef = React.useRef(0);
+  const velocitySmoothRef = React.useRef(0);
   const isHoveredRef = React.useRef(false);
   const isPointerDownRef = React.useRef(false);
   const isInViewRef = React.useRef(false);
@@ -61,6 +63,7 @@ export const HoverFramePlayer: React.FC<HoverFramePlayerProps> = ({
   const rafRef = React.useRef(0);
   const lastUiUpdateRef = React.useRef(0);
   const playbackRef = React.useRef(playback);
+  const lastFrameTimeRef = React.useRef<number | null>(null);
 
   const [loaded, setLoaded] = React.useState(false);
   const [loadProgress, setLoadProgress] = React.useState(0);
@@ -102,8 +105,8 @@ export const HoverFramePlayer: React.FC<HoverFramePlayerProps> = ({
     renderCinematicFrame(
       ctx,
       imagesRef.current,
-      displayRef.current,
-      velocityRef.current,
+      displaySmoothRef.current,
+      velocitySmoothRef.current,
       metrics,
       {
         driftIntensity: playbackRef.current.driftIntensity * heroBoost,
@@ -183,41 +186,65 @@ export const HoverFramePlayer: React.FC<HoverFramePlayerProps> = ({
     if (reducedMotion) {
       targetRef.current = 0.5;
       displayRef.current = 0.5;
+      displaySmoothRef.current = 0.5;
+      velocityRef.current = 0;
+      velocitySmoothRef.current = 0;
       paint();
       emitProgress(0.5);
       return;
     }
 
-    const loop = () => {
+    const NOMINAL_DT = 16.6667;
+
+    const loop = (timestamp: number) => {
       const cfg = playbackRef.current;
       const now = performance.now();
+
+      const lastTs = lastFrameTimeRef.current;
+      const rawDt = lastTs == null ? NOMINAL_DT : timestamp - lastTs;
+      lastFrameTimeRef.current = timestamp;
+      const dt = Math.max(1, Math.min(48, rawDt));
+      const dtFactor = dt / NOMINAL_DT;
+
       let target = targetRef.current;
       const active = isActive();
 
       if (active) {
         if (!isScrubbingRef.current || now - lastMoveRef.current > cfg.scrubIdleMs) {
-          target += cfg.autoPlaySpeed;
-          if (target > 1) target = 0;
+          target += cfg.autoPlaySpeed * dtFactor;
+          if (target > 1) target = target - 1;
           targetRef.current = target;
         }
       } else {
-        targetRef.current += (0 - targetRef.current) * (cfg.idleReturnSpeed ?? 0.045);
+        const idleReturn = (cfg.idleReturnSpeed ?? 0.045) * dtFactor;
+        targetRef.current += (0 - targetRef.current) * Math.min(1, idleReturn);
       }
 
-      const current = displayRef.current;
-      const next = current + (targetRef.current - current) * cfg.playbackSmoothing;
+      const smoothing = Math.min(1, cfg.playbackSmoothing * dtFactor * 1.25);
+      const displayCurrent = displayRef.current;
+      const displayNext = displayCurrent + (targetRef.current - displayCurrent) * smoothing;
+      displayRef.current = displayNext;
 
-      if (Math.abs(next - current) > 0.000008) {
-        velocityRef.current = Math.abs(next - current);
-        displayRef.current = next;
-        paint();
-        emitProgress(next);
-      } else if (Math.abs(current - targetRef.current) > 0.0001) {
-        displayRef.current = targetRef.current;
-        velocityRef.current = 0;
-        paint();
-        emitProgress(targetRef.current);
+      const smoothFactor = Math.min(1, 0.22 * dtFactor);
+      displaySmoothRef.current += (displayNext - displaySmoothRef.current) * smoothFactor;
+
+      const instVelocity = Math.abs(displayNext - displayCurrent);
+      velocityRef.current = instVelocity;
+      const velSmooth = Math.min(1, 0.18 * dtFactor);
+      velocitySmoothRef.current += (instVelocity - velocitySmoothRef.current) * velSmooth;
+
+      const effectiveDisplay = displaySmoothRef.current;
+      const deltaToPaint = Math.abs(effectiveDisplay - displaySmoothRef.current);
+
+      const snapThreshold = 0.00005;
+      if (Math.abs(displaySmoothRef.current - targetRef.current) < snapThreshold &&
+          velocitySmoothRef.current < 0.00001) {
+        displaySmoothRef.current = targetRef.current;
+        velocitySmoothRef.current = 0;
       }
+
+      paint();
+      emitProgress(effectiveDisplay);
 
       if (isScrubbingRef.current && now - lastMoveRef.current > cfg.scrubIdleMs + 120) {
         isScrubbingRef.current = false;
@@ -226,6 +253,7 @@ export const HoverFramePlayer: React.FC<HoverFramePlayerProps> = ({
       rafRef.current = requestAnimationFrame(loop);
     };
 
+    lastFrameTimeRef.current = null;
     rafRef.current = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(rafRef.current);
   }, [loaded, paint, emitProgress, reducedMotion, isActive]);
