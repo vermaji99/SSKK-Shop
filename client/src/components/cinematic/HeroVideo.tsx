@@ -7,6 +7,7 @@ interface HeroVideoProps {
   posterClassName?: string;
   reducedMotion?: boolean;
   hoverScrub?: boolean;
+  hoverPlay?: boolean;
   onProgress?: (progress: number) => void;
   onReady?: (duration: number) => void;
   ariaLabel?: string;
@@ -24,7 +25,8 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
   className,
   posterClassName,
   reducedMotion = false,
-  hoverScrub = true,
+  hoverScrub = false,
+  hoverPlay = false,
   onProgress,
   onReady,
   ariaLabel = 'Premium jewellery cinematic showcase',
@@ -64,6 +66,9 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
   const mp4Src = `/hero-video/${base}.mp4`;
   const sourceMp4Fallback = `/hero-video/${base}-source.mp4`;
   const fallbackFrame = `/hero-frames/frame_006.jpg`;
+
+  const isHoveredRef = React.useRef(false);
+  const isPlayingRef = React.useRef(false);
 
   const containerRef = React.useMemo(
     () => mergeRefs(containerRefProp, innerContainerRef),
@@ -238,9 +243,56 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
     [scrubFromRatio]
   );
 
+  const playVideo = React.useCallback(async () => {
+    const v = videoRef.current;
+    if (!v || isPlayingRef.current) return;
+    try {
+      await v.play();
+      isPlayingRef.current = true;
+    } catch {
+      isPlayingRef.current = false;
+    }
+  }, []);
+
+  const pauseVideo = React.useCallback(() => {
+    const v = videoRef.current;
+    if (!v || !isPlayingRef.current) return;
+    try {
+      v.pause();
+      isPlayingRef.current = false;
+    } catch {
+      isPlayingRef.current = false;
+    }
+  }, []);
+
   React.useEffect(() => {
     const el = innerContainerRef.current;
     if (!el) return;
+
+    if (hoverPlay && !reducedMotion && prefersHover) {
+      const onEnter = () => {
+        isHoveredRef.current = true;
+        stopIdleTick();
+        if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
+        playVideo();
+      };
+      const onLeave = () => {
+        isHoveredRef.current = false;
+        pauseVideo();
+        scheduleIdle();
+      };
+
+      el.addEventListener('pointerenter', onEnter);
+      el.addEventListener('pointerleave', onLeave);
+
+      return () => {
+        el.removeEventListener('pointerenter', onEnter);
+        el.removeEventListener('pointerleave', onLeave);
+        pauseVideo();
+        if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
+        stopIdleTick();
+      };
+    }
 
     if (!hoverScrub || reducedMotion || !prefersHover) {
       scheduleIdle();
@@ -268,7 +320,7 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
       if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
       stopIdleTick();
     };
-  }, [hoverScrub, reducedMotion, prefersHover, handlePointerMove, scheduleIdle, stopIdleTick]);
+  }, [hoverScrub, hoverPlay, reducedMotion, prefersHover, handlePointerMove, scheduleIdle, stopIdleTick, playVideo, pauseVideo]);
 
   React.useEffect(() => {
     let cancelled = false;
@@ -325,24 +377,35 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
     const onCanPlay = () => {
       suppressEmissionRef.current = false;
     };
+    let lastTimeUpdateEmit = 0;
+    const onTimeUpdate = () => {
+      const v = videoRef.current;
+      if (!v || !hoverPlay) return;
+      const now = performance.now();
+      if (now - lastTimeUpdateEmit < 50) return;
+      lastTimeUpdateEmit = now;
+      emitProgress(v.currentTime);
+    };
 
     v.addEventListener('seeked', onSeeked);
     v.addEventListener('waiting', onWaiting);
     v.addEventListener('playing', onPlaying);
     v.addEventListener('canplay', onCanPlay);
+    v.addEventListener('timeupdate', onTimeUpdate);
 
     return () => {
       v.removeEventListener('seeked', onSeeked);
       v.removeEventListener('waiting', onWaiting);
       v.removeEventListener('playing', onPlaying);
       v.removeEventListener('canplay', onCanPlay);
+      v.removeEventListener('timeupdate', onTimeUpdate);
       const rvfc = v as unknown as { cancelVideoFrameCallback?: (id: number) => void };
       if (rvfcIdRef.current != null && rvfc.cancelVideoFrameCallback) {
         rvfc.cancelVideoFrameCallback(rvfcIdRef.current);
         rvfcIdRef.current = null;
       }
     };
-  }, [emitProgress, schedulePendingSeek]);
+  }, [emitProgress, schedulePendingSeek, hoverPlay]);
 
   const handleLoadedMeta = React.useCallback(() => {
     const v = videoRef.current;
@@ -367,7 +430,7 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
     if (!v) return;
     setVideoReady((cur) => {
       const rvfc = v as unknown as { requestVideoFrameCallback?: (cb: FrameCallback) => number };
-      if (!cur && rvfc.requestVideoFrameCallback && !reducedMotion) {
+      if (!cur && rvfc.requestVideoFrameCallback && !reducedMotion && !hoverPlay) {
         try {
           const cb: FrameCallback = () => {
             emitProgress(currentMediaTimeRef.current);
@@ -381,8 +444,10 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
       return true;
     });
     onReady?.(durationRef.current || 0);
-    scheduleIdle();
-  }, [onReady, scheduleIdle, emitProgress, reducedMotion]);
+    if (!hoverPlay || !prefersHover) {
+      scheduleIdle();
+    }
+  }, [onReady, scheduleIdle, emitProgress, reducedMotion, hoverPlay, prefersHover]);
 
   const handleVideoError = React.useCallback(() => {
     setVideoFallback(true);
