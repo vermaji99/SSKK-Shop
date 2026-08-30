@@ -10,7 +10,7 @@ interface HeroVideoProps {
   hoverPlay?: boolean;
   onProgress?: (progress: number) => void;
   onReady?: (duration: number) => void;
-  onFirstPlaybackComplete?: () => void;
+  onPlaybackEnded?: () => void;
   restartToken?: number;
   ariaLabel?: string;
   containerRef?: React.Ref<HTMLDivElement>;
@@ -31,7 +31,7 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
   hoverPlay = false,
   onProgress,
   onReady,
-  onFirstPlaybackComplete,
+  onPlaybackEnded,
   restartToken,
   ariaLabel = 'Premium jewellery cinematic showcase',
   containerRef: containerRefProp,
@@ -62,13 +62,9 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
   const idleStartRampRef = React.useRef(0);
   const lastCommitTimeRef = React.useRef(0);
   const scrubLastSmoothRef = React.useRef<number | null>(null);
-  const firstPlaybackCompleteRef = React.useRef(false);
   const inCompletionWindowRef = React.useRef(false);
-  const restartedRef = React.useRef(false);
   const lastRestartTokenRef = React.useRef(restartToken);
-
-  const firstPlaybackStoppedAtEndRef = React.useRef(false);
-  const forceLoopRef = React.useRef(false);
+  const endCallbackCooldownRef = React.useRef(false);
 
   const base = isMobile ? 'hero-mobile' : 'hero-desktop';
   const posterWebp = `/hero-video/${base}-poster.webp`;
@@ -420,29 +416,28 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
       lastTimeUpdateEmit = now;
       emitProgress(v.currentTime);
 
-      if (onFirstPlaybackComplete && !firstPlaybackCompleteRef.current) {
+      if (onPlaybackEnded && !endCallbackCooldownRef.current) {
         const dur = durationRef.current || v.duration || 0;
         if (dur > 0.5 && v.currentTime >= dur - 0.06 && !inCompletionWindowRef.current) {
           inCompletionWindowRef.current = true;
-          firstPlaybackCompleteRef.current = true;
-          firstPlaybackStoppedAtEndRef.current = true;
+          endCallbackCooldownRef.current = true;
           try {
-            onFirstPlaybackComplete();
+            onPlaybackEnded();
           } catch {
           }
         }
         if (inCompletionWindowRef.current && v.currentTime < dur * 0.2) {
           inCompletionWindowRef.current = false;
+          endCallbackCooldownRef.current = false;
         }
       }
     };
     const onEnded = () => {
-      if (onFirstPlaybackComplete && !firstPlaybackCompleteRef.current) {
-        firstPlaybackCompleteRef.current = true;
-        firstPlaybackStoppedAtEndRef.current = true;
+      if (onPlaybackEnded && !endCallbackCooldownRef.current) {
+        endCallbackCooldownRef.current = true;
         inCompletionWindowRef.current = true;
         try {
-          onFirstPlaybackComplete();
+          onPlaybackEnded();
         } catch {
         }
       }
@@ -468,7 +463,7 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
         rvfcIdRef.current = null;
       }
     };
-  }, [emitProgress, schedulePendingSeek, hoverPlay, onFirstPlaybackComplete]);
+  }, [emitProgress, schedulePendingSeek, hoverPlay, onPlaybackEnded]);
 
   const handleLoadedMeta = React.useCallback(() => {
     const v = videoRef.current;
@@ -523,9 +518,7 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
     const v = videoRef.current;
     if (!v) return;
     try {
-      forceLoopRef.current = true;
-      v.loop = true;
-      restartedRef.current = true;
+      v.loop = false;
       v.muted = true;
       const dur = durationRef.current || v.duration || 0;
       const startAt = dur > 0 ? Math.max(0, Math.min(0.08 * dur, 0.12)) : 0;
@@ -541,6 +534,8 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
       emitProgress(startAt);
       currentMediaTimeRef.current = startAt;
       smoothMediaTimeRef.current = startAt;
+      endCallbackCooldownRef.current = false;
+      inCompletionWindowRef.current = false;
       const playPromise = v.play();
       if (playPromise && typeof playPromise.then === 'function') {
         playPromise.then(() => {
@@ -552,8 +547,6 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
     } catch {
     }
   }, [restartToken, emitProgress]);
-
-  const shouldFirstPlaybackLoop = !(onFirstPlaybackComplete && hoverPlay);
 
   return (
     <div
@@ -592,7 +585,7 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
         <video
           ref={videoRef}
           muted
-          loop={shouldFirstPlaybackLoop}
+          loop={false}
           playsInline
           autoPlay={false}
           preload="auto"

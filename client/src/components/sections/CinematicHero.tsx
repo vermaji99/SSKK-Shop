@@ -104,7 +104,7 @@ const CinematicHero: React.FC = () => {
         <HeroVideo
           reducedMotion={reducedMotion}
           hoverPlay
-          onFirstPlaybackComplete={handleFirstPlaybackComplete}
+          onPlaybackEnded={handleFirstPlaybackComplete}
           restartToken={restartToken}
           ariaLabel="Jewellery commercial cinematic showcase — hover to play, tap to play on mobile"
         />
