@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { MapPin, Phone, Clock, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { CinematicHero } from '@/components/sections/CinematicHero';
+import { FrameSequenceShowcase } from '@/components/sections/FrameSequenceShowcase';
 import { BrandIntro } from '@/components/sections/BrandIntro';
 import { Categories } from '@/components/sections/Categories';
 import { FeaturedProducts } from '@/components/sections/FeaturedProducts';
@@ -30,6 +31,7 @@ export const Home: React.FC = () => {
       />
 
       <CinematicHero />
+      <FrameSequenceShowcase />
       <BrandIntro />
       <Categories />
       <FeaturedProducts />

@@ -18,3 +18,5 @@ export * from './BestsellersCarousel';
 export { default as BestsellersCarousel } from './BestsellersCarousel';
 export * from './HomeInquiry';
 export { default as HomeInquiry } from './HomeInquiry';
+export * from './FrameSequenceShowcase';
+export { default as FrameSequenceShowcase } from './FrameSequenceShowcase';

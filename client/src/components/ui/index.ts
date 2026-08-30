@@ -16,3 +16,5 @@ export * from './Badge';
 export { default as Badge } from './Badge';
 export * from './BlurImage';
 export { default as BlurImage } from './BlurImage';
+export * from './PremiumReveal';
+export { default as PremiumReveal } from './PremiumReveal';
