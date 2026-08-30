@@ -11,9 +11,9 @@ const BRAND_LINES = [
 const LETTER = {
   hidden: (i: number) => ({
     opacity: 0,
-    y: '88%',
-    rotateX: -70,
-    filter: 'blur(14px)',
+    y: '92%',
+    rotateX: -62,
+    filter: 'blur(16px)',
     transition: { duration: 0 },
   }),
   show: (i: number) => ({
@@ -22,9 +22,20 @@ const LETTER = {
     rotateX: 0,
     filter: 'blur(0px)',
     transition: {
-      duration: 0.95,
-      delay: i * 0.035,
-      ease: [0.22, 1, 0.36, 1],
+      duration: 1.05,
+      delay: i * 0.028,
+      ease: [0.19, 1.05, 0.32, 1],
+    },
+  }),
+  exit: (i: number) => ({
+    opacity: 0,
+    y: '-70%',
+    rotateX: 44,
+    filter: 'blur(12px)',
+    transition: {
+      duration: 0.62,
+      delay: i * 0.012,
+      ease: [0.55, 0, 0.68, 0.06],
     },
   }),
 };
@@ -33,8 +44,14 @@ const WORD = {
   hidden: {},
   show: {
     transition: {
-      staggerChildren: 0.02,
+      staggerChildren: 0.015,
       delayChildren: 0,
+    },
+  },
+  exit: {
+    transition: {
+      staggerChildren: 0.01,
+      staggerDirection: -1,
     },
   },
 };
@@ -43,14 +60,21 @@ const LINE = {
   hidden: {},
   show: (lineIdx: number) => ({
     transition: {
-      staggerChildren: 0.12,
-      delayChildren: lineIdx * 0.38,
+      staggerChildren: 0.09,
+      delayChildren: lineIdx * 0.22,
+    },
+  }),
+  exit: (lineIdx: number) => ({
+    transition: {
+      staggerChildren: 0.05,
+      delayChildren: lineIdx * 0.04,
+      staggerDirection: -1,
     },
   }),
 };
 
-const BRAND_ANIMATION_TOTAL_MS = 3850;
-const BRAND_EXIT_FADE_MS = 900;
+const BRAND_ANIMATION_TOTAL_MS = 5600;
+const BRAND_EXIT_FADE_MS = 1100;
 
 const CinematicHero: React.FC = () => {
   const reducedMotionStore = useUIStore((s) => s.reducedMotion);
@@ -168,160 +192,197 @@ const CinematicHero: React.FC = () => {
             >
               <motion.div
                 aria-hidden="true"
-                className="pointer-events-none absolute -inset-x-10 -inset-y-6 sm:-inset-x-20 sm:-inset-y-10 rounded-[40px]"
+                className="pointer-events-none absolute -inset-x-12 -inset-y-8 sm:-inset-x-24 sm:-inset-y-14 rounded-[48px]"
                 initial={{ opacity: 0 }}
                 animate={{
-                  opacity: exitBrand ? [0.38, 0] : [0, 0.55, 0.22, 0.42, 0.18],
+                  opacity: exitBrand ? [0.5, 0] : [0, 0.82, 0.34, 0.62, 0.28],
+                  scale: exitBrand ? [1, 1.04] : [0.97, 1.01, 0.995, 1.015, 1],
                 }}
                 transition={{
-                  duration: exitBrand ? 0.8 : 3.2,
-                  times: exitBrand ? [0, 1] : [0, 0.22, 0.5, 0.78, 1],
+                  duration: exitBrand ? 0.95 : 4.6,
+                  times: exitBrand ? [0, 1] : [0, 0.2, 0.46, 0.74, 1],
                   ease: 'easeOut',
                 }}
                 style={{
                   background:
-                    'radial-gradient(ellipse 62% 52% at 50% 48%, rgba(244,215,123,0.16) 0%, rgba(212,175,55,0.10) 35%, rgba(212,175,55,0.04) 62%, transparent 100%)',
-                  filter: 'blur(18px)',
+                    'radial-gradient(ellipse 58% 50% at 50% 48%, rgba(255,243,202,0.22) 0%, rgba(250,226,148,0.15) 18%, rgba(244,215,123,0.12) 36%, rgba(212,175,55,0.07) 56%, rgba(178,140,35,0.03) 78%, transparent 100%), radial-gradient(ellipse 38% 32% at 50% 44%, rgba(255,251,232,0.16) 0%, transparent 65%)',
+                  filter: 'blur(22px)',
+                }}
+              />
+              <motion.div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-[22%] top-[36%] bottom-[30%] rounded-full"
+                initial={{ opacity: 0 }}
+                animate={{
+                  opacity: exitBrand ? [0.28, 0] : [0, 0.48, 0.14, 0.36, 0.1],
+                }}
+                transition={{
+                  duration: exitBrand ? 0.7 : 4.2,
+                  times: exitBrand ? [0, 1] : [0, 0.25, 0.5, 0.76, 1],
+                  ease: 'easeOut',
+                }}
+                style={{
+                  background:
+                    'radial-gradient(ellipse 60% 55% at 50% 50%, rgba(255,246,214,0.30) 0%, rgba(244,215,123,0.10) 45%, transparent 78%)',
+                  filter: 'blur(14px)',
+                  mixBlendMode: 'screen',
                 }}
               />
 
-              <div className="relative space-y-1">
-                {BRAND_LINES.map((line, lineIdx) => (
-                <motion.div
-                  key={line.text}
-                  variants={LINE}
-                  custom={lineIdx}
-                  className="relative overflow-visible"
-                  style={{
-                    lineHeight: 1.02,
-                  }}
-                >
-                  <motion.div
-                    variants={WORD}
-                    className="inline-flex flex-wrap justify-center items-baseline"
-                    style={{ transformStyle: 'preserve-3d' }}
-                  >
-                    {line.text.split(' ').map((word, wordIdx) => (
-                      <React.Fragment key={`${lineIdx}-${wordIdx}`}>
-                        {wordIdx > 0 && (
-                        <span
-                          className="inline-block"
-                          style={{
-                            width: 'clamp(0.3em, 0.65vw, 0.48em)',
-                          }}
-                          aria-hidden="true"
-                        />
-                      )}
-                      <motion.span
-                        key={`w-${lineIdx}-${wordIdx}`}
-                        className="inline-flex"
+              <div className="relative space-y-0.5 sm:space-y-1">
+                {(() => {
+                  let flatLetterIdx = 0;
+                  return BRAND_LINES.map((line, lineIdx) => (
+                    <motion.div
+                      key={line.text}
+                      variants={LINE}
+                      custom={lineIdx}
+                      className="relative overflow-visible"
+                      style={{ lineHeight: 1.02 }}
+                    >
+                      <motion.div
                         variants={WORD}
+                        className="inline-flex flex-wrap justify-center items-baseline"
+                        style={{ transformStyle: 'preserve-3d' }}
                       >
-                        {Array.from(word).map((ch, chIdx) => {
-                          const globalIdx =
-                            lineIdx * 100 + wordIdx * 20 + chIdx;
-                          return (
+                        {line.text.split(' ').map((word, wordIdx) => (
+                          <React.Fragment key={`${lineIdx}-${wordIdx}`}>
+                            {wordIdx > 0 && (
+                              <span
+                                className="inline-block"
+                                style={{ width: 'clamp(0.35em, 0.7vw, 0.55em)' }}
+                                aria-hidden="true"
+                              />
+                            )}
                             <motion.span
-                              key={`c-${lineIdx}-${wordIdx}-${chIdx}-${lettersKey(globalIdx)}`}
-                              custom={globalIdx}
-                              variants={LETTER}
-                              className={`inline-block font-serif font-medium tracking-tight ${
-                                line.tone === 'gold'
-                                  ? 'text-gold-gradient hero-letter-sheen'
-                                  : 'text-cream'
-                              }`}
-                              style={{
-                                fontSize:
-                                  lineIdx === 0
-                                    ? 'clamp(1.95rem, 7.6vw, 5.4rem)'
-                                    : 'clamp(2.15rem, 8.5vw, 5.9rem)',
-                                transformOrigin: '50% 90%',
-                                backfaceVisibility: 'hidden',
-                              }}
+                              key={`w-${lineIdx}-${wordIdx}`}
+                              className="inline-flex"
+                              variants={WORD}
                             >
-                              {ch}
+                              {Array.from(word).map((ch, chIdx) => {
+                                const letterId = flatLetterIdx;
+                                flatLetterIdx += 1;
+                                return (
+                                  <motion.span
+                                    key={`c-${lineIdx}-${wordIdx}-${chIdx}-${lettersKey(letterId)}`}
+                                    custom={letterId}
+                                    variants={LETTER}
+                                    className={`inline-block font-serif font-medium tracking-[-0.01em] ${
+                                      line.tone === 'gold'
+                                        ? 'hero-gold-text hero-gold-sheen'
+                                        : 'hero-cream-text'
+                                    }`}
+                                    style={{
+                                      fontSize:
+                                        lineIdx === 0
+                                          ? 'clamp(2.05rem, 8.1vw, 5.8rem)'
+                                          : 'clamp(2.25rem, 9vw, 6.3rem)',
+                                      transformOrigin: '50% 90%',
+                                      backfaceVisibility: 'hidden',
+                                    }}
+                                  >
+                                    {ch}
+                                  </motion.span>
+                                );
+                              })}
                             </motion.span>
-                          );
-                        })}
-                      </motion.span>
-                    </React.Fragment>
-                    ))}
-                  </motion.div>
-                </motion.div>
-              ))}
+                          </React.Fragment>
+                        ))}
+                      </motion.div>
+                    </motion.div>
+                  ));
+                })()}
               </div>
 
               <motion.div
-                className="relative mx-auto mt-6 sm:mt-8"
+                className="relative mx-auto mt-6 sm:mt-9"
                 initial={{ scaleX: 0, opacity: 0 }}
                 animate={{
                   scaleX: exitBrand ? 0 : 1,
                   opacity: exitBrand ? 0 : 1,
                 }}
                 transition={{
-                  delay: exitBrand ? 0 : reducedMotion ? 0 : 1.35,
-                  duration: exitBrand ? 0.55 : 1.1,
+                  delay: exitBrand ? 0 : reducedMotion ? 0 : 1.75,
+                  duration: exitBrand ? 0.55 : 1.25,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                style={{
-                  transformOrigin: '50% 50%',
-                }}
+                style={{ transformOrigin: '50% 50%' }}
               >
                 <div
                   className="mx-auto h-px"
                   style={{
-                    width: 'clamp(120px, 28vw, 300px)',
+                    width: 'clamp(140px, 30vw, 320px)',
                     background:
-                      'linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.55) 15%, rgba(244,215,123,0.96) 50%, rgba(212,175,55,0.55) 85%, transparent 100%)',
+                      'linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.35) 12%, rgba(244,215,123,0.75) 28%, rgba(255,243,200,0.98) 50%, rgba(244,215,123,0.75) 72%, rgba(212,175,55,0.35) 88%, transparent 100%)',
+                    boxShadow:
+                      '0 0 18px 0 rgba(244,215,123,0.28), 0 0 42px -6px rgba(212,175,55,0.18)',
                   }}
                 />
                 <motion.div
                   aria-hidden="true"
-                  className="pointer-events-none absolute inset-x-0 -top-3 h-6"
+                  className="pointer-events-none absolute inset-x-0 -top-3 h-7"
                   initial={{ opacity: 0, y: -6 }}
                   animate={{
-                    opacity: exitBrand ? 0 : [0, 1, 0],
-                    y: exitBrand ? 0 : [0, -10, 0],
+                    opacity: exitBrand ? 0 : [0, 0.9, 0, 0.7, 0],
+                    y: exitBrand ? 0 : [0, -12, -4, -14, 0],
                   }}
                   transition={{
-                    delay: exitBrand ? 0 : reducedMotion ? 0 : 2.1,
-                    duration: exitBrand ? 0.4 : 1.4,
+                    delay: exitBrand ? 0 : reducedMotion ? 0 : 2.5,
+                    duration: exitBrand ? 0.4 : 2.4,
                     ease: 'easeOut',
+                    times: exitBrand ? [0, 1] : [0, 0.2, 0.45, 0.75, 1],
                   }}
                   style={{
                     background:
-                      'radial-gradient(ellipse 50% 60% at 50% 50%, rgba(244,215,123,0.62) 0%, rgba(212,175,55,0.22) 45%, transparent 100%)',
-                    filter: 'blur(4px)',
+                      'radial-gradient(ellipse 48% 62% at 50% 50%, rgba(255,236,170,0.72) 0%, rgba(244,215,123,0.34) 38%, rgba(212,175,55,0.14) 68%, transparent 100%)',
+                    filter: 'blur(5px)',
                   }}
                 />
               </motion.div>
 
               <motion.p
-                className="mt-6 sm:mt-7 uppercase text-[10.5px] sm:text-[11.5px] text-cream/58"
-                initial={{ opacity: 0, y: 10, filter: 'blur(6px)' }}
+                className="mt-6 sm:mt-8 uppercase tracking-widest text-[10.5px] sm:text-[11.5px]"
+                initial={{ opacity: 0, y: 10, filter: 'blur(7px)' }}
                 animate={{
                   opacity: exitBrand ? 0 : 1,
                   y: exitBrand ? -6 : 0,
-                  filter: exitBrand ? 'blur(4px)' : 'blur(0px)',
+                  filter: exitBrand ? 'blur(5px)' : 'blur(0px)',
+                  color: exitBrand ? 'rgba(250,238,202,0)' : 'rgba(250,238,202,0.7)',
                 }}
                 transition={{
-                  delay: exitBrand ? 0.1 : reducedMotion ? 0 : 1.6,
-                  duration: exitBrand ? 0.6 : 0.95,
+                  delay: exitBrand ? 0.1 : reducedMotion ? 0 : 2.05,
+                  duration: exitBrand ? 0.6 : 1.05,
                   ease: [0.22, 1, 0.36, 1],
                 }}
                 style={{
-                  letterSpacing: 'clamp(0.28em, 0.52vw, 0.46em)',
+                  letterSpacing: 'clamp(0.3em, 0.55vw, 0.5em)',
+                  textShadow: '0 0 18px rgba(244,215,123,0.12)',
                 }}
               >
-                <span className="inline-flex items-center gap-2 justify-center">
+                <span className="inline-flex items-center gap-2.5 justify-center">
                   <span
-                    className="inline-block w-1.5 h-1.5 rounded-full bg-gold-400/90 shadow-[0_0_10px_2px_rgba(244,215,123,0.85)]"
+                    className="inline-block w-1.5 h-1.5 rounded-full"
+                    style={{
+                      background:
+                        'radial-gradient(circle at 35% 35%, #FFF4C8 0%, #F4D77B 42%, #D4AF37 100%)',
+                      boxShadow:
+                        '0 0 10px 2px rgba(244,215,123,0.85), 0 0 24px 4px rgba(212,175,55,0.38)',
+                    }}
                     aria-hidden="true"
                   />
                   Since 1985
-                  <span className="text-gold-400/70">&middot;</span>
+                  <span style={{ color: 'rgba(228,196,102,0.78)' }}>&middot;</span>
                   Doharighat
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-gold-400/90 shadow-[0_0_10px_2px_rgba(244,215,123,0.85)]" aria-hidden="true" />
+                  <span
+                    className="inline-block w-1.5 h-1.5 rounded-full"
+                    style={{
+                      background:
+                        'radial-gradient(circle at 35% 35%, #FFF4C8 0%, #F4D77B 42%, #D4AF37 100%)',
+                      boxShadow:
+                        '0 0 10px 2px rgba(244,215,123,0.85), 0 0 24px 4px rgba(212,175,55,0.38)',
+                    }}
+                    aria-hidden="true"
+                  />
                 </span>
               </motion.p>
             </motion.div>
