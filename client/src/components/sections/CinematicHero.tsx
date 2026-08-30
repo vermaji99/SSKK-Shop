@@ -49,14 +49,48 @@ const LINE = {
   }),
 };
 
+const BRAND_ANIMATION_TOTAL_MS = 3850;
+const BRAND_EXIT_FADE_MS = 900;
+
 const CinematicHero: React.FC = () => {
   const reducedMotionStore = useUIStore((s) => s.reducedMotion);
   const prefersReducedMotion = useReducedMotion();
   const reducedMotion = reducedMotionStore || prefersReducedMotion;
   const [revealBrand, setRevealBrand] = React.useState(false);
+  const [exitBrand, setExitBrand] = React.useState(false);
+  const [restartToken, setRestartToken] = React.useState<number>(0);
+
+  const timersRef = React.useRef<{
+    restart?: ReturnType<typeof setTimeout>;
+    exit?: ReturnType<typeof setTimeout>;
+  }>({});
 
   const handleFirstPlaybackComplete = React.useCallback(() => {
     setRevealBrand(true);
+    setExitBrand(false);
+
+    if (timersRef.current.restart) clearTimeout(timersRef.current.restart);
+    if (timersRef.current.exit) clearTimeout(timersRef.current.exit);
+
+    const total = reducedMotion ? 800 : BRAND_ANIMATION_TOTAL_MS;
+    const exitStart = Math.max(200, total - BRAND_EXIT_FADE_MS);
+
+    timersRef.current.exit = setTimeout(() => {
+      setExitBrand(true);
+    }, exitStart);
+
+    timersRef.current.restart = setTimeout(() => {
+      setRestartToken((n) => n + 1);
+      setRevealBrand(false);
+      setExitBrand(false);
+    }, total);
+  }, [reducedMotion]);
+
+  React.useEffect(() => {
+    return () => {
+      if (timersRef.current.restart) clearTimeout(timersRef.current.restart);
+      if (timersRef.current.exit) clearTimeout(timersRef.current.exit);
+    };
   }, []);
 
   const lettersKey = React.useCallback((idx: number) => idx, []);
@@ -71,6 +105,7 @@ const CinematicHero: React.FC = () => {
           reducedMotion={reducedMotion}
           hoverPlay
           onFirstPlaybackComplete={handleFirstPlaybackComplete}
+          restartToken={restartToken}
           ariaLabel="Jewellery commercial cinematic showcase — hover to play, tap to play on mobile"
         />
       </div>
@@ -84,31 +119,43 @@ const CinematicHero: React.FC = () => {
         aria-hidden="true"
       />
 
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {revealBrand && (
           <motion.div
             key="hero-brand"
             initial="hidden"
-            animate="show"
-            exit={{ opacity: 0 }}
+            animate={exitBrand ? 'exit' : 'show'}
+            exit={{ opacity: 0, filter: 'blur(10px)', transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } }}
+            variants={{
+              hidden: {},
+              show: {},
+              exit: {},
+            }}
             className="absolute inset-0 z-[2] pointer-events-none flex items-center justify-center px-4 sm:px-6"
             style={{ perspective: '1400px' }}
             aria-hidden={!revealBrand}
           >
             <motion.div
               className="relative text-center"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0, y: 10, scale: 0.992 }}
+              animate={{
+                opacity: exitBrand ? 0 : 1,
+                y: exitBrand ? -18 : 0,
+                scale: exitBrand ? 1.012 : 1,
+                filter: exitBrand ? 'blur(8px)' : 'blur(0px)',
+              }}
+              transition={{ duration: exitBrand ? 0.9 : 0.9, ease: [0.22, 1, 0.36, 1] }}
             >
               <motion.div
                 aria-hidden="true"
                 className="pointer-events-none absolute -inset-x-10 -inset-y-6 sm:-inset-x-20 sm:-inset-y-10 rounded-[40px]"
                 initial={{ opacity: 0 }}
-                animate={{ opacity: [0, 0.55, 0.22, 0.42, 0.18] }}
+                animate={{
+                  opacity: exitBrand ? [0.38, 0] : [0, 0.55, 0.22, 0.42, 0.18],
+                }}
                 transition={{
-                  duration: 3.2,
-                  times: [0, 0.22, 0.5, 0.78, 1],
+                  duration: exitBrand ? 0.8 : 3.2,
+                  times: exitBrand ? [0, 1] : [0, 0.22, 0.5, 0.78, 1],
                   ease: 'easeOut',
                 }}
                 style={{
@@ -188,12 +235,12 @@ const CinematicHero: React.FC = () => {
                 className="relative mx-auto mt-6 sm:mt-8"
                 initial={{ scaleX: 0, opacity: 0 }}
                 animate={{
-                  scaleX: 1,
-                  opacity: 1,
+                  scaleX: exitBrand ? 0 : 1,
+                  opacity: exitBrand ? 0 : 1,
                 }}
                 transition={{
-                  delay: reducedMotion ? 0 : 1.35,
-                  duration: 1.1,
+                  delay: exitBrand ? 0 : reducedMotion ? 0 : 1.35,
+                  duration: exitBrand ? 0.55 : 1.1,
                   ease: [0.22, 1, 0.36, 1],
                 }}
                 style={{
@@ -212,10 +259,13 @@ const CinematicHero: React.FC = () => {
                   aria-hidden="true"
                   className="pointer-events-none absolute inset-x-0 -top-3 h-6"
                   initial={{ opacity: 0, y: -6 }}
-                  animate={{ opacity: [0, 1, 0], y: [0, -10, 0] }}
+                  animate={{
+                    opacity: exitBrand ? 0 : [0, 1, 0],
+                    y: exitBrand ? 0 : [0, -10, 0],
+                  }}
                   transition={{
-                    delay: reducedMotion ? 0 : 2.1,
-                    duration: 1.4,
+                    delay: exitBrand ? 0 : reducedMotion ? 0 : 2.1,
+                    duration: exitBrand ? 0.4 : 1.4,
                     ease: 'easeOut',
                   }}
                   style={{
@@ -229,10 +279,14 @@ const CinematicHero: React.FC = () => {
               <motion.p
                 className="mt-6 sm:mt-7 uppercase text-[10.5px] sm:text-[11.5px] text-cream/58"
                 initial={{ opacity: 0, y: 10, filter: 'blur(6px)' }}
-                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                animate={{
+                  opacity: exitBrand ? 0 : 1,
+                  y: exitBrand ? -6 : 0,
+                  filter: exitBrand ? 'blur(4px)' : 'blur(0px)',
+                }}
                 transition={{
-                  delay: reducedMotion ? 0 : 1.6,
-                  duration: 0.95,
+                  delay: exitBrand ? 0.1 : reducedMotion ? 0 : 1.6,
+                  duration: exitBrand ? 0.6 : 0.95,
                   ease: [0.22, 1, 0.36, 1],
                 }}
                 style={{
