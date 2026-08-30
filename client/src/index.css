@@ -593,6 +593,28 @@
       opacity: 0;
     }
   }
+
+  .hero-letter-sheen {
+    position: relative;
+    background-size: 240% 240%;
+    animation: hero-sheen 10s ease-in-out infinite;
+  }
+
+  @keyframes hero-sheen {
+    0%   { background-position: 0% 50%; filter: drop-shadow(0 4px 14px rgba(212,175,55,0.08)); }
+    18%  { background-position: 60% 50%; filter: drop-shadow(0 8px 26px rgba(244,215,123,0.30)); }
+    35%  { background-position: 120% 50%; filter: drop-shadow(0 5px 18px rgba(212,175,55,0.16)); }
+    55%  { background-position: 70% 50%; filter: drop-shadow(0 10px 32px rgba(244,215,123,0.34)); }
+    75%  { background-position: 20% 50%; filter: drop-shadow(0 6px 20px rgba(212,175,55,0.14)); }
+    100% { background-position: 0% 50%; filter: drop-shadow(0 4px 14px rgba(212,175,55,0.08)); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-letter-sheen {
+      animation: none;
+      background-position: 50% 50%;
+    }
+  }
 }
 
 @layer utilities {

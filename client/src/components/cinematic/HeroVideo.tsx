@@ -10,6 +10,7 @@ interface HeroVideoProps {
   hoverPlay?: boolean;
   onProgress?: (progress: number) => void;
   onReady?: (duration: number) => void;
+  onFirstPlaybackComplete?: () => void;
   ariaLabel?: string;
   containerRef?: React.Ref<HTMLDivElement>;
 }
@@ -29,6 +30,7 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
   hoverPlay = false,
   onProgress,
   onReady,
+  onFirstPlaybackComplete,
   ariaLabel = 'Premium jewellery cinematic showcase',
   containerRef: containerRefProp,
 }) => {
@@ -58,6 +60,8 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
   const idleStartRampRef = React.useRef(0);
   const lastCommitTimeRef = React.useRef(0);
   const scrubLastSmoothRef = React.useRef<number | null>(null);
+  const firstPlaybackCompleteRef = React.useRef(false);
+  const inCompletionWindowRef = React.useRef(false);
 
   const base = isMobile ? 'hero-mobile' : 'hero-desktop';
   const posterWebp = `/hero-video/${base}-poster.webp`;
@@ -408,6 +412,21 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
       if (now - lastTimeUpdateEmit < 50) return;
       lastTimeUpdateEmit = now;
       emitProgress(v.currentTime);
+
+      if (onFirstPlaybackComplete && !firstPlaybackCompleteRef.current) {
+        const dur = durationRef.current || v.duration || 0;
+        if (dur > 0.5 && v.currentTime >= dur - 0.08 && !inCompletionWindowRef.current) {
+          inCompletionWindowRef.current = true;
+          firstPlaybackCompleteRef.current = true;
+          try {
+            onFirstPlaybackComplete();
+          } catch {
+          }
+        }
+        if (inCompletionWindowRef.current && v.currentTime < dur * 0.2) {
+          inCompletionWindowRef.current = false;
+        }
+      }
     };
 
     v.addEventListener('seeked', onSeeked);
