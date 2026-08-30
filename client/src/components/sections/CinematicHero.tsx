@@ -63,14 +63,23 @@ const CinematicHero: React.FC = () => {
   const timersRef = React.useRef<{
     restart?: ReturnType<typeof setTimeout>;
     exit?: ReturnType<typeof setTimeout>;
+    autoTrigger?: ReturnType<typeof setTimeout>;
+    cycleLock?: boolean;
   }>({});
 
-  const handleFirstPlaybackComplete = React.useCallback(() => {
-    setRevealBrand(true);
-    setExitBrand(false);
+  const startBrandCycle = React.useCallback(() => {
+    if (timersRef.current.cycleLock) return;
+    timersRef.current.cycleLock = true;
 
+    if (timersRef.current.autoTrigger) {
+      clearTimeout(timersRef.current.autoTrigger);
+      timersRef.current.autoTrigger = undefined;
+    }
     if (timersRef.current.restart) clearTimeout(timersRef.current.restart);
     if (timersRef.current.exit) clearTimeout(timersRef.current.exit);
+
+    setRevealBrand(true);
+    setExitBrand(false);
 
     const total = reducedMotion ? 800 : BRAND_ANIMATION_TOTAL_MS;
     const exitStart = Math.max(200, total - BRAND_EXIT_FADE_MS);
@@ -83,24 +92,35 @@ const CinematicHero: React.FC = () => {
       setRestartToken((n) => n + 1);
       setRevealBrand(false);
       setExitBrand(false);
+      timersRef.current.cycleLock = false;
     }, total);
   }, [reducedMotion]);
 
+  const handleFirstPlaybackComplete = React.useCallback(() => {
+    startBrandCycle();
+  }, [startBrandCycle]);
+
   React.useEffect(() => {
+    const autoDelay = reducedMotion ? 900 : 2800;
+    timersRef.current.autoTrigger = setTimeout(() => {
+      startBrandCycle();
+    }, autoDelay);
+
     return () => {
+      if (timersRef.current.autoTrigger) clearTimeout(timersRef.current.autoTrigger);
       if (timersRef.current.restart) clearTimeout(timersRef.current.restart);
       if (timersRef.current.exit) clearTimeout(timersRef.current.exit);
     };
-  }, []);
+  }, [reducedMotion, startBrandCycle]);
 
   const lettersKey = React.useCallback((idx: number) => idx, []);
 
   return (
     <section
-      className="relative w-full min-h-[100svh] h-auto sm:min-h-[640px] md:min-h-[720px] lg:min-h-[800px] bg-[#05020A] overflow-hidden isolate select-none"
+      className="relative w-full hero-section-height bg-[#05020A] overflow-hidden isolate select-none"
       aria-label="Premium gold and diamond jewellery showcase"
     >
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 w-full h-full">
         <HeroVideo
           reducedMotion={reducedMotion}
           hoverPlay

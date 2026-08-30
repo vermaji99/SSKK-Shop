@@ -615,6 +615,34 @@
       background-position: 50% 50%;
     }
   }
+
+  .hero-section-height {
+    height: 100vh;
+    height: 100svh;
+    height: 100dvh;
+    min-height: 480px;
+    min-height: -webkit-fill-available;
+    min-height: stretch;
+  }
+
+  @media (min-width: 640px) {
+    .hero-section-height {
+      height: auto;
+      min-height: 640px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .hero-section-height {
+      min-height: 720px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-section-height {
+      min-height: 800px;
+    }
+  }
 }
 
 @layer utilities {
