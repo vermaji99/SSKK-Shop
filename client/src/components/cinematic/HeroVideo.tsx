@@ -269,33 +269,56 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
     const el = innerContainerRef.current;
     if (!el) return;
 
-    if (hoverPlay && !reducedMotion && prefersHover) {
-      const onEnter = () => {
-        isHoveredRef.current = true;
-        stopIdleTick();
-        if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
-        playVideo();
-      };
-      const onLeave = () => {
-        isHoveredRef.current = false;
-        pauseVideo();
-        scheduleIdle();
-      };
+    if (hoverPlay && !reducedMotion) {
+      if (prefersHover) {
+        const onEnter = () => {
+          isHoveredRef.current = true;
+          stopIdleTick();
+          if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
+          playVideo();
+        };
+        const onLeave = () => {
+          isHoveredRef.current = false;
+          pauseVideo();
+          stopIdleTick();
+          if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
+        };
 
-      el.addEventListener('pointerenter', onEnter);
-      el.addEventListener('pointerleave', onLeave);
+        el.addEventListener('pointerenter', onEnter);
+        el.addEventListener('pointerleave', onLeave);
 
-      return () => {
-        el.removeEventListener('pointerenter', onEnter);
-        el.removeEventListener('pointerleave', onLeave);
-        pauseVideo();
-        if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
-        stopIdleTick();
-      };
+        return () => {
+          el.removeEventListener('pointerenter', onEnter);
+          el.removeEventListener('pointerleave', onLeave);
+          pauseVideo();
+          if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
+          stopIdleTick();
+        };
+      } else {
+        const onClick = () => {
+          const v = videoRef.current;
+          if (!v) return;
+          if (v.paused || v.ended) {
+            playVideo();
+          } else {
+            pauseVideo();
+          }
+        };
+
+        el.addEventListener('click', onClick);
+        el.style.cursor = 'pointer';
+
+        return () => {
+          el.removeEventListener('click', onClick);
+          pauseVideo();
+        };
+      }
     }
 
     if (!hoverScrub || reducedMotion || !prefersHover) {
-      scheduleIdle();
+      if (!hoverPlay) {
+        scheduleIdle();
+      }
       return;
     }
 
@@ -444,7 +467,7 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
       return true;
     });
     onReady?.(durationRef.current || 0);
-    if (!hoverPlay || !prefersHover) {
+    if (!hoverPlay && (!prefersHover || reducedMotion)) {
       scheduleIdle();
     }
   }, [onReady, scheduleIdle, emitProgress, reducedMotion, hoverPlay, prefersHover]);
