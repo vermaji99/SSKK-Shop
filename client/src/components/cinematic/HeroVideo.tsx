@@ -14,6 +14,11 @@ interface HeroVideoProps {
   restartToken?: number;
   ariaLabel?: string;
   containerRef?: React.Ref<HTMLDivElement>;
+  mp4SrcOverride?: string;
+  webmSrcOverride?: string;
+  sourceMp4FallbackOverride?: string;
+  posterWebpOverride?: string;
+  posterJpgOverride?: string;
 }
 
 const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
@@ -35,6 +40,11 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
   restartToken,
   ariaLabel = 'Premium jewellery cinematic showcase',
   containerRef: containerRefProp,
+  mp4SrcOverride,
+  webmSrcOverride,
+  sourceMp4FallbackOverride,
+  posterWebpOverride,
+  posterJpgOverride,
 }) => {
   const { isMobile, prefersHover } = useDeviceProfile();
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
@@ -67,11 +77,11 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
   const endCallbackCooldownRef = React.useRef(false);
 
   const base = isMobile ? 'hero-mobile' : 'hero-desktop';
-  const posterWebp = `/hero-video/${base}-poster.webp`;
-  const posterJpg = `/hero-video/${base}-poster.jpg`;
-  const webmSrc = `/hero-video/${base}.webm`;
-  const mp4Src = `/hero-video/${base}.mp4`;
-  const sourceMp4Fallback = `/hero-video/${base}-source.mp4`;
+  const posterWebp = posterWebpOverride === null ? '' : (posterWebpOverride ?? `/hero-video/${base}-poster.webp`);
+  const posterJpg = posterJpgOverride === null ? '' : (posterJpgOverride ?? `/hero-video/${base}-poster.jpg`);
+  const webmSrc = webmSrcOverride === null ? '' : (webmSrcOverride ?? `/hero-video/${base}.webm`);
+  const mp4Src = mp4SrcOverride === null ? '' : (mp4SrcOverride ?? `/hero-video/${base}.mp4`);
+  const sourceMp4Fallback = sourceMp4FallbackOverride === null ? '' : (sourceMp4FallbackOverride ?? `/hero-video/${base}-source.mp4`);
   const fallbackFrame = `/hero-frames/frame_006.jpg`;
 
   const isHoveredRef = React.useRef(false);
@@ -355,6 +365,10 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
   React.useEffect(() => {
     let cancelled = false;
     const tryImage = (url: string, next?: string) => {
+      if (!url) {
+        if (next && !cancelled) tryImage(next);
+        return;
+      }
       const img = new Image();
       img.decoding = 'async';
       img.onload = () => {
@@ -365,7 +379,11 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
       };
       img.src = url;
     };
-    tryImage(posterWebp, posterJpg);
+    if (posterWebp) {
+      tryImage(posterWebp, posterJpg);
+    } else if (posterJpg) {
+      tryImage(posterJpg);
+    }
     const t = setTimeout(() => {
       if (!cancelled) tryImage(fallbackFrame);
     }, 1200);
@@ -561,27 +579,29 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
       aria-label={ariaLabel}
     >
       <picture className="absolute inset-0 w-full h-full block overflow-hidden" style={{ height: '100%', width: '100%' }}>
-        <source srcSet={posterWebp} type="image/webp" />
-        <img
-          src={posterJpg}
-          alt=""
-          aria-hidden="true"
-          decoding="async"
-          loading="eager"
-          className={cn(
-            'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 will-change-transform transition-opacity duration-700 ease-out select-none pointer-events-none',
-            videoReady ? 'opacity-0' : 'opacity-100',
-            posterClassName
-          )}
-          style={{
-            width: 'auto',
-            height: 'auto',
-            minWidth: '100%',
-            minHeight: '100%',
-            maxWidth: 'none',
-            objectFit: 'cover',
-          }}
-        />
+        {posterWebp && <source srcSet={posterWebp} type="image/webp" />}
+        {posterJpg && (
+          <img
+            src={posterJpg}
+            alt=""
+            aria-hidden="true"
+            decoding="async"
+            loading="eager"
+            className={cn(
+              'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 will-change-transform transition-opacity duration-700 ease-out select-none pointer-events-none',
+              videoReady ? 'opacity-0' : 'opacity-100',
+              posterClassName
+            )}
+            style={{
+              width: 'auto',
+              height: 'auto',
+              minWidth: '100%',
+              minHeight: '100%',
+              maxWidth: 'none',
+              objectFit: 'cover',
+            }}
+          />
+        )}
       </picture>
 
       {!posterLoaded && (
@@ -621,9 +641,9 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
         >
           {!reducedMotion && (
             <>
-              <source src={webmSrc} type="video/webm; codecs=vp9" />
-              <source src={mp4Src} type="video/mp4; codecs=avc1.64002a" />
-              <source src={sourceMp4Fallback} type="video/mp4" />
+              {webmSrc && <source src={webmSrc} type="video/webm; codecs=vp9" />}
+              {mp4Src && <source src={mp4Src} type="video/mp4; codecs=avc1.64002a" />}
+              {sourceMp4Fallback && <source src={sourceMp4Fallback} type="video/mp4" />}
             </>
           )}
         </video>

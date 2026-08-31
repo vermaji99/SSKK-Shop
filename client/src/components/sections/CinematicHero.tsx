@@ -2,6 +2,13 @@ import * as React from 'react';
 import { motion, useReducedMotion, AnimatePresence } from 'framer-motion';
 import { useUIStore } from '@/store/uiStore';
 import { HeroVideo } from '@/components/cinematic/HeroVideo';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+
+const HERO_MOBILE_BREAKPOINT = '(max-width: 639.98px)';
+const HERO_MOBILE_MP4 =
+  '/Jewellery_commercial_for_SSKK_202608271422_202608311433.mp4';
+const HERO_DESKTOP_MP4 =
+  '/Jewellery_commercial_for_SSKK_202608271422.mp4';
 
 const BRAND_LINES = [
   { text: 'Shubham Swarn', tone: 'cream' },
@@ -80,6 +87,7 @@ const CinematicHero: React.FC = () => {
   const reducedMotionStore = useUIStore((s) => s.reducedMotion);
   const prefersReducedMotion = useReducedMotion();
   const reducedMotion = reducedMotionStore || prefersReducedMotion;
+  const isMobile = useMediaQuery(HERO_MOBILE_BREAKPOINT);
   const [revealBrand, setRevealBrand] = React.useState(false);
   const [exitBrand, setExitBrand] = React.useState(false);
   const [restartToken, setRestartToken] = React.useState<number>(0);
@@ -151,6 +159,9 @@ const CinematicHero: React.FC = () => {
           onPlaybackEnded={handleFirstPlaybackComplete}
           restartToken={restartToken}
           ariaLabel="Jewellery commercial cinematic showcase — hover to play, tap to play on mobile"
+          webmSrcOverride={null}
+          mp4SrcOverride={isMobile ? HERO_MOBILE_MP4 : HERO_DESKTOP_MP4}
+          sourceMp4FallbackOverride={isMobile ? HERO_MOBILE_MP4 : HERO_DESKTOP_MP4}
         />
       </div>
 
