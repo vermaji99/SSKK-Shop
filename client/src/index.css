@@ -747,10 +747,10 @@
 
   .hero-section-height video,
   .hero-section-height img,
-  .hero-section-height canvas,
+  .hero-section-height picture img,
   .showcase-section-height video,
   .showcase-section-height img,
-  .showcase-section-height canvas {
+  .showcase-section-height picture img {
     width: auto !important;
     height: auto !important;
     min-width: 100% !important;
@@ -764,6 +764,21 @@
     left: 50% !important;
     transform: translate3d(-50%, -50%, 0) !important;
     -webkit-transform: translate3d(-50%, -50%, 0) !important;
+  }
+
+  .hero-section-height canvas,
+  .showcase-section-height canvas {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    transform: none !important;
+    -webkit-transform: none !important;
   }
 }
 

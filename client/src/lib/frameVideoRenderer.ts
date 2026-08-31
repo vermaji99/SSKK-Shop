@@ -13,7 +13,14 @@ export const syncCanvasSize = (
   getDpr: () => number
 ): CanvasMetrics | null => {
   const dpr = getDpr();
-  const { width, height } = canvas.getBoundingClientRect();
+  const parent = canvas.parentElement ?? canvas;
+  const rect = parent.getBoundingClientRect();
+  let { width, height } = rect;
+  if (width === 0 || height === 0) {
+    const fallback = canvas.getBoundingClientRect();
+    width = fallback.width;
+    height = fallback.height;
+  }
   if (width === 0 || height === 0) return null;
 
   const pxW = Math.round(width * dpr);
@@ -38,17 +45,24 @@ const computeCoverRect = (
   offsetX = 0,
   offsetY = 0
 ) => {
-  const imgRatio = img.naturalWidth / img.naturalHeight;
-  const canvasRatio = width / height;
+  const imgRatio = img.naturalWidth / Math.max(1, img.naturalHeight);
+  const canvasRatio = width / Math.max(1, height);
   let drawW: number;
   let drawH: number;
+  let safeScale = Math.max(1, scale);
 
   if (imgRatio > canvasRatio) {
-    drawH = height * scale;
+    drawH = height * safeScale;
     drawW = drawH * imgRatio;
   } else {
-    drawW = width * scale;
+    drawW = width * safeScale;
     drawH = drawW / imgRatio;
+  }
+
+  if (drawW < width || drawH < height) {
+    const extraScale = Math.max(width / Math.max(1, drawW), height / Math.max(1, drawH));
+    drawW *= extraScale;
+    drawH *= extraScale;
   }
 
   return {
@@ -81,7 +95,7 @@ export const renderCinematicFrame = (
   const indexB = Math.min(indexA + 1, images.length - 1);
   const blend = smootherstep(exact - indexA);
 
-  const globalScale = 1.045 - clamped * 0.045;
+  const globalScale = 1.09 - clamped * 0.045;
   const driftX = Math.sin(clamped * Math.PI) * width * 0.005 * driftIntensity;
   const driftY = (clamped - 0.5) * height * 0.007 * driftIntensity;
   const frameDrift = (exact - indexA - 0.5) * width * 0.0025 * driftIntensity;

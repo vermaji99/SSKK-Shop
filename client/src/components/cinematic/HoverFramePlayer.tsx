@@ -348,18 +348,10 @@ export const HoverFramePlayer: React.FC<HoverFramePlayerProps> = ({
       <canvas
         ref={canvasRef}
         className={cn(
-          'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 will-change-transform transition-opacity duration-700',
+          'absolute inset-0 w-full h-full will-change-transform transition-opacity duration-700',
           loaded ? 'opacity-100' : 'opacity-0'
         )}
-        style={{
-          width: 'auto',
-          height: 'auto',
-          minWidth: '100%',
-          minHeight: '100%',
-          maxWidth: 'none',
-          objectFit: 'cover',
-          imageRendering: 'auto',
-        }}
+        style={{ imageRendering: 'auto' }}
       />
 
       <div
