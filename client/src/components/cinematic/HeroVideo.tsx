@@ -556,10 +556,11 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
         hoverScrub && prefersHover && !reducedMotion ? 'touch-none cursor-ew-resize' : '',
         className
       )}
+      style={{ height: '100%', width: '100%', top: 0, left: 0, right: 0, bottom: 0 }}
       role="img"
       aria-label={ariaLabel}
     >
-      <picture className="absolute inset-0 w-full h-full block overflow-hidden">
+      <picture className="absolute inset-0 w-full h-full block overflow-hidden" style={{ height: '100%', width: '100%' }}>
         <source srcSet={posterWebp} type="image/webp" />
         <img
           src={posterJpg}
@@ -572,7 +573,7 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
             videoReady ? 'opacity-0' : 'opacity-100',
             posterClassName
           )}
-          style={{ objectFit: 'cover', objectPosition: '50% 50%' }}
+          style={{ height: '100%', width: '100%', objectFit: 'cover', objectPosition: '50% 50%' }}
         />
       </picture>
 
@@ -600,7 +601,7 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
             'absolute inset-0 w-full h-full object-cover object-center will-change-transform transition-opacity duration-700 ease-out select-none pointer-events-none',
             videoReady && !reducedMotion ? 'opacity-100' : 'opacity-0'
           )}
-          style={{ imageRendering: 'auto', objectFit: 'cover', objectPosition: '50% 50%' }}
+          style={{ height: '100%', width: '100%', objectFit: 'cover', objectPosition: '50% 50%', imageRendering: 'auto' }}
           aria-hidden="true"
         >
           {!reducedMotion && (

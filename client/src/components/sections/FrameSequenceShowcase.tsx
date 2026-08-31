@@ -9,9 +9,8 @@ import {
 const FrameSequenceShowcase: React.FC = () => {
   return (
     <section
-      className="relative w-full overflow-hidden bg-[#05020A] isolate select-none"
+      className="relative w-full overflow-hidden bg-[#05020A] isolate select-none showcase-section-height"
       aria-label="Jewelry cinematic showcase — hover to explore jeweled bird pendant in motion"
-      style={{ minHeight: 'clamp(600px, 92svh, 1020px)' }}
     >
       <HoverFramePlayer
         getFrameUrl={getHeroFrameUrl}

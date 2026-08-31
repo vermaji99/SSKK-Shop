@@ -682,26 +682,65 @@
     height: 100svh;
     height: 100dvh;
     min-height: 480px;
-    min-height: -webkit-fill-available;
-    min-height: stretch;
+  }
+
+  @supports (-webkit-touch-callout: none) {
+    .hero-section-height {
+      min-height: -webkit-fill-available;
+    }
   }
 
   @media (min-width: 640px) {
     .hero-section-height {
-      height: auto;
+      height: clamp(640px, 96svh, 900px);
+      height: clamp(640px, 96dvh, 900px);
       min-height: 640px;
     }
   }
 
   @media (min-width: 768px) {
     .hero-section-height {
+      height: clamp(720px, 94svh, 960px);
+      height: clamp(720px, 94dvh, 960px);
       min-height: 720px;
     }
   }
 
   @media (min-width: 1024px) {
     .hero-section-height {
+      height: clamp(800px, 92svh, 1024px);
+      height: clamp(800px, 92dvh, 1024px);
       min-height: 800px;
+    }
+  }
+
+  .showcase-section-height {
+    height: clamp(600px, 96svh, 1020px);
+    height: clamp(600px, 96dvh, 1020px);
+    min-height: 600px;
+  }
+
+  @media (min-width: 640px) {
+    .showcase-section-height {
+      height: clamp(620px, 94svh, 1020px);
+      height: clamp(620px, 94dvh, 1020px);
+      min-height: 620px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .showcase-section-height {
+      height: clamp(700px, 92svh, 1020px);
+      height: clamp(700px, 92dvh, 1020px);
+      min-height: 700px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .showcase-section-height {
+      height: clamp(780px, 90svh, 1020px);
+      height: clamp(780px, 90dvh, 1020px);
+      min-height: 780px;
     }
   }
 }

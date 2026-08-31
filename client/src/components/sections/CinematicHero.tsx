@@ -144,7 +144,7 @@ const CinematicHero: React.FC = () => {
       className="relative w-full hero-section-height bg-[#05020A] overflow-hidden isolate select-none"
       aria-label="Premium gold and diamond jewellery showcase"
     >
-      <div className="absolute inset-0 z-0 w-full h-full">
+      <div className="absolute inset-0 z-0 w-full h-full" style={{ height: '100%', width: '100%', top: 0, left: 0, right: 0, bottom: 0 }}>
         <HeroVideo
           reducedMotion={reducedMotion}
           hoverPlay

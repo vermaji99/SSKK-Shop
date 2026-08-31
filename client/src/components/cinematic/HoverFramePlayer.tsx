@@ -314,6 +314,7 @@ export const HoverFramePlayer: React.FC<HoverFramePlayerProps> = ({
       )}
       style={{
         ...(aspectRatio ? { aspectRatio } : {}),
+        ...(isHero ? { height: '100%', width: '100%', top: 0, left: 0, right: 0, bottom: 0 } : {}),
         touchAction: touchLocked ? 'none' : 'pan-y',
       }}
       onPointerEnter={() => {
@@ -350,7 +351,7 @@ export const HoverFramePlayer: React.FC<HoverFramePlayerProps> = ({
           'absolute inset-0 w-full h-full will-change-transform transition-opacity duration-700',
           loaded ? 'opacity-100' : 'opacity-0'
         )}
-        style={{ imageRendering: 'auto' }}
+        style={{ height: '100%', width: '100%', imageRendering: 'auto' }}
       />
 
       <div
