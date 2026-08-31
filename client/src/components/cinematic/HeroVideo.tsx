@@ -559,7 +559,7 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
       role="img"
       aria-label={ariaLabel}
     >
-      <picture className="absolute inset-0 w-full h-full block">
+      <picture className="absolute inset-0 w-full h-full block overflow-hidden">
         <source srcSet={posterWebp} type="image/webp" />
         <img
           src={posterJpg}
@@ -568,10 +568,13 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
           decoding="async"
           loading="eager"
           className={cn(
-            'absolute inset-0 w-full h-full object-cover will-change-transform transition-opacity duration-700 ease-out select-none pointer-events-none',
+            'absolute inset-0 will-change-transform transition-opacity duration-700 ease-out select-none pointer-events-none object-center',
+            'max-sm:h-full max-sm:w-auto max-sm:min-w-full max-sm:max-w-none',
+            'sm:w-full sm:h-full sm:object-cover',
             videoReady ? 'opacity-0' : 'opacity-100',
             posterClassName
           )}
+          style={{ objectFit: 'cover', objectPosition: 'center center' }}
         />
       </picture>
 
@@ -596,10 +599,12 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
           onLoadedData={handleCanPlay}
           onError={handleVideoError}
           className={cn(
-            'absolute inset-0 w-full h-full object-cover will-change-transform transition-opacity duration-700 ease-out select-none pointer-events-none',
+            'absolute inset-0 will-change-transform transition-opacity duration-700 ease-out select-none pointer-events-none object-center',
+            'max-sm:h-full max-sm:w-auto max-sm:min-w-full max-sm:max-w-none',
+            'sm:w-full sm:h-full sm:object-cover',
             videoReady && !reducedMotion ? 'opacity-100' : 'opacity-0'
           )}
-          style={{ transform: 'translateZ(0)', imageRendering: 'auto' }}
+          style={{ transform: 'translateZ(0)', imageRendering: 'auto', objectFit: 'cover', objectPosition: 'center center' }}
           aria-hidden="true"
         >
           {!reducedMotion && (

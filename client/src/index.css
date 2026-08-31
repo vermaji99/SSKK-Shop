@@ -686,6 +686,18 @@
     min-height: stretch;
   }
 
+  @media (max-width: 639px) {
+    .hero-section-height video,
+    .hero-section-height picture > img {
+      height: 100% !important;
+      width: auto !important;
+      min-width: 100% !important;
+      max-width: none !important;
+      object-fit: cover !important;
+      object-position: center center !important;
+    }
+  }
+
   @media (min-width: 640px) {
     .hero-section-height {
       height: auto;
