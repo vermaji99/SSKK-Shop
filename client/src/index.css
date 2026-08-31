@@ -686,18 +686,6 @@
     min-height: stretch;
   }
 
-  @media (max-width: 639px) {
-    .hero-section-height video,
-    .hero-section-height picture > img {
-      height: 100% !important;
-      width: auto !important;
-      min-width: 100% !important;
-      max-width: none !important;
-      object-fit: cover !important;
-      object-position: center center !important;
-    }
-  }
-
   @media (min-width: 640px) {
     .hero-section-height {
       height: auto;
@@ -733,5 +721,44 @@
 
   .bg-noise {
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  }
+}
+
+/* ==========================================================================
+   HERO MOBILE: HEIGHT-PRIORITY VIDEO/POSTER + CENTER FOCUS
+   Placed OUTSIDE all @layer directives so the cascade can never demote it
+   below Tailwind utilities. Uses !important + double-selector specificity
+   to guarantee it wins over any utility class on devices < 640px wide.
+   ========================================================================== */
+@media (max-width: 639px) {
+  html body .hero-section-height video,
+  html body .hero-section-height picture > img {
+    position: absolute !important;
+    top: 0 !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    height: 100% !important;
+    width: auto !important;
+    min-width: 100% !important;
+    max-width: none !important;
+    object-fit: cover !important;
+    object-position: 50% 50% !important;
+    aspect-ratio: auto !important;
+  }
+
+  html body .hero-section-height,
+  html body .hero-section-height > *,
+  html body .hero-section-height > * > * {
+    min-height: 480px;
+    min-height: -webkit-fill-available;
+    min-height: stretch;
+  }
+
+  html body .hero-section-height {
+    height: 100vh;
+    height: 100svh;
+    height: 100dvh;
   }
 }
