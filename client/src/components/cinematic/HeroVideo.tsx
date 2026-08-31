@@ -38,7 +38,8 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
 }) => {
   const { isMobile, prefersHover } = useDeviceProfile();
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
-  const innerContainerRef = React.useRef<HTMLDivElement>(null);
+  const posterImgRef = React.useRef<HTMLImageElement | null>(null);
+  const innerContainerRef = React.useRef<HTMLDivElement | null>(null);
   const [videoReady, setVideoReady] = React.useState(false);
   const [posterLoaded, setPosterLoaded] = React.useState(false);
   const [videoFallback, setVideoFallback] = React.useState(false);
@@ -548,6 +549,136 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
     }
   }, [restartToken, emitProgress]);
 
+  /* ------------------------------------------------------------------
+   * MOBILE FULL-HEIGHT VIDEO/POSTER: INLINE STYLE INJECTION (NUKE)
+   * All percentage-based heights, CSS-safety rules, and viewport-unit
+   * classes can still be defeated on specific mobile UAs (iOS Safari
+   * address bar, Chrome Android, etc.) by containing-block resolution
+   * quirks. Nothing beats an inline style written at runtime with real
+   * pixel values read from window.innerHeight + window.innerWidth.
+   * We apply the rules with CSSStyleDeclaration.setProperty() so they
+   * win over any stylesheet rule (inline > author stylesheets).
+   * ------------------------------------------------------------------ */
+  React.useEffect(() => {
+    const MOBILE_BREAKPOINT = 640;
+    const MIN_VIEWPORT_H = 480;
+    let cancelled = false;
+    let ro: ResizeObserver | null = null;
+
+    const apply = () => {
+      if (cancelled) return;
+      if (typeof window === 'undefined') return;
+      const isSmallViewport = window.innerWidth < MOBILE_BREAKPOINT;
+      const poster = posterImgRef.current;
+      const video = videoRef.current;
+      const els: HTMLElement[] = [];
+      if (poster) els.push(poster);
+      if (video) els.push(video);
+      if (els.length === 0) return;
+
+      for (const el of els) {
+        const d = el.style;
+        if (isSmallViewport) {
+          const vh = Math.max(MIN_VIEWPORT_H, window.innerHeight || 0);
+          const vw = window.innerWidth || 0;
+          d.setProperty('position', 'fixed', 'important');
+          d.setProperty('top', '50%', 'important');
+          d.setProperty('left', '50%', 'important');
+          d.setProperty('right', 'auto', 'important');
+          d.setProperty('bottom', 'auto', 'important');
+          d.setProperty('transform', `translate3d(-50%, -50%, 0)`, 'important');
+          d.setProperty('width', 'auto', 'important');
+          d.setProperty('min-width', `${vw}px`, 'important');
+          d.setProperty('max-width', 'none', 'important');
+          d.setProperty('height', `${vh}px`, 'important');
+          d.setProperty('min-height', `${vh}px`, 'important');
+          d.setProperty('object-fit', 'cover', 'important');
+          d.setProperty('object-position', '50% 50%', 'important');
+          d.setProperty('aspect-ratio', 'auto', 'important');
+          d.setProperty('display', 'block', 'important');
+          d.setProperty('z-index', '0', 'important');
+          d.setProperty('pointer-events', 'none', 'important');
+          d.setProperty('backface-visibility', 'hidden', 'important');
+          d.setProperty('contain', 'layout paint size', 'important');
+        } else {
+          d.removeProperty('position');
+          d.removeProperty('top');
+          d.removeProperty('left');
+          d.removeProperty('right');
+          d.removeProperty('bottom');
+          d.removeProperty('transform');
+          d.removeProperty('width');
+          d.removeProperty('min-width');
+          d.removeProperty('max-width');
+          d.removeProperty('height');
+          d.removeProperty('min-height');
+          d.removeProperty('object-fit');
+          d.removeProperty('object-position');
+          d.removeProperty('aspect-ratio');
+          d.removeProperty('display');
+          d.removeProperty('z-index');
+          d.removeProperty('pointer-events');
+          d.removeProperty('backface-visibility');
+          d.removeProperty('contain');
+        }
+      }
+
+      const container = innerContainerRef.current as HTMLElement | null;
+      if (container) {
+        if (isSmallViewport) {
+          const vh = Math.max(MIN_VIEWPORT_H, window.innerHeight || 0);
+          container.style.setProperty('height', `${vh}px`, 'important');
+          container.style.setProperty('min-height', `${vh}px`, 'important');
+        } else {
+          container.style.removeProperty('height');
+          container.style.removeProperty('min-height');
+        }
+      }
+    };
+
+    apply();
+
+    let raf = 0;
+    const schedule = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(apply);
+    };
+    window.addEventListener('resize', schedule, { passive: true });
+    window.addEventListener('orientationchange', schedule, { passive: true });
+    window.addEventListener('visualViewport', schedule, { passive: true });
+    try {
+      if (typeof ResizeObserver !== 'undefined') {
+        ro = new ResizeObserver(schedule);
+        if (document.documentElement) ro.observe(document.documentElement);
+        if (document.body) ro.observe(document.body);
+      }
+    } catch {}
+    if ('visualViewport' in window && window.visualViewport) {
+      (window.visualViewport as VisualViewport).addEventListener('resize', schedule, { passive: true });
+      (window.visualViewport as VisualViewport).addEventListener('scroll', schedule, { passive: true });
+    }
+
+    const reapplyInterval = window.setInterval(() => {
+      if (typeof window !== 'undefined' && window.innerWidth < MOBILE_BREAKPOINT) {
+        schedule();
+      }
+    }, 750);
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', schedule);
+      window.removeEventListener('orientationchange', schedule);
+      window.removeEventListener('visualViewport', schedule);
+      try { ro?.disconnect(); } catch {}
+      if ('visualViewport' in window && window.visualViewport) {
+        (window.visualViewport as VisualViewport).removeEventListener('resize', schedule);
+        (window.visualViewport as VisualViewport).removeEventListener('scroll', schedule);
+      }
+      clearInterval(reapplyInterval);
+    };
+  }, []);
+
   return (
     <div
       ref={containerRef}
@@ -563,6 +694,7 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
       <picture className="absolute inset-0 w-full h-full block overflow-hidden max-sm:h-screen max-sm:h-[100svh] max-sm:h-[100dvh] max-sm:min-h-[480px]">
         <source srcSet={posterWebp} type="image/webp" />
         <img
+          ref={posterImgRef}
           src={posterJpg}
           alt=""
           aria-hidden="true"
