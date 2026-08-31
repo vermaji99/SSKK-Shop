@@ -571,6 +571,7 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
       ref={containerRef}
       className={cn(
         'absolute inset-0 w-full h-full overflow-hidden bg-[#05020A]',
+        isMobile ? 'hero-video-contain' : '',
         hoverScrub && prefersHover && !reducedMotion ? 'touch-none cursor-ew-resize' : '',
         className
       )}

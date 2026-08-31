@@ -766,6 +766,22 @@
     -webkit-transform: translate3d(-50%, -50%, 0) !important;
   }
 
+  @media (max-width: 639.98px) {
+    .hero-video-contain,
+    .hero-video-contain video,
+    .hero-video-contain picture img {
+      min-width: auto !important;
+      min-height: auto !important;
+      max-width: 100% !important;
+      max-height: 100% !important;
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: contain !important;
+      -o-object-fit: contain !important;
+      background: #05020A;
+    }
+  }
+
   .hero-section-height canvas,
   .showcase-section-height canvas {
     width: 100% !important;
