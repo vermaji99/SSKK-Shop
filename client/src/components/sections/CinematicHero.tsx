@@ -144,7 +144,7 @@ const CinematicHero: React.FC = () => {
       className="relative w-full hero-section-height bg-[#05020A] overflow-hidden isolate select-none"
       aria-label="Premium gold and diamond jewellery showcase"
     >
-      <div className="absolute inset-0 z-0 w-full h-full">
+      <div className="absolute inset-0 z-0 w-full h-full max-sm:h-screen max-sm:h-[100svh] max-sm:h-[100dvh] max-sm:min-h-[480px]">
         <HeroVideo
           reducedMotion={reducedMotion}
           hoverPlay
@@ -175,7 +175,7 @@ const CinematicHero: React.FC = () => {
               show: {},
               exit: {},
             }}
-            className="absolute inset-0 z-[2] pointer-events-none flex items-center justify-center px-4 sm:px-6"
+            className="absolute inset-0 z-[2] pointer-events-none flex items-center justify-center px-4 sm:px-6 max-sm:items-start max-sm:pt-[22vh] max-sm:pt-[22svh] max-sm:pt-[22dvh]"
             style={{ perspective: '1400px' }}
             aria-hidden={!revealBrand}
           >

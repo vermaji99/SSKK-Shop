@@ -553,13 +553,14 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
       ref={containerRef}
       className={cn(
         'absolute inset-0 w-full h-full overflow-hidden bg-[#05020A]',
+        'max-sm:h-screen max-sm:h-[100svh] max-sm:h-[100dvh] max-sm:min-h-[480px]',
         hoverScrub && prefersHover && !reducedMotion ? 'touch-none cursor-ew-resize' : '',
         className
       )}
       role="img"
       aria-label={ariaLabel}
     >
-      <picture className="absolute inset-0 w-full h-full block overflow-hidden">
+      <picture className="absolute inset-0 w-full h-full block overflow-hidden max-sm:h-screen max-sm:h-[100svh] max-sm:h-[100dvh] max-sm:min-h-[480px]">
         <source srcSet={posterWebp} type="image/webp" />
         <img
           src={posterJpg}
@@ -568,11 +569,12 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
           decoding="async"
           loading="eager"
           className={cn(
-            'absolute will-change-transform transition-opacity duration-700 ease-out select-none pointer-events-none object-center',
-            'inset-0 sm:w-full sm:h-full sm:object-cover',
-            'max-sm:top-0 max-sm:right-auto max-sm:bottom-auto max-sm:left-1/2 max-sm:-translate-x-1/2',
-            'max-sm:h-full max-sm:w-auto max-sm:min-w-full max-sm:max-w-none',
-            'max-sm:object-[50%_50%]',
+            'absolute will-change-transform transition-opacity duration-700 ease-out select-none pointer-events-none',
+            'inset-0 sm:w-full sm:h-full sm:object-cover sm:object-center',
+            'max-sm:top-1/2 max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:-translate-y-1/2',
+            'max-sm:h-full max-sm:h-screen max-sm:h-[100svh] max-sm:h-[100dvh] max-sm:min-h-[480px]',
+            'max-sm:w-auto max-sm:min-w-full max-sm:max-w-none',
+            'max-sm:object-cover max-sm:object-[50%_50%]',
             videoReady ? 'opacity-0' : 'opacity-100',
             posterClassName
           )}
@@ -601,11 +603,12 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
           onLoadedData={handleCanPlay}
           onError={handleVideoError}
           className={cn(
-            'absolute will-change-transform transition-opacity duration-700 ease-out select-none pointer-events-none object-center',
-            'inset-0 sm:w-full sm:h-full sm:object-cover',
-            'max-sm:top-0 max-sm:right-auto max-sm:bottom-auto max-sm:left-1/2 max-sm:-translate-x-1/2',
-            'max-sm:h-full max-sm:w-auto max-sm:min-w-full max-sm:max-w-none',
-            'max-sm:object-[50%_50%]',
+            'absolute will-change-transform transition-opacity duration-700 ease-out select-none pointer-events-none',
+            'inset-0 sm:w-full sm:h-full sm:object-cover sm:object-center',
+            'max-sm:top-1/2 max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:-translate-y-1/2',
+            'max-sm:h-full max-sm:h-screen max-sm:h-[100svh] max-sm:h-[100dvh] max-sm:min-h-[480px]',
+            'max-sm:w-auto max-sm:min-w-full max-sm:max-w-none',
+            'max-sm:object-cover max-sm:object-[50%_50%]',
             videoReady && !reducedMotion ? 'opacity-100' : 'opacity-0'
           )}
           style={{ imageRendering: 'auto', objectFit: 'cover', objectPosition: '50% 50%' }}
