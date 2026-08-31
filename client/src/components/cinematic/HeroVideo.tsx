@@ -569,11 +569,18 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
           decoding="async"
           loading="eager"
           className={cn(
-            'absolute inset-0 w-full h-full object-cover object-center will-change-transform transition-opacity duration-700 ease-out select-none pointer-events-none',
+            'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 will-change-transform transition-opacity duration-700 ease-out select-none pointer-events-none',
             videoReady ? 'opacity-0' : 'opacity-100',
             posterClassName
           )}
-          style={{ height: '100%', width: '100%', objectFit: 'cover', objectPosition: '50% 50%' }}
+          style={{
+            width: 'auto',
+            height: 'auto',
+            minWidth: '100%',
+            minHeight: '100%',
+            maxWidth: 'none',
+            objectFit: 'cover',
+          }}
         />
       </picture>
 
@@ -598,10 +605,18 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
           onLoadedData={handleCanPlay}
           onError={handleVideoError}
           className={cn(
-            'absolute inset-0 w-full h-full object-cover object-center will-change-transform transition-opacity duration-700 ease-out select-none pointer-events-none',
+            'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 will-change-transform transition-opacity duration-700 ease-out select-none pointer-events-none',
             videoReady && !reducedMotion ? 'opacity-100' : 'opacity-0'
           )}
-          style={{ height: '100%', width: '100%', objectFit: 'cover', objectPosition: '50% 50%', imageRendering: 'auto' }}
+          style={{
+            width: 'auto',
+            height: 'auto',
+            minWidth: '100%',
+            minHeight: '100%',
+            maxWidth: 'none',
+            objectFit: 'cover',
+            imageRendering: 'auto',
+          }}
           aria-hidden="true"
         >
           {!reducedMotion && (

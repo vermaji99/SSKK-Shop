@@ -715,33 +715,55 @@
   }
 
   .showcase-section-height {
-    height: clamp(600px, 96svh, 1020px);
-    height: clamp(600px, 96dvh, 1020px);
+    height: 100vh;
+    height: 100svh;
+    height: 100dvh;
     min-height: 600px;
   }
 
   @media (min-width: 640px) {
     .showcase-section-height {
-      height: clamp(620px, 94svh, 1020px);
-      height: clamp(620px, 94dvh, 1020px);
-      min-height: 620px;
+      height: clamp(640px, 96svh, 1020px);
+      height: clamp(640px, 96dvh, 1020px);
+      min-height: 640px;
     }
   }
 
   @media (min-width: 768px) {
     .showcase-section-height {
-      height: clamp(700px, 92svh, 1020px);
-      height: clamp(700px, 92dvh, 1020px);
-      min-height: 700px;
+      height: clamp(720px, 94svh, 1020px);
+      height: clamp(720px, 94dvh, 1020px);
+      min-height: 720px;
     }
   }
 
   @media (min-width: 1024px) {
     .showcase-section-height {
-      height: clamp(780px, 90svh, 1020px);
-      height: clamp(780px, 90dvh, 1020px);
-      min-height: 780px;
+      height: clamp(800px, 92svh, 1020px);
+      height: clamp(800px, 92dvh, 1020px);
+      min-height: 800px;
     }
+  }
+
+  .hero-section-height video,
+  .hero-section-height img,
+  .hero-section-height canvas,
+  .showcase-section-height video,
+  .showcase-section-height img,
+  .showcase-section-height canvas {
+    width: auto !important;
+    height: auto !important;
+    min-width: 100% !important;
+    min-height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    object-fit: cover !important;
+    -o-object-fit: cover !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate3d(-50%, -50%, 0) !important;
+    -webkit-transform: translate3d(-50%, -50%, 0) !important;
   }
 }
 
