@@ -5,6 +5,7 @@ import { Button, SectionTitle, AnimatedCounter, GoldDivider } from '@/components
 import SEO from '@/components/common/SEO';
 import { PAGE_SEO } from '@/config/seo';
 import { cn } from '@/lib/utils';
+import { JEWELRY_IMAGES } from '@/config/assets';
 
 const stats = [
   { value: 25, suffix: '+', label: 'Years in Business', icon: Award },
@@ -102,25 +103,24 @@ const About = () => {
             className="relative"
           >
             <div className="relative aspect-[4/5] overflow-hidden border-2 border-gold-400/30 shadow-gold-glow-lg">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-800 via-purple-900 to-background-tertiary" />
-              <div
-                className="absolute inset-0 opacity-60"
-                style={{
-                  backgroundImage:
-                    'radial-gradient(circle at 50% 40%, rgba(212, 175, 55, 0.3) 0%, transparent 50%)',
-                }}
+              <img
+                src={JEWELRY_IMAGES.royalRing}
+                alt="Royal handcrafted 22K gold diamond ring — SSKK signature design"
+                className="w-full h-full object-cover"
+                loading="lazy"
               />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center p-8">
-                  <div className="w-28 h-28 mx-auto mb-8 rounded-full gold-gradient flex items-center justify-center shadow-gold-glow-xl animate-gold-glow">
-                    <Gem className="w-14 h-14 text-purple-900" strokeWidth={1.5} />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+              <div className="absolute inset-0 flex items-end p-6 sm:p-8 md:p-10">
+                <div className="text-left">
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 mb-5 rounded-full gold-gradient/90 flex items-center justify-center shadow-gold-glow-lg animate-gold-glow border border-gold-300/40">
+                    <Gem className="w-10 h-10 sm:w-12 sm:h-12 text-purple-900" strokeWidth={1.5} />
                   </div>
-                  <p className="heading-serif text-cream text-2xl md:text-3xl font-bold italic">
+                  <p className="heading-serif text-cream text-xl sm:text-2xl md:text-3xl font-bold italic leading-snug">
                     "Jewelry is the most transformative thing you can wear."
                   </p>
-                  <GoldDivider className="my-6 mx-auto" width={60} thickness={2} />
-                  <p className="text-gold-300 uppercase tracking-widest text-sm font-semibold">
-                    SSKK Est. 2000
+                  <GoldDivider className="my-5" width={60} thickness={2} />
+                  <p className="text-gold-300 uppercase tracking-widest text-xs sm:text-sm font-semibold">
+                    SSKK Est. 2000 — Doharighat, Mau
                   </p>
                 </div>
               </div>
@@ -261,25 +261,31 @@ const About = () => {
             className="order-1 lg:order-2 relative"
           >
             <div className="relative aspect-square overflow-hidden border-2 border-gold-400/30">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-background-tertiary to-purple-800" />
+              <img
+                src={JEWELRY_IMAGES.birdLocket}
+                alt="Handcrafted gold bird locket pendant — artisan-crafted in SSKK Doharighat workshop"
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-black/30 via-transparent to-black/55" />
               <div
-                className="absolute inset-0 opacity-50"
+                className="absolute inset-0 opacity-50 pointer-events-none"
                 style={{
                   backgroundImage:
-                    'radial-gradient(circle at 30% 30%, rgba(212, 175, 55, 0.25) 0%, transparent 40%), radial-gradient(circle at 70% 70%, rgba(212, 175, 55, 0.2) 0%, transparent 40%)',
+                    'radial-gradient(circle at 30% 25%, rgba(212, 175, 55, 0.22) 0%, transparent 45%), radial-gradient(circle at 75% 75%, rgba(212, 175, 55, 0.16) 0%, transparent 40%)',
                 }}
               />
-              <div className="absolute inset-0 flex items-center justify-center p-8">
-                <div className="text-center">
-                  <div className="w-36 h-36 mx-auto mb-8 rounded-full gold-gradient flex items-center justify-center shadow-gold-glow-xl">
-                    <Users className="w-18 h-18 text-purple-900" strokeWidth={1.5} style={{ width: 72, height: 72 }} />
+              <div className="absolute inset-0 flex items-end p-6 sm:p-8 md:p-10">
+                <div className="text-left">
+                  <div className="w-24 h-24 sm:w-28 sm:h-28 mb-5 rounded-full gold-gradient/90 flex items-center justify-center shadow-gold-glow-xl border border-gold-300/40">
+                    <Users className="text-purple-900" strokeWidth={1.5} style={{ width: 52, height: 52 }} />
                   </div>
-                  <h3 className="heading-serif text-cream text-2xl md:text-3xl font-bold mb-3">
-                    Family of Artisans
+                  <h3 className="heading-serif text-cream text-xl sm:text-2xl md:text-3xl font-bold mb-3 leading-tight">
+                    Family of Master Artisans
                   </h3>
-                  <p className="text-text-muted text-base">
+                  <p className="text-cream/85 text-sm sm:text-base leading-relaxed max-w-sm">
                     50+ skilled craftspeople, each a master in their specialty, united by a
-                    shared passion for timeless beauty.
+                    shared passion for timeless Indian gold jewelry.
                   </p>
                 </div>
               </div>
@@ -357,13 +363,13 @@ const About = () => {
             <div className="mt-10 flex flex-wrap justify-center gap-5">
               <Button size="lg" asChild>
                 <Link to="/collections">
-                  Explore Collections
+                  Explore 22K Gold & Diamond Collections
                   <ArrowRight className="w-5 h-5" />
                 </Link>
               </Button>
               <Button variant="secondary" size="lg" asChild>
                 <Link to="/contact">
-                  Get in Touch
+                  Book a Private Showroom Consultation
                 </Link>
               </Button>
             </div>

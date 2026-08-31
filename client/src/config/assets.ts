@@ -3,14 +3,21 @@ export const publicAsset = (fileName: string): string => encodeURI(`/${fileName}
 
 export const JEWELRY_IMAGES = {
   ring: publicAsset('Luxury Gold Diamond Ring.png'),
+  royalRing: publicAsset('Royal Ring.jpg'),
+  ringSet: publicAsset('Ring_s.png'),
   necklace: publicAsset('Luxury Gold Necklace.png'),
+  haarSet: publicAsset('Haar Set.png'),
   bridalSet: publicAsset('Bridal Necklace Set.png'),
   earrings: publicAsset('Diamond Earrings.png'),
   jhumka: publicAsset('Jhumka.png'),
-  bangle: publicAsset('Gold Bangle.png'),
-  bangleAlt: publicAsset('Gold Bangle (2).png'),
+  jhumkaAlt: publicAsset('Jhumka_2.png'),
+  bangle: publicAsset('Gold Bangle (2).png'),
+  bangleAlt: publicAsset('Gold Bangle.png'),
   chain: publicAsset('Gold Diamond Chain.png'),
-  pendant: publicAsset('Pendant.png'),
+  pendant: publicAsset('Pendent2.png'),
+  pendantAlt: publicAsset('Pendant.png'),
+  pendantNath: publicAsset('Pendant_4.png'),
+  birdLocket: publicAsset('Bird_locket.png'),
   showcase: publicAsset('ChatGPT Image Aug 11, 2026, 03_35_08 PM.png'),
 } as const;
 
@@ -44,6 +51,6 @@ export const CATEGORY_IMAGE_BY_SLUG: Record<string, string> = {
   chains: JEWELRY_IMAGES.chain,
   bangles: JEWELRY_IMAGES.bangle,
   bridal: JEWELRY_IMAGES.bridalSet,
-  nath: JEWELRY_IMAGES.pendant,
+  nath: JEWELRY_IMAGES.pendantNath,
   pendants: JEWELRY_IMAGES.pendant,
 };

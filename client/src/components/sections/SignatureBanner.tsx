@@ -16,7 +16,7 @@ const SignatureBanner: React.FC = () => {
   const contentRef = React.useRef<HTMLDivElement>(null);
   const contentInView = useInView(contentRef, { once: true, margin: '-100px' });
 
-  const bannerUrl = JEWELRY_IMAGES.bridalSet;
+  const bannerUrl = JEWELRY_IMAGES.haarSet;
 
   return (
     <section

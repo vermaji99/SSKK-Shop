@@ -6,11 +6,11 @@ import { SectionTitle } from '@/components/ui';
 import { JEWELRY_IMAGES } from '@/config/assets';
 
 const bridalImages = [
-  { src: JEWELRY_IMAGES.bridalSet, alt: 'Bridal gold necklace set', className: 'col-span-2 row-span-2' },
-  { src: JEWELRY_IMAGES.jhumka, alt: 'Bridal jhumka earrings', className: 'col-span-1 row-span-1' },
-  { src: JEWELRY_IMAGES.necklace, alt: 'Bridal necklace', className: 'col-span-1 row-span-1' },
-  { src: JEWELRY_IMAGES.pendant, alt: 'Traditional nath pendant', className: 'col-span-1 row-span-1' },
-  { src: JEWELRY_IMAGES.bangle, alt: 'Bridal gold bangles', className: 'col-span-1 row-span-1' },
+  { src: JEWELRY_IMAGES.bridalSet, alt: 'Bridal gold necklace set with maang tikka', className: 'col-span-2 row-span-2' },
+  { src: JEWELRY_IMAGES.jhumkaAlt, alt: 'Bridal gold jhumka earrings — alternate pair', className: 'col-span-1 row-span-1' },
+  { src: JEWELRY_IMAGES.haarSet, alt: 'Traditional bridal haar long necklace set', className: 'col-span-1 row-span-1' },
+  { src: JEWELRY_IMAGES.pendantNath, alt: 'Traditional bridal nath with pendant nose ring', className: 'col-span-1 row-span-1' },
+  { src: JEWELRY_IMAGES.bangleAlt, alt: 'Bridal gold bangles stack — pair set', className: 'col-span-1 row-span-1' },
 ];
 
 const BridalCollection: React.FC = () => {

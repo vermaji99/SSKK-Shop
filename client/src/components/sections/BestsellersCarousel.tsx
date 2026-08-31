@@ -123,7 +123,7 @@ const BestsellersCarousel: React.FC = () => {
               to={hasRealBestsellers ? '/collections?bestseller=true' : '/collections'}
               className="hidden sm:inline-flex items-center gap-2 text-gold-400 uppercase tracking-[0.2em] text-xs font-semibold ml-2"
             >
-              View All <ArrowRight className="w-4 h-4" />
+              View {hasRealBestsellers ? 'All Bestsellers' : 'All Jewellery'} <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
@@ -158,9 +158,18 @@ const BestsellersCarousel: React.FC = () => {
             ))}
           </div>
         ) : (
-          <p className="text-center text-text-muted py-16 font-serif">
-            Explore our complete jewellery collection to discover signature pieces from Doharighat.
-          </p>
+          <div className="text-center py-14 md:py-16 px-6 border border-purple-700/40 bg-background-tertiary/40">
+            <p className="text-center text-text-muted py-2 font-serif text-lg md:text-xl max-w-lg mx-auto leading-relaxed">
+              Explore our complete jewellery collection to discover signature 22K gold rings, bridal sets, and diamond pieces from our Doharighat showroom.
+            </p>
+            <Link
+              to="/collections"
+              className="btn-primary inline-flex items-center gap-2 mt-6"
+            >
+              Browse Full Collection
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
         )}
       </div>
     </section>
