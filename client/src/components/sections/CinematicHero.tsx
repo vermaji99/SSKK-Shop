@@ -1,8 +1,12 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { motion, useReducedMotion, AnimatePresence } from 'framer-motion';
+import { MessageCircle } from 'lucide-react';
 import { useUIStore } from '@/store/uiStore';
 import { HeroVideo } from '@/components/cinematic/HeroVideo';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { Button } from '@/components/ui/Button';
+import { BUSINESS } from '@/config/business';
 
 const HERO_MOBILE_BREAKPOINT = '(max-width: 639.98px)';
 const HERO_MOBILE_MP4 =
@@ -203,40 +207,21 @@ const CinematicHero: React.FC = () => {
             >
               <motion.div
                 aria-hidden="true"
-                className="pointer-events-none absolute -inset-x-12 -inset-y-8 sm:-inset-x-24 sm:-inset-y-14 rounded-[48px]"
+                className="pointer-events-none absolute -inset-x-12 -inset-y-8 sm:-inset-x-20 sm:-inset-y-12 rounded-[48px]"
                 initial={{ opacity: 0 }}
                 animate={{
-                  opacity: exitBrand ? [0.5, 0] : [0, 0.82, 0.34, 0.62, 0.28],
-                  scale: exitBrand ? [1, 1.04] : [0.97, 1.01, 0.995, 1.015, 1],
+                  opacity: exitBrand ? [0.25, 0] : [0, 0.35, 0.16, 0.28, 0.12],
+                  scale: exitBrand ? [1, 1.02] : [0.985, 1.005, 0.998, 1.008, 1],
                 }}
                 transition={{
-                  duration: exitBrand ? 0.95 : 4.6,
-                  times: exitBrand ? [0, 1] : [0, 0.2, 0.46, 0.74, 1],
+                  duration: exitBrand ? 0.9 : 4.6,
+                  times: exitBrand ? [0, 1] : [0, 0.22, 0.48, 0.76, 1],
                   ease: 'easeOut',
                 }}
                 style={{
                   background:
-                    'radial-gradient(ellipse 58% 50% at 50% 48%, rgba(255,243,202,0.22) 0%, rgba(250,226,148,0.15) 18%, rgba(244,215,123,0.12) 36%, rgba(212,175,55,0.07) 56%, rgba(178,140,35,0.03) 78%, transparent 100%), radial-gradient(ellipse 38% 32% at 50% 44%, rgba(255,251,232,0.16) 0%, transparent 65%)',
-                  filter: 'blur(22px)',
-                }}
-              />
-              <motion.div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-x-[22%] top-[36%] bottom-[30%] rounded-full"
-                initial={{ opacity: 0 }}
-                animate={{
-                  opacity: exitBrand ? [0.28, 0] : [0, 0.48, 0.14, 0.36, 0.1],
-                }}
-                transition={{
-                  duration: exitBrand ? 0.7 : 4.2,
-                  times: exitBrand ? [0, 1] : [0, 0.25, 0.5, 0.76, 1],
-                  ease: 'easeOut',
-                }}
-                style={{
-                  background:
-                    'radial-gradient(ellipse 60% 55% at 50% 50%, rgba(255,246,214,0.30) 0%, rgba(244,215,123,0.10) 45%, transparent 78%)',
-                  filter: 'blur(14px)',
-                  mixBlendMode: 'screen',
+                    'radial-gradient(ellipse 55% 48% at 50% 48%, rgba(255,243,202,0.12) 0%, rgba(250,226,148,0.08) 22%, rgba(244,215,123,0.05) 44%, rgba(212,175,55,0.025) 66%, transparent 100%)',
+                  filter: 'blur(18px)',
                 }}
               />
 
@@ -324,29 +309,9 @@ const CinematicHero: React.FC = () => {
                   style={{
                     width: 'clamp(140px, 30vw, 320px)',
                     background:
-                      'linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.35) 12%, rgba(244,215,123,0.75) 28%, rgba(255,243,200,0.98) 50%, rgba(244,215,123,0.75) 72%, rgba(212,175,55,0.35) 88%, transparent 100%)',
+                      'linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.25) 14%, rgba(244,215,123,0.55) 30%, rgba(255,243,200,0.82) 50%, rgba(244,215,123,0.55) 70%, rgba(212,175,55,0.25) 86%, transparent 100%)',
                     boxShadow:
-                      '0 0 18px 0 rgba(244,215,123,0.28), 0 0 42px -6px rgba(212,175,55,0.18)',
-                  }}
-                />
-                <motion.div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-x-0 -top-3 h-7"
-                  initial={{ opacity: 0, y: -6 }}
-                  animate={{
-                    opacity: exitBrand ? 0 : [0, 0.9, 0, 0.7, 0],
-                    y: exitBrand ? 0 : [0, -12, -4, -14, 0],
-                  }}
-                  transition={{
-                    delay: exitBrand ? 0 : reducedMotion ? 0 : 2.5,
-                    duration: exitBrand ? 0.4 : 2.4,
-                    ease: 'easeOut',
-                    times: exitBrand ? [0, 1] : [0, 0.2, 0.45, 0.75, 1],
-                  }}
-                  style={{
-                    background:
-                      'radial-gradient(ellipse 48% 62% at 50% 50%, rgba(255,236,170,0.72) 0%, rgba(244,215,123,0.34) 38%, rgba(212,175,55,0.14) 68%, transparent 100%)',
-                    filter: 'blur(5px)',
+                      '0 0 10px rgba(244,215,123,0.15), 0 0 22px -4px rgba(212,175,55,0.08)',
                   }}
                 />
               </motion.div>
@@ -366,8 +331,7 @@ const CinematicHero: React.FC = () => {
                   ease: [0.22, 1, 0.36, 1],
                 }}
                 style={{
-                  letterSpacing: 'clamp(0.3em, 0.55vw, 0.5em)',
-                  textShadow: '0 0 18px rgba(244,215,123,0.12)',
+                  letterSpacing: 'clamp(0.28em, 0.5vw, 0.45em)',
                 }}
               >
                 <span className="inline-flex items-center gap-2.5 justify-center">
@@ -375,22 +339,22 @@ const CinematicHero: React.FC = () => {
                     className="inline-block w-1.5 h-1.5 rounded-full"
                     style={{
                       background:
-                        'radial-gradient(circle at 35% 35%, #FFF4C8 0%, #F4D77B 42%, #D4AF37 100%)',
+                        'radial-gradient(circle at 35% 35%, #FBE8B3 0%, #E7C65A 50%, #C9A227 100%)',
                       boxShadow:
-                        '0 0 10px 2px rgba(244,215,123,0.85), 0 0 24px 4px rgba(212,175,55,0.38)',
+                        '0 0 6px rgba(244,215,123,0.35), 0 0 14px rgba(212,175,55,0.16)',
                     }}
                     aria-hidden="true"
                   />
-                  Since 1985
-                  <span style={{ color: 'rgba(228,196,102,0.78)' }}>&middot;</span>
-                  Doharighat
+                  {BUSINESS.city}
+                  <span style={{ color: 'rgba(228,196,102,0.65)' }}>&middot;</span>
+                  {BUSINESS.district}
                   <span
                     className="inline-block w-1.5 h-1.5 rounded-full"
                     style={{
                       background:
-                        'radial-gradient(circle at 35% 35%, #FFF4C8 0%, #F4D77B 42%, #D4AF37 100%)',
+                        'radial-gradient(circle at 35% 35%, #FBE8B3 0%, #E7C65A 50%, #C9A227 100%)',
                       boxShadow:
-                        '0 0 10px 2px rgba(244,215,123,0.85), 0 0 24px 4px rgba(212,175,55,0.38)',
+                        '0 0 6px rgba(244,215,123,0.35), 0 0 14px rgba(212,175,55,0.16)',
                     }}
                     aria-hidden="true"
                   />
@@ -400,6 +364,76 @@ const CinematicHero: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          delay: reducedMotion ? 0.15 : 0.5,
+          duration: reducedMotion ? 0.4 : 1.1,
+          ease: [0.22, 1, 0.36, 1],
+        }}
+        className="absolute inset-0 z-[3] pointer-events-auto flex flex-col items-center justify-end px-4 sm:px-6 md:px-8 pb-10 sm:pb-16 md:pb-20"
+        style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 2.5rem)' }}
+      >
+        <div className="w-full max-w-4xl text-center">
+          <h1
+            className="font-serif font-medium leading-[1.05] tracking-[-0.012em] hero-gold-text hero-gold-sheen"
+            style={{
+              fontSize: 'clamp(2rem, 5.4vw, 4.25rem)',
+              textShadow: '0 1px 18px rgba(5,2,10,0.78), 0 0 28px rgba(244,215,123,0.06)',
+            }}
+          >
+            Timeless Jewellery. Made for Your Most Precious Moments.
+          </h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              delay: reducedMotion ? 0.3 : 0.95,
+              duration: reducedMotion ? 0.4 : 0.9,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="mx-auto mt-4 sm:mt-6 max-w-2xl font-sans text-cream/75 text-[13.5px] sm:text-[15px] md:text-[16.5px] leading-relaxed tracking-wide"
+            style={{ letterSpacing: '0.01em' }}
+          >
+            <span className="text-cream/90 font-medium">{BUSINESS.name}</span>
+            <span className="mx-2 text-gold-400/70">&middot;</span>
+            Premium Gold &amp; Diamond Jewellery
+            <span className="mx-2 text-gold-400/70">&middot;</span>
+            {BUSINESS.city}, {BUSINESS.district}
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              delay: reducedMotion ? 0.45 : 1.35,
+              duration: reducedMotion ? 0.4 : 0.95,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="mt-7 sm:mt-9 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4"
+          >
+            <Button asChild variant="primary" size="lg" className="w-full sm:w-auto min-w-[200px]">
+              <Link to="/collections">
+                Explore Jewellery
+              </Link>
+            </Button>
+            <Button asChild variant="secondary" size="lg" className="w-full sm:w-auto min-w-[200px]">
+              <a
+                href={BUSINESS.socials.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="WhatsApp Shubham Swarn Kala Kendra"
+              >
+                <MessageCircle className="h-4.5 w-4.5" strokeWidth={2} />
+                WhatsApp Us
+              </a>
+            </Button>
+          </motion.div>
+        </div>
+      </motion.div>
     </section>
   );
 };

@@ -31,7 +31,7 @@ const Categories: React.FC = () => {
         <SectionTitle
           label="Categories"
           title="Explore Our Collections"
-          subtitle="From timeless classics to contemporary masterpieces, discover jewelry curated for every occasion and celebration."
+          subtitle="Rings, bangles, necklaces and bridal sets — crafted in BIS Hallmarked gold."
           className="mb-14 md:mb-16"
         />
 

@@ -89,7 +89,7 @@ const FeaturedProducts: React.FC = () => {
           <SectionTitle
             label="Featured"
             title="Featured Jewellery"
-            subtitle="Handpicked pieces that define luxury — our most cherished designs crafted with exceptional artistry and attention to detail by master artisans."
+            subtitle="Curated designs available to view today in our Doharighat showroom."
             align="left"
             className="mb-0"
           />

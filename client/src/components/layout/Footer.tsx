@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom';
-import { Instagram, Facebook, Phone, MapPin, Mail } from 'lucide-react';
+import { Instagram, Facebook, Phone, MapPin, Mail, MessageCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { BUSINESS } from '@/config/business';
 
 const navigationLinks = [
   { name: 'Home', path: '/' },
-  { name: 'Collections', path: '/collections' },
-  { name: 'Jewelry', path: '/jewelry' },
+  { name: 'Jewellery', path: '/collections' },
+  { name: 'Bridal', path: '/collections/bridal' },
   { name: 'About', path: '/about' },
-  { name: 'Contact', path: '/contact' },
+  { name: 'Visit Us', path: '/contact' },
 ];
 
 const categoryLinks = [
@@ -73,7 +73,7 @@ export function Footer() {
                   'hover:bg-gold hover:text-purple-900 transition-all duration-300'
                 )}
               >
-                <Phone size={18} strokeWidth={1.5} />
+                <MessageCircle size={18} strokeWidth={1.5} />
               </a>
             </div>
           </div>

@@ -135,7 +135,6 @@ const Contact = () => {
         title={PAGE_SEO.contact.title}
         description={PAGE_SEO.contact.description}
         canonical={PAGE_SEO.contact.canonical}
-        noIndex={PAGE_SEO.contact.noIndex}
       />
     <div className="min-h-screen bg-background">
       <section className="relative min-h-[45vh] flex items-center overflow-hidden">
@@ -208,7 +207,7 @@ const Contact = () => {
                     <Wrapper
                       {...wrapperProps}
                       className={cn(
-                        'group flex items-start gap-5 p-6 glass hover:border-gold-400/40 transition-all duration-500 hover:shadow-gold-glow',
+                        'group flex items-start gap-5 p-6 glass hover:border-gold-400/34 transition-all duration-500',
                         info.href && 'cursor-pointer'
                       )}
                     >
@@ -364,7 +363,7 @@ const Contact = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-50px' }}
           transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="overflow-hidden border-2 border-gold-400/30 shadow-gold-glow"
+          className="overflow-hidden border border-gold-400/25"
         >
           <iframe
             title="SSKK Jewelers - Doharighat Location"

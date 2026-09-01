@@ -63,7 +63,7 @@ const BridalCollection: React.FC = () => {
             <SectionTitle
               label="Bridal Heritage"
               title="Made for Your Most Precious Moments"
-              subtitle="Complete bridal sets — necklace, earrings, maang tikka, nath, and bangles — handcrafted in hallmarked 22K gold for your wedding day."
+              subtitle="Necklace, earrings, maang tikka, nath and bangles in 22K BIS Hallmarked gold."
               align="left"
               className="mb-10"
             />

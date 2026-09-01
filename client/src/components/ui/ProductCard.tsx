@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Eye } from 'lucide-react';
+import { Heart, MessageCircle } from 'lucide-react';
 import { cn, formatCurrencyINR } from '@/lib/utils';
 import { useWishlistStore } from '@/store/wishlistStore';
 import type { Product } from '@/lib/types';
 import { Badge } from './Badge';
 import { BlurImage } from './BlurImage';
 import { DEFAULT_PRODUCT_IMAGE } from '@/config/assets';
+import { BUSINESS } from '@/config/business';
 
 interface ProductCardProps {
   product: Product;
@@ -40,6 +41,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className, onEnquire
       await toggleWishlist(product);
     } catch {
     }
+  };
+
+  const whatsappMessage = encodeURIComponent(
+    `Hi, I am interested in "${product.name}", product code ${product.slug}. Please share the current price and availability.`
+  );
+  const whatsappHref = `${BUSINESS.socials.whatsapp}?text=${whatsappMessage}`;
+
+  const handleWhatsAppClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    window.open(whatsappHref, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -101,18 +113,21 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className, onEnquire
                   />
                 </motion.button>
 
-                <motion.div
+                <motion.a
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={handleWhatsAppClick}
                   initial={{ opacity: 0, y: 14 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
                   transition={{ duration: 0.34, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute left-1/2 -translate-x-1/2 bottom-4 sm:bottom-5 z-10 w-[calc(100%-1.75rem)] sm:w-auto"
+                  className="absolute left-1/2 -translate-x-1/2 bottom-4 sm:bottom-5 z-10 w-[calc(100%-1.75rem)] sm:w-auto inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 bg-emerald-600/94 backdrop-blur-md border border-emerald-400/50 text-white text-[10px] sm:text-xs uppercase tracking-[0.18em] sm:tracking-[0.22em] font-semibold hover:bg-emerald-500 hover:border-emerald-300 hover:shadow-[0_10px_28px_-8px_rgba(16,185,129,0.55)] transition-all duration-300"
+                  aria-label={`Enquire about ${product.name} on WhatsApp`}
                 >
-                  <div className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 sm:px-6 py-2.5 sm:py-3 bg-background-tertiary/92 backdrop-blur-md border border-gold-400/42 text-gold-300 text-[10px] sm:text-xs uppercase tracking-[0.18em] sm:tracking-[0.22em] font-semibold hover:bg-gold-400/22 hover:border-gold-400/75 transition-all duration-300">
-                    <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                    Quick View
-                  </div>
-                </motion.div>
+                  <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" strokeWidth={2} />
+                  Enquire on WhatsApp
+                </motion.a>
               </>
             )}
           </AnimatePresence>

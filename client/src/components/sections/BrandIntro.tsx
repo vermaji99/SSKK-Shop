@@ -66,7 +66,7 @@ const BrandIntro: React.FC = () => {
             transition={{ duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="relative"
           >
-            <div className="relative aspect-[4/5] w-full max-w-xl mx-auto lg:mx-0 overflow-hidden gold-border shadow-gold-glow-lg">
+            <div className="relative aspect-[4/5] w-full max-w-xl mx-auto lg:mx-0 overflow-hidden border border-gold-400/25">
               <motion.img
                 style={{ y: imageY }}
                 src={imageUrl}

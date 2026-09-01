@@ -10,10 +10,10 @@ import { BUSINESS } from '@/config/business';
 
 const navLinks = [
   { name: 'Home', path: '/' },
-  { name: 'Jewelry', path: '/jewelry' },
-  { name: 'Collections', path: '/collections' },
+  { name: 'Jewellery', path: '/collections' },
+  { name: 'Bridal', path: '/collections/bridal' },
   { name: 'About', path: '/about' },
-  { name: 'Contact', path: '/contact' },
+  { name: 'Visit Us', path: '/contact' },
 ];
 
 const IconButton: React.FC<{

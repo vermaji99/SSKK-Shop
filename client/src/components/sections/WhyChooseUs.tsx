@@ -99,10 +99,10 @@ const WhyChooseUs: React.FC = () => {
                   'group relative flex flex-col items-start p-7 md:p-8 h-full',
                   'bg-gradient-to-b from-background-tertiary/80 to-purple-900/20',
                   'border border-purple-700/40 transition-all duration-500',
-                  'hover:border-gold-400/50 hover:shadow-gold-glow'
+                  'hover:border-gold-400/40'
                 )}
               >
-                <div className="mb-6 w-16 h-16 md:w-[72px] md:h-[72px] flex items-center justify-center rounded-full border border-gold-400/40 bg-purple-900/40 group-hover:shadow-gold-glow transition-all duration-500">
+                <div className="mb-6 w-16 h-16 md:w-[72px] md:h-[72px] flex items-center justify-center rounded-full border border-gold-400/32 bg-purple-900/40 transition-all duration-500">
                   <Icon
                     className="w-7 h-7 md:w-8 md:h-8 text-gold-400"
                     strokeWidth={1.5}

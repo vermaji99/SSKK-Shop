@@ -105,6 +105,15 @@ const ProductDetail = () => {
 
   const inWishlist = product ? isInWishlist(product._id) : false;
 
+  const whatsappMessage = product
+    ? encodeURIComponent(
+        `Hi, I am interested in "${product.name}", product code ${product.slug}. Please share the current price and availability.`
+      )
+    : '';
+  const whatsappHref = product
+    ? `${BUSINESS.socials.whatsapp}?text=${whatsappMessage}`
+    : BUSINESS.socials.whatsapp;
+
   const handleAddToCart = async () => {
     if (!product) return;
     try {
@@ -354,7 +363,7 @@ const ProductDetail = () => {
                     className={cn(
                       'relative aspect-square border overflow-hidden transition-all duration-300',
                       selectedImageIndex === idx
-                        ? 'border-gold-400 ring-2 ring-gold-400/40 shadow-gold-glow scale-[1.02]'
+                        ? 'border-gold-400 ring-2 ring-gold-400/28 scale-[1.02]'
                         : 'border-purple-700/40 hover:border-gold-400/50 opacity-70 hover:opacity-100'
                     )}
                     aria-label={`Select image ${idx + 1}`}
@@ -408,6 +417,19 @@ const ProductDetail = () => {
               )}
             </div>
 
+            {hasValidPrice && (
+              <motion.p
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15, duration: 0.4 }}
+                className="mt-3 text-[11.5px] sm:text-xs text-text-muted/85 leading-relaxed"
+              >
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-gold-400/70 mr-2 align-middle" />
+                Displayed price is indicative. Final price depends on current gold rate, making charges, stones &amp; taxes.
+                Contact showroom for exact pricing.
+              </motion.p>
+            )}
+
             <GoldDivider className="my-8" width={120} thickness={2} />
 
             {product.description && (
@@ -441,31 +463,44 @@ const ProductDetail = () => {
               </div>
             )}
 
-            <div className="mt-10 flex flex-col sm:flex-row flex-wrap gap-4">
+            <div className="mt-10 flex flex-col sm:flex-row flex-wrap gap-3.5 sm:gap-4">
+              <Button asChild size="lg" className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold hover:shadow-[0_10px_32px_-10px_rgba(16,185,129,0.55)]">
+                <a
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Enquire about this product on WhatsApp"
+                >
+                  <MessageCircle className="w-5 h-5" strokeWidth={2} />
+                  WhatsApp Enquiry
+                </a>
+              </Button>
+              <Button asChild variant="secondary" size="lg" className="flex-1">
+                <a
+                  href={`tel:+91${BUSINESS.phonePrimary}`}
+                  aria-label={`Call ${BUSINESS.phonePrimaryFormatted}`}
+                >
+                  Call Store
+                </a>
+              </Button>
               <Button
+                variant="outline-gold"
                 onClick={() => setInquiryOpen(true)}
                 size="lg"
-                className="flex-1 bg-gradient-to-r from-gold-500 via-gold-400 to-amber-600 text-purple-950 hover:brightness-110 font-bold"
+                className="flex-1 sm:w-auto sm:min-w-[180px]"
               >
-                <MessageCircle className="w-5 h-5" />
                 Enquire Now
               </Button>
-              <a
-                href={`tel:+91${BUSINESS.phonePrimary}`}
-                className="flex-1 btn-secondary flex items-center justify-center gap-2 py-3 px-6 text-sm"
-              >
-                Call to Purchase
-              </a>
               <Button
                 variant="ghost"
                 onClick={handleToggleWishlist}
                 loading={togglingWishlist}
                 size="lg"
                 className={cn(
-                  'sm:w-auto px-6 border',
+                  'sm:w-auto px-6 border border-purple-700/40',
                   inWishlist
                     ? 'bg-gold-400/10 border-gold-400/50 text-gold-300'
-                    : 'border-purple-700/50 hover:border-gold-400/50'
+                    : 'hover:border-gold-400/50'
                 )}
               >
                 {togglingWishlist ? (

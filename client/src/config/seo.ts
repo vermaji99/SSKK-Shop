@@ -277,14 +277,12 @@ export const PAGE_SEO = {
     description:
       'Learn about Shubham Swarn Kala Kendra — a trusted gold showroom in Doharighat, Mau offering handcrafted 22K and 18K gold jewellery with personalized service.',
     canonical: `${SITE_URL}/about`,
-    noIndex: true,
   },
   contact: {
     title: 'Contact Us | Visit Doharighat Showroom | Shubham Swarn Kala Kendra',
     description:
       'Contact Shubham Swarn Kala Kendra for jewellery inquiries, custom designs, and showroom visits in Doharighat, Mau. Call, WhatsApp, or send an inquiry online.',
     canonical: `${SITE_URL}/contact`,
-    noIndex: true,
   },
   wishlist: {
     title: 'Wishlist | Saved Jewellery | Shubham Swarn Kala Kendra',

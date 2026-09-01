@@ -46,20 +46,15 @@ export default {
           '0%': { opacity: '0', transform: 'translateY(30px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
-        'gold-glow': {
-          '0%, 100%': { boxShadow: '0 0 20px rgba(212, 175, 55, 0.3)' },
-          '50%': { boxShadow: '0 0 40px rgba(212, 175, 55, 0.6)' },
-        },
       },
       animation: {
         shimmer: 'shimmer 3s ease-in-out infinite',
         'fade-in-up': 'fade-in-up 0.8s ease-out forwards',
-        'gold-glow': 'gold-glow 2s ease-in-out infinite',
       },
       boxShadow: {
-        'gold-glow': '0 0 20px rgba(212, 175, 55, 0.3)',
-        'gold-glow-lg': '0 0 40px rgba(212, 175, 55, 0.5)',
-        'gold-glow-xl': '0 0 60px rgba(212, 175, 55, 0.7)',
+        'gold-glow': '0 0 14px rgba(212, 175, 55, 0.16)',
+        'gold-glow-lg': '0 0 28px rgba(212, 175, 55, 0.22)',
+        'gold-glow-xl': '0 0 42px rgba(212, 175, 55, 0.28)',
       },
     },
   },

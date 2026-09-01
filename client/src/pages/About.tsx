@@ -1,42 +1,41 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Gem, Shield, Hand, Sparkles, ArrowRight, Award, Users, Palette, Crown } from 'lucide-react';
-import { Button, SectionTitle, AnimatedCounter, GoldDivider } from '@/components/ui';
+import { Gem, Shield, Award, HeartHandshake, ArrowRight } from 'lucide-react';
+import { Button, SectionTitle, GoldDivider } from '@/components/ui';
 import SEO from '@/components/common/SEO';
 import { PAGE_SEO } from '@/config/seo';
-import { cn } from '@/lib/utils';
 import { JEWELRY_IMAGES } from '@/config/assets';
+import { BUSINESS } from '@/config/business';
 
-const stats = [
-  { value: 25, suffix: '+', label: 'Years in Business', icon: Award },
-  { value: 10000, suffix: '+', label: 'Happy Customers', icon: Users },
-  { value: 5000, suffix: '+', label: 'Unique Designs', icon: Palette },
-  { value: 50, suffix: '+', label: 'Master Artisans', icon: Crown },
-];
-
-const values = [
-  {
-    icon: Gem,
-    title: 'Uncompromising Quality',
-    description:
-      'Every piece is crafted from the finest metals and ethically sourced gemstones, handpicked by our experts for exceptional brilliance and clarity.',
-  },
+const trustPillars = [
   {
     icon: Shield,
-    title: 'Trust & Transparency',
+    title: 'BIS Hallmarked Gold',
     description:
-      'With a legacy spanning decades, we have built relationships rooted in honesty. Every purchase comes with a certificate of authenticity and lifetime warranty.',
+      'Every gold piece carries the trusted BIS hallmark — a genuine assurance of purity and authenticity.',
   },
   {
-    icon: Hand,
-    title: 'Artisanal Craftsmanship',
+    icon: Award,
+    title: 'Certified Diamonds',
     description:
-      'Our master artisans bring generations of expertise to each creation, meticulously setting every stone and shaping every curve by hand.',
+      'Diamonds sourced with integrity and accompanied by certification, so you can buy with complete confidence.',
+  },
+  {
+    icon: Gem,
+    title: '22K & 18K Purity',
+    description:
+      'Handcrafted pieces in 22K for traditional bridal wear and 18K for diamond-set contemporary designs.',
+  },
+  {
+    icon: HeartHandshake,
+    title: 'Bespoke Custom Designs',
+    description:
+      'Work directly with our craftsmen to create a one-of-a-kind piece tailored to your taste and occasion.',
   },
 ];
 
 const fadeInUp = {
-  hidden: { opacity: 0, y: 40 },
+  hidden: { opacity: 0, y: 36 },
   visible: { opacity: 1, y: 0 },
 };
 
@@ -47,16 +46,15 @@ const About = () => {
         title={PAGE_SEO.about.title}
         description={PAGE_SEO.about.description}
         canonical={PAGE_SEO.about.canonical}
-        noIndex={PAGE_SEO.about.noIndex}
       />
     <div className="min-h-screen bg-background">
-      <section className="relative min-h-[50vh] flex items-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-900 via-purple-800/80 to-background" />
+      <section className="relative min-h-[46vh] flex items-center overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-purple-900 via-purple-800/60 to-background" />
         <div
-          className="absolute inset-0 opacity-40"
+          className="absolute inset-0 opacity-28"
           style={{
             backgroundImage:
-              'radial-gradient(ellipse at 30% 20%, rgba(212, 175, 55, 0.25) 0%, transparent 45%), radial-gradient(ellipse at 70% 80%, rgba(75, 31, 111, 0.5) 0%, transparent 50%)',
+              'radial-gradient(ellipse at 30% 24%, rgba(212, 175, 55, 0.18) 0%, transparent 48%), radial-gradient(ellipse at 72% 82%, rgba(75, 31, 111, 0.42) 0%, transparent 52%)',
           }}
         />
         <div className="relative container section-padding pt-40 pb-24 text-center">
@@ -77,88 +75,78 @@ const About = () => {
             <motion.h1
               variants={fadeInUp}
               transition={{ duration: 0.8, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="heading-serif font-bold text-gold-gradient leading-tight"
-              style={{ fontSize: 'clamp(3rem, 8vw, 6rem)' }}
+              className="heading-serif font-semibold text-gold-gradient leading-tight"
+              style={{ fontSize: 'clamp(2.75rem, 7.2vw, 5.25rem)' }}
             >
-              Our Story
+              Our Showroom
             </motion.h1>
             <motion.p
               variants={fadeInUp}
               transition={{ duration: 0.8, delay: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="mt-8 text-text-muted text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
+              className="mt-7 text-cream/72 text-base md:text-lg max-w-2xl mx-auto leading-relaxed"
             >
-              Crafting heirlooms of tomorrow, rooted in the timeless traditions of Indian jewelry artistry.
+              A trusted Doharighat showroom for handcrafted gold and diamond jewellery — serving {BUSINESS.district} and nearby communities with personalized care.
             </motion.p>
           </motion.div>
         </div>
       </section>
 
       <section className="container section-padding">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-center">
           <motion.div
-            initial={{ opacity: 0, x: -40 }}
+            initial={{ opacity: 0, x: -36 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="relative"
           >
-            <div className="relative aspect-[4/5] overflow-hidden border-2 border-gold-400/30 shadow-gold-glow-lg">
+            <div className="relative aspect-[4/5] overflow-hidden border border-gold-400/22">
               <img
                 src={JEWELRY_IMAGES.royalRing}
-                alt="Royal handcrafted 22K gold diamond ring — SSKK signature design"
+                alt="Handcrafted 22K gold diamond ring — SSKK signature design"
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/62 via-black/22 to-transparent" />
               <div className="absolute inset-0 flex items-end p-6 sm:p-8 md:p-10">
                 <div className="text-left">
-                  <div className="w-20 h-20 sm:w-24 sm:h-24 mb-5 rounded-full gold-gradient/90 flex items-center justify-center shadow-gold-glow-lg animate-gold-glow border border-gold-300/40">
-                    <Gem className="w-10 h-10 sm:w-12 sm:h-12 text-purple-900" strokeWidth={1.5} />
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 mb-5 rounded-full bg-gold-400/10 border border-gold-400/30 flex items-center justify-center">
+                    <Gem className="w-8 h-8 sm:w-10 sm:h-10 text-gold-300" strokeWidth={1.5} />
                   </div>
-                  <p className="heading-serif text-cream text-xl sm:text-2xl md:text-3xl font-bold italic leading-snug">
-                    "Jewelry is the most transformative thing you can wear."
+                  <p className="heading-serif text-cream text-lg sm:text-xl md:text-2xl font-medium leading-snug max-w-sm">
+                    Hand-finished pieces, selected in person at our Doharighat showroom.
                   </p>
                   <GoldDivider className="my-5" width={60} thickness={2} />
-                  <p className="text-gold-300 uppercase tracking-widest text-xs sm:text-sm font-semibold">
-                    SSKK Est. 2000 — Doharighat, Mau
+                  <p className="text-gold-300/90 uppercase tracking-widest text-[11px] sm:text-xs font-semibold">
+                    SSKK · {BUSINESS.city}, {BUSINESS.district}
                   </p>
                 </div>
               </div>
             </div>
-            <div className="absolute -bottom-6 -right-6 w-40 h-40 border-2 border-gold-400/20 -z-10" />
-            <div className="absolute -top-6 -left-6 w-40 h-40 border-2 border-gold-400/20 -z-10" />
+            <div className="absolute -bottom-5 -right-5 w-36 h-36 border border-gold-400/16 -z-10" />
+            <div className="absolute -top-5 -left-5 w-36 h-36 border border-gold-400/16 -z-10" />
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, x: 40 }}
+            initial={{ opacity: 0, x: 36 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
             <SectionTitle
-              label="OUR HERITAGE"
-              title="Where Tradition Meets Timeless Design"
+              label="OUR FOCUS"
+              title="Craftsmanship, Purity, and Personal Care"
               align="left"
             />
-            <div className="mt-10 space-y-5 text-text-muted leading-relaxed text-base md:text-lg">
+            <div className="mt-8 space-y-4 text-cream/72 leading-relaxed text-base md:text-[17px]">
               <p>
-                Founded in the heart of Doharighat, SSKK Jewelers began as a humble workshop
-                where a single master artisan poured his soul into every creation. What started
-                as a dream to preserve India's rich jewelry heritage has blossomed into a
-                revered name synonymous with trust, elegance, and unparalleled craftsmanship.
+                {BUSINESS.name} is a local {BUSINESS.city} jewellery showroom offering a curated selection of gold rings, bangles, necklaces, bridal sets, and custom gemstone designs.
               </p>
               <p>
-                For over two decades, we have been the guardians of tradition — blending
-                ancient techniques passed down through generations with contemporary designs
-                that speak to the modern soul. Every piece in our collection tells a story;
-                stories of celebrations, of love, of milestones, and of the women who wear
-                our creations with quiet pride.
+                Each piece in our collection is selected for craftsmanship and finish quality. We help customers choose the right jewellery for weddings, engagements, gifting, and everyday wear — with honest guidance and attentive service.
               </p>
               <p>
-                From intricate gold necklaces inspired by temple architecture to delicate
-                diamond pieces that catch the light in a thousand ways, our artisans imbue
-                each creation with intention, meaning, and an unwavering commitment to
-                excellence that has become the hallmark of the SSKK name.
+                Visit us in-store to view our complete collection, discuss custom design requirements, or get a live price quote based on current gold rates and making charges.
               </p>
             </div>
           </motion.div>
@@ -166,39 +154,42 @@ const About = () => {
       </section>
 
       <section className="relative py-20 md:py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-purple-900/40 to-background" />
-        <div className="absolute inset-0 opacity-30">
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-purple-900/28 to-background" />
+        <div className="absolute inset-0 opacity-22">
           <div
             className="absolute inset-0"
             style={{
               backgroundImage:
-                'radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.15) 0%, transparent 60%)',
+                'radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.11) 0%, transparent 62%)',
             }}
           />
         </div>
         <div className="relative container">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
-            {stats.map((stat, idx) => {
-              const Icon = stat.icon;
+          <SectionTitle
+            label="OUR COMMITMENT"
+            title="Four Pillars of Trust"
+            subtitle="The standards that define every piece and every interaction at our showroom."
+          />
+          <div className="mt-12 sm:mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-5">
+            {trustPillars.map((pillar, idx) => {
+              const Icon = pillar.icon;
               return (
                 <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 30 }}
+                  key={pillar.title}
+                  initial={{ opacity: 0, y: 26 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: idx * 0.1 }}
-                  className="glass p-8 text-center group hover:shadow-gold-glow-lg transition-all duration-500"
+                  className="glass p-7 sm:p-8 group hover:border-gold-400/34 border border-purple-700/32 transition-all duration-500"
                 >
-                  <div className="w-16 h-16 mx-auto mb-6 rounded-full gold-gradient/10 border border-gold-400/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
-                    <Icon className="w-7 h-7 text-gold-300" strokeWidth={1.75} />
+                  <div className="w-13 h-13 sm:w-14 sm:h-14 mx-auto mb-5 sm:mb-6 rounded-full bg-gold-400/10 border border-gold-400/26 flex items-center justify-center group-hover:scale-105 transition-transform duration-500" style={{ width: 56, height: 56 }}>
+                    <Icon className="w-5.5 h-5.5 sm:w-6 sm:h-6 text-gold-300" strokeWidth={1.75} />
                   </div>
-                  <AnimatedCounter
-                    end={stat.value}
-                    suffix={stat.suffix}
-                    className="heading-serif font-bold text-cream text-4xl md:text-5xl text-gold-gradient"
-                  />
-                  <p className="mt-4 text-text-muted uppercase tracking-wider text-xs md:text-sm font-medium">
-                    {stat.label}
+                  <h3 className="heading-serif font-semibold text-cream text-base sm:text-lg text-center leading-tight mb-3">
+                    {pillar.title}
+                  </h3>
+                  <p className="text-cream/68 text-center text-[13px] sm:text-sm leading-relaxed">
+                    {pillar.description}
                   </p>
                 </motion.div>
               );
@@ -207,170 +198,105 @@ const About = () => {
         </div>
       </section>
 
-      <section className="container section-padding">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+      <section className="container section-padding pt-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-center">
           <motion.div
-            initial={{ opacity: 0, x: -40 }}
+            initial={{ opacity: 0, x: -36 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="order-2 lg:order-1"
           >
             <SectionTitle
-              label="OUR VISION"
-              title="The Artisan Behind the Legacy"
+              label="THE EXPERIENCE"
+              title="Visit Our Showroom"
               align="left"
             />
-            <div className="mt-10 space-y-5 text-text-muted leading-relaxed text-base md:text-lg">
+            <div className="mt-8 space-y-4 text-cream/72 leading-relaxed text-base md:text-[17px]">
               <p>
-                Our founder, a visionary with gold in his veins and artistry in his hands,
-                believed that jewelry is more than adornment — it is emotion made tangible,
-                memory given form, and love captured in precious metal.
+                We invite you to experience our collection in person at our {BUSINESS.city} showroom. View pieces up close, compare designs side by side, and receive individualized attention from our team.
               </p>
               <p>
-                Under his guidance, SSKK has grown to become a sanctuary where heritage
-                techniques thrive alongside modern innovation. Each artisan in our workshop
-                undergoes years of rigorous apprenticeship, mastering the delicate arts of
-                filigree, kundan, polki, and stone setting before they are entrusted with
-                creating pieces that will be treasured for generations.
-              </p>
-              <p>
-                "We don't just sell jewelry," he often says. "We create companions for
-                life's most precious moments. Every piece that leaves our workshop carries
-                a piece of our heart and the blessings of countless hours of devotion."
+                Custom design consultations are available by appointment. Bring inspirations, photographs, or heirloom pieces — and we'll work with you on a bespoke creation.
               </p>
             </div>
-            <div className="mt-8 flex items-center gap-4">
-              <div className="w-16 h-16 rounded-full gold-gradient flex items-center justify-center">
-                <Sparkles className="w-7 h-7 text-purple-900" />
-              </div>
-              <div>
-                <p className="heading-serif text-cream text-xl font-bold">SSKK Founder</p>
-                <p className="text-gold-300 text-sm uppercase tracking-wider">
-                  Master Jeweler & Visionary
-                </p>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="order-1 lg:order-2 relative"
-          >
-            <div className="relative aspect-square overflow-hidden border-2 border-gold-400/30">
-              <img
-                src={JEWELRY_IMAGES.birdLocket}
-                alt="Handcrafted gold bird locket pendant — artisan-crafted in SSKK Doharighat workshop"
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-br from-black/30 via-transparent to-black/55" />
-              <div
-                className="absolute inset-0 opacity-50 pointer-events-none"
-                style={{
-                  backgroundImage:
-                    'radial-gradient(circle at 30% 25%, rgba(212, 175, 55, 0.22) 0%, transparent 45%), radial-gradient(circle at 75% 75%, rgba(212, 175, 55, 0.16) 0%, transparent 40%)',
-                }}
-              />
-              <div className="absolute inset-0 flex items-end p-6 sm:p-8 md:p-10">
-                <div className="text-left">
-                  <div className="w-24 h-24 sm:w-28 sm:h-28 mb-5 rounded-full gold-gradient/90 flex items-center justify-center shadow-gold-glow-xl border border-gold-300/40">
-                    <Users className="text-purple-900" strokeWidth={1.5} style={{ width: 52, height: 52 }} />
-                  </div>
-                  <h3 className="heading-serif text-cream text-xl sm:text-2xl md:text-3xl font-bold mb-3 leading-tight">
-                    Family of Master Artisans
-                  </h3>
-                  <p className="text-cream/85 text-sm sm:text-base leading-relaxed max-w-sm">
-                    50+ skilled craftspeople, each a master in their specialty, united by a
-                    shared passion for timeless Indian gold jewelry.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="absolute -bottom-6 -right-6 w-full h-full border-2 border-gold-400/10 -z-10 translate-x-4 translate-y-4" />
-          </motion.div>
-        </div>
-      </section>
-
-      <section className="container section-padding pt-4">
-        <SectionTitle
-          label="WHY CHOOSE US"
-          title="The SSKK Difference"
-          subtitle="Three pillars that have made us the trusted choice for discerning jewelry lovers across generations."
-        />
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
-          {values.map((value, idx) => {
-            const Icon = value.icon;
-            return (
-              <motion.div
-                key={value.title}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.7, delay: idx * 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="group relative p-10 bg-gradient-to-b from-background-tertiary to-purple-900/20 border border-purple-700/40 hover:border-gold-400/40 transition-all duration-500 hover:shadow-gold-glow-lg"
-              >
-                <div className="absolute top-0 left-0 right-0 h-[2px] gold-gradient scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left" />
-                <div className={cn(
-                  'w-18 h-18 mb-8 rounded-full border-2 flex items-center justify-center transition-all duration-500 group-hover:shadow-gold-glow',
-                  'border-gold-400/40 bg-gold-400/5 group-hover:border-gold-400/70 group-hover:bg-gold-400/10'
-                )} style={{ width: 72, height: 72 }}>
-                  <Icon className="w-9 h-9 text-gold-300 transition-transform duration-500 group-hover:scale-110" strokeWidth={1.75} />
-                </div>
-                <h3 className="heading-serif text-cream text-2xl font-bold mb-5 leading-tight">
-                  {value.title}
-                </h3>
-                <p className="text-text-muted leading-relaxed">
-                  {value.description}
-                </p>
-              </motion.div>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="container pb-24 md:pb-32">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.97 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="relative overflow-hidden border-2 border-gold-400/30 p-10 md:p-16 lg:p-20 text-center"
-        >
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/60 via-background-tertiary to-purple-800/60" />
-          <div
-            className="absolute inset-0 opacity-40"
-            style={{
-              backgroundImage:
-                'radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.2) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(212, 175, 55, 0.15) 0%, transparent 50%)',
-            }}
-          />
-          <div className="relative">
-            <h2
-              className="heading-serif font-bold text-gold-gradient leading-tight"
-              style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)' }}
-            >
-              Ready to Find Your Perfect Piece?
-            </h2>
-            <p className="mt-6 text-text-muted text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-              Whether you're marking a milestone, searching for a gift, or simply treating
-              yourself to something extraordinary, we're here to help you find a piece as
-              unique as your story.
-            </p>
-            <div className="mt-10 flex flex-wrap justify-center gap-5">
+            <div className="mt-8 flex flex-wrap gap-3 sm:gap-4">
               <Button size="lg" asChild>
                 <Link to="/collections">
-                  Explore 22K Gold & Diamond Collections
+                  Browse the Collection
                   <ArrowRight className="w-5 h-5" />
                 </Link>
               </Button>
               <Button variant="secondary" size="lg" asChild>
                 <Link to="/contact">
-                  Book a Private Showroom Consultation
+                  Get Directions
                 </Link>
+              </Button>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 36 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="order-1 lg:order-2 relative"
+          >
+            <div className="relative aspect-square overflow-hidden border border-gold-400/22">
+              <img
+                src={JEWELRY_IMAGES.birdLocket}
+                alt="Handcrafted gold bird locket pendant — artisan-crafted in SSKK workshop"
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-black/22 via-transparent to-black/48" />
+            </div>
+            <div className="absolute -bottom-5 -right-5 w-full h-full border border-gold-400/10 -z-10 translate-x-4 translate-y-4" />
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="container pb-24 md:pb-32">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.98 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="relative overflow-hidden border border-gold-400/22 p-8 md:p-14 lg:p-16 text-center"
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/52 via-background-tertiary to-purple-800/50" />
+          <div
+            className="absolute inset-0 opacity-28"
+            style={{
+              backgroundImage:
+                'radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.13) 0%, transparent 52%), radial-gradient(circle at 80% 50%, rgba(212, 175, 55, 0.10) 0%, transparent 52%)',
+            }}
+          />
+          <div className="relative">
+            <h2
+              className="heading-serif font-semibold text-gold-gradient leading-tight"
+              style={{ fontSize: 'clamp(1.875rem, 4.6vw, 3.25rem)' }}
+            >
+              Find a Piece You'll Treasure
+            </h2>
+            <p className="mt-6 text-cream/72 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+              Explore our collection online, then visit our showroom to see and select your piece in person. Our team will guide you through every step.
+            </p>
+            <div className="mt-9 flex flex-wrap justify-center gap-4 sm:gap-5">
+              <Button size="lg" asChild>
+                <Link to="/collections">
+                  Explore Jewellery
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+              </Button>
+              <Button variant="secondary" size="lg" asChild>
+                <a
+                  href={BUSINESS.socials.whatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  WhatsApp for Inquiry
+                </a>
               </Button>
             </div>
           </div>
