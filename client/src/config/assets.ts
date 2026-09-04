@@ -53,4 +53,78 @@ export const CATEGORY_IMAGE_BY_SLUG: Record<string, string> = {
   bridal: JEWELRY_IMAGES.bridalSet,
   nath: JEWELRY_IMAGES.pendantNath,
   pendants: JEWELRY_IMAGES.pendant,
+  mangtikka: JEWELRY_IMAGES.haarSet,
+  custom: JEWELRY_IMAGES.showcase,
 };
+
+export const VISUAL_COLLECTIONS: Array<{
+  name: string;
+  slug: string;
+  description: string;
+  image: string;
+  hasDbSlug: boolean;
+}> = [
+  {
+    name: 'Rings',
+    slug: 'rings',
+    description: 'Statement bands and everyday solitaires in 22K and 18K gold.',
+    image: JEWELRY_IMAGES.ring,
+    hasDbSlug: true,
+  },
+  {
+    name: 'Earrings',
+    slug: 'earrings',
+    description: 'Jhumkas, studs and drops — from delicate daily wear to occasion pieces.',
+    image: JEWELRY_IMAGES.jhumka,
+    hasDbSlug: true,
+  },
+  {
+    name: 'Necklaces',
+    slug: 'necklaces',
+    description: 'Handcrafted harams, chokers and layered necklaces in hallmark gold.',
+    image: JEWELRY_IMAGES.necklace,
+    hasDbSlug: true,
+  },
+  {
+    name: 'Bangles',
+    slug: 'bangles',
+    description: 'Traditional kada, kada sets and slim bangles for every occasion.',
+    image: JEWELRY_IMAGES.bangle,
+    hasDbSlug: true,
+  },
+  {
+    name: 'Chains',
+    slug: 'chains',
+    description: 'Classic link chains, rope chains and rope-style necklaces for men and women.',
+    image: JEWELRY_IMAGES.chain,
+    hasDbSlug: true,
+  },
+  {
+    name: 'Bridal',
+    slug: 'bridal',
+    description: 'Complete bridal sets — haar, nath, bangles and tikka in heritage designs.',
+    image: JEWELRY_IMAGES.bridalSet,
+    hasDbSlug: true,
+  },
+  {
+    name: 'Nath',
+    slug: 'nath',
+    description: 'Traditional Maharashtrian and bridal nath with pearl and gold detailing.',
+    image: JEWELRY_IMAGES.pendantNath,
+    hasDbSlug: true,
+  },
+  {
+    name: 'Mang Tikka',
+    slug: 'mangtikka',
+    description: 'Bridal maang tikka and matha patti designs in hallmarked gold.',
+    image: JEWELRY_IMAGES.haarSet,
+    hasDbSlug: false,
+  },
+  {
+    name: 'Custom Jewellery',
+    slug: 'custom',
+    description: 'Bespoke designs created from your brief, crafted in our Doharighat workshop.',
+    image: JEWELRY_IMAGES.showcase,
+    hasDbSlug: false,
+  },
+];

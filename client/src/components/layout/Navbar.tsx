@@ -1,20 +1,24 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Heart, ShoppingBag, Menu, X, Phone } from 'lucide-react';
+import { Search, Heart, ShoppingBag, Menu, X, Phone, MessageCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useUIStore } from '@/store/uiStore';
 import { useCartStore } from '@/store/cartStore';
 import { useWishlistStore } from '@/store/wishlistStore';
-import { BUSINESS } from '@/config/business';
+import { BUSINESS, WHATSAPP_PREFILLS, buildWhatsAppUrl } from '@/config/business';
 
 const navLinks = [
   { name: 'Home', path: '/' },
   { name: 'Jewellery', path: '/collections' },
   { name: 'Bridal', path: '/collections/bridal' },
   { name: 'About', path: '/about' },
-  { name: 'Visit Us', path: '/contact' },
+  { name: 'Our Story', path: '/about#story' },
+  { name: 'Visit Us', path: '/contact#visit' },
+  { name: 'Contact', path: '/contact#enquiry' },
 ];
+
+const HEADER_WHATSAPP_URL = buildWhatsAppUrl(WHATSAPP_PREFILLS.header);
 
 const IconButton: React.FC<{
   children: React.ReactNode;
@@ -53,6 +57,7 @@ export function Navbar() {
     useUIStore();
   const { openCart, getTotalItems } = useCartStore();
   const { items: wishlistItems } = useWishlistStore();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -68,6 +73,17 @@ export function Navbar() {
   const wishlistCount = wishlistItems.length;
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
+
+  const isLinkActive = useMemo(() => {
+    return (path: string): boolean => {
+      if (path === '/') return location.pathname === '/';
+      const [route, hash] = path.split('#');
+      if (route && location.pathname !== route) return false;
+      if (hash) return location.pathname === route && location.hash === `#${hash}`;
+      if (route && route !== '/') return location.pathname.startsWith(route);
+      return location.pathname === '/';
+    };
+  }, [location.pathname, location.hash]);
 
   return (
     <>
@@ -104,16 +120,23 @@ export function Navbar() {
           </Link>
 
           <div className="hidden lg:flex items-center justify-center gap-8 xl:gap-10">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.path}
-                data-cursor="hover"
-                className="nav-underline relative text-text/90 hover:text-gold transition-colors duration-300 ease-out text-[12.5px] md:text-sm uppercase tracking-[0.18em] md:tracking-[0.22em] font-medium py-2"
-              >
-                <span className="relative inline-block">{link.name}</span>
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const active = isLinkActive(link.path);
+              return (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  data-cursor="hover"
+                  aria-current={active ? 'page' : undefined}
+                  className={cn(
+                    'nav-underline relative text-text/90 hover:text-gold transition-colors duration-300 ease-out text-[12.5px] md:text-sm uppercase tracking-[0.18em] md:tracking-[0.22em] font-medium py-2',
+                    active && 'is-active text-gold'
+                  )}
+                >
+                  <span className="relative inline-block">{link.name}</span>
+                </Link>
+              );
+            })}
           </div>
 
           <div className="flex items-center gap-0.5 sm:gap-1 md:gap-2 shrink-0 pl-1">
@@ -139,6 +162,24 @@ export function Navbar() {
                 </span>
               )}
             </Link>
+
+            <a
+              href={HEADER_WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="WhatsApp SSKK for jewellery enquiries"
+              data-cursor="hover"
+              className={cn(
+                'hidden md:inline-flex touch-target items-center gap-1.5 px-3 md:px-3.5 py-2 rounded-full',
+                'gold-gradient text-purple-900 font-semibold uppercase tracking-wider text-[10.5px] md:text-[11px]',
+                'shadow-gold-glow hover:shadow-gold-glow-lg transition-all duration-500 ease-out',
+                'hover:-translate-y-px active:translate-y-0 active:scale-[0.986]',
+                'ring-1 ring-gold-400/30'
+              )}
+            >
+              <MessageCircle size={15} strokeWidth={1.75} className="md:w-[16px] md:h-[16px]" />
+              <span className="whitespace-nowrap">WhatsApp</span>
+            </a>
 
             <IconButton ariaLabel="Cart" onClick={openCart} badge={cartCount}>
               <ShoppingBag size={18} strokeWidth={1.5} className="sm:w-[19px] sm:h-[19px]" />
@@ -185,32 +226,39 @@ export function Navbar() {
           >
             <div className="flex flex-col min-h-[calc(100dvh-5rem)] px-5 sm:px-6 pb-8">
               <nav className="flex flex-col gap-0.5">
-                {navLinks.map((link, index) => (
-                  <motion.div
-                    key={link.name}
-                    initial={{ opacity: 0, y: 18 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -16 }}
-                    transition={{
-                      delay: 0.12 + index * 0.085,
-                      duration: 0.46,
-                      ease: [0.22, 1, 0.36, 1],
-                    }}
-                  >
-                    <Link
-                      to={link.path}
-                      onClick={closeMobileMenu}
-                      className="group font-serif text-[1.55rem] sm:text-2xl md:text-3xl text-cream/92 hover:text-gold-gradient transition-colors duration-300 block py-3.5 sm:py-4 border-b border-gold-400/[0.11] min-h-[56px] flex items-center"
+                {navLinks.map((link, index) => {
+                  const active = isLinkActive(link.path);
+                  return (
+                    <motion.div
+                      key={link.name}
+                      initial={{ opacity: 0, y: 18 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -16 }}
+                      transition={{
+                        delay: 0.12 + index * 0.085,
+                        duration: 0.46,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
                     >
-                      <span className="flex items-center justify-between w-full">
-                        <span>{link.name}</span>
-                        <span className="text-gold-400/60 text-base sm:text-lg transform -translate-x-3 group-hover:translate-x-0 transition-transform duration-400 ease-out opacity-0 group-hover:opacity-100">
-                          →
+                      <Link
+                        to={link.path}
+                        onClick={closeMobileMenu}
+                        aria-current={active ? 'page' : undefined}
+                        className={cn(
+                          'group font-serif text-[1.55rem] sm:text-2xl md:text-3xl hover:text-gold-gradient transition-colors duration-300 block py-3.5 sm:py-4 border-b border-gold-400/[0.11] min-h-[56px] flex items-center',
+                          active ? 'text-gold-gradient' : 'text-cream/92'
+                        )}
+                      >
+                        <span className="flex items-center justify-between w-full">
+                          <span>{link.name}</span>
+                          <span className="text-gold-400/60 text-base sm:text-lg transform -translate-x-3 group-hover:translate-x-0 transition-transform duration-400 ease-out opacity-0 group-hover:opacity-100">
+                            →
+                          </span>
                         </span>
-                      </span>
-                    </Link>
-                  </motion.div>
-                ))}
+                      </Link>
+                    </motion.div>
+                  );
+                })}
               </nav>
 
               <motion.div

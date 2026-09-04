@@ -255,9 +255,9 @@ export const buildDefaultSchemaGraph = () => ({
 
 export const PAGE_SEO = {
   home: {
-    title: 'Shubham Swarn Kala Kendra | Gold & Diamond Jewellery in Doharighat, Mau',
+    title: 'Shubham Swarn Kala Kendra | Premium Gold & Diamond Jewellery',
     description:
-      'Discover premium gold and diamond jewellery at Shubham Swarn Kala Kendra in Doharighat, Mau, Uttar Pradesh. Explore rings, earrings, necklaces, chains, bangles, bridal jewellery and more.',
+      'Discover premium gold, diamond and bridal jewellery at Shubham Swarn Kala Kendra in Doharighat, Mau. Explore timeless designs and personalised jewellery.',
     canonical: SITE_URL,
   },
   collections: {

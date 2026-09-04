@@ -8,7 +8,9 @@ const navigationLinks = [
   { name: 'Jewellery', path: '/collections' },
   { name: 'Bridal', path: '/collections/bridal' },
   { name: 'About', path: '/about' },
-  { name: 'Visit Us', path: '/contact' },
+  { name: 'Our Story', path: '/about#story' },
+  { name: 'Visit Us', path: '/contact#visit' },
+  { name: 'Contact', path: '/contact#enquiry' },
 ];
 
 const categoryLinks = [
@@ -19,8 +21,11 @@ const categoryLinks = [
   { name: 'Bangles', path: '/collections/bangles' },
   { name: 'Bridal', path: '/collections/bridal' },
   { name: 'Nath', path: '/collections/nath' },
-  { name: 'Pendants', path: '/collections/pendants' },
 ];
+
+const WHATSAPP_FOOTER_PREFILL = encodeURIComponent(
+  "Hello SSKK, I'm reaching out from the footer of your website to enquire about your jewellery collection and showroom in Doharighat."
+);
 
 export function Footer() {
   return (
@@ -63,7 +68,7 @@ export function Footer() {
                 <Facebook size={18} strokeWidth={1.5} />
               </a>
               <a
-                href={BUSINESS.socials.whatsapp}
+                href={`${BUSINESS.socials.whatsapp}?text=${WHATSAPP_FOOTER_PREFILL}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 data-cursor="hover"
@@ -161,7 +166,7 @@ export function Footer() {
           <p className="text-text-muted text-xs">
             © {new Date().getFullYear()} {BUSINESS.name}. All rights reserved.
           </p>
-          <div className="flex items-center gap-6 text-xs text-text-muted">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-text-muted">
             <Link
               to="/privacy-policy"
               data-cursor="hover"
@@ -176,6 +181,10 @@ export function Footer() {
             >
               Terms of Service
             </Link>
+            <span className="hidden md:inline text-gold/40" aria-hidden="true">·</span>
+            <span className="text-text-muted/80 text-[11px]">
+              Crafted by <span className="text-gold-300/80 font-medium tracking-wide">Shubham Verma</span>
+            </span>
           </div>
         </div>
       </div>

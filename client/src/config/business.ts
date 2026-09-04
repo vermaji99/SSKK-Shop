@@ -1,3 +1,11 @@
+export type Testimonial = {
+  id?: string;
+  name: string;
+  location?: string;
+  quote: string;
+  rating?: 5;
+};
+
 export const BUSINESS = {
   name: "Shubham Swarn Kala Kendra",
   shortName: "SSKK Jewelry",
@@ -26,3 +34,27 @@ export const BUSINESS = {
     whatsapp: "https://wa.me/919935178342",
   },
 };
+
+export const WHATSAPP_PREFILLS = {
+  header: "Hello SSKK, I'd like to know more about your gold jewellery collection and showroom in Doharighat.",
+  hero: "Hello SSKK, I loved your jewellery on the website. Please share your latest bridal and everyday collections available in Doharighat.",
+  product: (name: string, sku: string, purity?: string) =>
+    `Hello SSKK, I am interested in ${name ? `"${name}"` : 'a jewellery piece'} (SKU: ${sku || '-'})${purity ? ` in ${purity}` : ''}. Please share current price, purity, and availability at your Doharighat showroom.`,
+  custom: "Hello SSKK, I'd like to discuss a custom jewellery design. Can we book a consultation at your Doharighat showroom?",
+  floating: "Hello SSKK, I would like to enquire about your jewellery collection.",
+} as const;
+
+export const buildWhatsAppUrl = (message: string): string =>
+  `https://wa.me/${BUSINESS.whatsappPrimary}?text=${encodeURIComponent(message)}`;
+
+export const GOOGLE_MAPS_SEARCH = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(BUSINESS.address)}`;
+
+export const TESTIMONIALS_EDITABLE: Testimonial[] = [
+  {
+    id: 'example-1',
+    name: 'Customer Name /* EDITABLE — replace with verified review */',
+    location: 'Doharighat, Mau',
+    quote: 'Replace this text with a verified customer testimonial shared by a real SSKK client.',
+    rating: 5,
+  },
+];

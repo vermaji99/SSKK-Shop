@@ -20,3 +20,5 @@ export * from './HomeInquiry';
 export { default as HomeInquiry } from './HomeInquiry';
 export * from './FrameSequenceShowcase';
 export { default as FrameSequenceShowcase } from './FrameSequenceShowcase';
+export * from './TrustBar';
+export { default as TrustBar } from './TrustBar';
