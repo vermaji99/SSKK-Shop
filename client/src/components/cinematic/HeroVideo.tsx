@@ -496,19 +496,21 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
     const v = videoRef.current;
     if (!v) return;
     durationRef.current = Number.isFinite(v.duration) && v.duration > 0 ? v.duration : 5;
-    targetMediaTimeRef.current = durationRef.current * 0.02;
-    lastTargetTimeRef.current = targetMediaTimeRef.current;
-    currentMediaTimeRef.current = targetMediaTimeRef.current;
-    smoothMediaTimeRef.current = targetMediaTimeRef.current;
-    scrubLastSmoothRef.current = targetMediaTimeRef.current;
-    idleStartRampRef.current = 0;
-    try {
-      v.currentTime = targetMediaTimeRef.current;
-      inFlightSeekRef.current = true;
-    } catch {
-      inFlightSeekRef.current = false;
+    if (hoverScrub) {
+      targetMediaTimeRef.current = durationRef.current * 0.02;
+      lastTargetTimeRef.current = targetMediaTimeRef.current;
+      currentMediaTimeRef.current = targetMediaTimeRef.current;
+      smoothMediaTimeRef.current = targetMediaTimeRef.current;
+      scrubLastSmoothRef.current = targetMediaTimeRef.current;
+      idleStartRampRef.current = 0;
+      try {
+        v.currentTime = targetMediaTimeRef.current;
+        inFlightSeekRef.current = true;
+      } catch {
+        inFlightSeekRef.current = false;
+      }
     }
-  }, []);
+  }, [hoverScrub]);
 
   const handleCanPlay = React.useCallback(() => {
     const v = videoRef.current;
@@ -529,7 +531,7 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
       return true;
     });
     onReady?.(durationRef.current || 0);
-    if (!hoverPlay && (!prefersHover || reducedMotion)) {
+    if (hoverScrub && !hoverPlay && (!prefersHover || reducedMotion)) {
       scheduleIdle();
     }
   }, [onReady, scheduleIdle, emitProgress, reducedMotion, hoverPlay, prefersHover]);
