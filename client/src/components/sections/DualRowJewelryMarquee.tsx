@@ -37,7 +37,7 @@ const ROW_ONE_ITEMS: MarqueeJewelryItem[] = [
     purity: '22K BIS Hallmarked',
     image: JEWELRY_IMAGES.haarSet,
     slug: 'bridal',
-    tag: 'BRIDAL',
+    tag: 'BRIDAL HERITAGE',
   },
   {
     id: 'm3',
@@ -55,7 +55,7 @@ const ROW_ONE_ITEMS: MarqueeJewelryItem[] = [
     purity: '22K Handcrafted Gold',
     image: JEWELRY_IMAGES.bangle,
     slug: 'bangles',
-    tag: 'HERITAGE',
+    tag: 'CRAFTSMANSHIP',
   },
   {
     id: 'm5',
@@ -64,13 +64,13 @@ const ROW_ONE_ITEMS: MarqueeJewelryItem[] = [
     purity: '22K Gold & Precious Gems',
     image: JEWELRY_IMAGES.bridalSet,
     slug: 'bridal',
-    tag: 'NEW',
+    tag: 'NEW ARRIVAL',
   },
   {
     id: 'm6',
     name: 'Carved Peacock Gold Locket',
     category: 'Pendants',
-    purity: '22K BIS Gold',
+    purity: '22K BIS Hallmarked',
     image: JEWELRY_IMAGES.birdLocket,
     slug: 'necklaces',
     tag: 'BESPOKE',
@@ -162,10 +162,10 @@ const MarqueeCard: React.FC<{ item: MarqueeJewelryItem }> = ({ item }) => {
   const whatsappHref = `${BUSINESS.socials.whatsapp}?text=${whatsappMessage}`;
 
   return (
-    <div className="group relative w-56 sm:w-64 md:w-72 lg:w-80 shrink-0 mx-2.5 sm:mx-3">
+    <div className="group relative w-60 sm:w-68 md:w-76 lg:w-84 shrink-0 mx-3 sm:mx-4 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1.5 hover:scale-[1.02]">
       <Link
         to={`/collections/${item.slug}`}
-        className="block w-full overflow-hidden bg-[#0A0414] border border-gold-400/[0.16] transition-all duration-500 hover:border-gold-400/60 hover:shadow-[0_16px_40px_-16px_rgba(212,175,55,0.22)]"
+        className="block w-full overflow-hidden bg-gradient-to-b from-[#140822]/90 via-[#0B0515]/95 to-[#07040B] border border-gold-400/[0.22] transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:border-gold-400/[0.75] group-hover:shadow-[0_20px_50px_-16px_rgba(212,175,55,0.28)]"
       >
         <div className="relative aspect-[4/5] w-full overflow-hidden">
           <BlurImage
@@ -176,19 +176,29 @@ const MarqueeCard: React.FC<{ item: MarqueeJewelryItem }> = ({ item }) => {
             wrapperClassName="w-full h-full"
           />
 
-          {/* Dark Overlay Gradient */}
+          {/* Ambient Gold Radial Spotlight Hover Effect */}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-out"
+            style={{
+              background:
+                'radial-gradient(circle at 50% 45%, rgba(212,175,55,0.2) 0%, rgba(212,175,55,0.05) 50%, transparent 80%)',
+            }}
+            aria-hidden="true"
+          />
+
+          {/* Dark Luxury Backdrop Gradient */}
           <div
             className="absolute inset-0 pointer-events-none transition-opacity duration-500"
             style={{
               background:
-                'linear-gradient(180deg, rgba(5,2,10,0.1) 0%, rgba(5,2,10,0.3) 50%, rgba(5,2,10,0.92) 100%)',
+                'linear-gradient(180deg, rgba(5,2,10,0.15) 0%, rgba(5,2,10,0.35) 45%, rgba(5,2,10,0.95) 100%)',
             }}
           />
 
-          {/* Top Tag & Wishlist */}
-          <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10">
+          {/* Top Tag & Wishlist Action Button */}
+          <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between z-10">
             {item.tag && (
-              <span className="px-2.5 py-1 bg-[#0B0515]/85 backdrop-blur-md border border-gold-400/40 text-[9px] uppercase tracking-[0.2em] font-semibold text-gold-300">
+              <span className="px-3 py-1 bg-[#07040B]/90 backdrop-blur-md border border-gold-400/50 text-[9.5px] uppercase tracking-[0.22em] font-semibold text-gold-300 shadow-md">
                 {item.tag}
               </span>
             )}
@@ -196,30 +206,38 @@ const MarqueeCard: React.FC<{ item: MarqueeJewelryItem }> = ({ item }) => {
               type="button"
               onClick={handleWishlistClick}
               className={cn(
-                'ml-auto w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md border transition-all duration-300',
+                'ml-auto w-8.5 h-8.5 rounded-full flex items-center justify-center backdrop-blur-md border transition-all duration-300',
                 inWishlist
-                  ? 'bg-gold-400 text-purple-950 border-gold-300 shadow-md'
-                  : 'bg-[#0B0515]/75 border-gold-400/30 text-gold-300 hover:bg-gold-400/20'
+                  ? 'bg-gold-400 text-purple-950 border-gold-300 shadow-lg scale-105'
+                  : 'bg-[#07040B]/80 border-gold-400/35 text-gold-300 hover:bg-gold-400/25 hover:border-gold-400/70'
               )}
               aria-label="Toggle wishlist"
             >
-              <Heart size={14} className={inWishlist ? 'fill-current' : ''} />
+              <Heart size={15} className={inWishlist ? 'fill-current' : ''} />
             </button>
           </div>
 
-          {/* Bottom Info Overlay */}
-          <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-5 pointer-events-none">
+          {/* Bottom Editorial Info Box */}
+          <div className="absolute inset-0 flex flex-col justify-end p-4.5 sm:p-5.5 pointer-events-none">
             <div className="pointer-events-auto">
-              <span className="text-[10px] uppercase tracking-[0.2em] text-gold-400 font-semibold block mb-1">
+              <span className="text-[10px] uppercase tracking-[0.22em] text-gold-400/95 font-semibold block mb-1">
                 {item.category} &middot; {item.purity}
               </span>
+
               <h4 className="font-serif text-base sm:text-lg text-cream font-medium leading-snug line-clamp-1 group-hover:text-gold-200 transition-colors">
                 {item.name}
               </h4>
 
-              <div className="mt-3 pt-2.5 border-t border-gold-400/20 flex items-center justify-between">
-                <span className="text-[11px] uppercase tracking-[0.16em] text-gold-300 font-semibold flex items-center gap-1">
-                  Enquire <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+              {/* Gold Underline Indicator */}
+              <div
+                className="mt-1.5 h-[1.5px] gold-gradient transition-all duration-500 ease-out group-hover:w-full"
+                style={{ width: '0px' }}
+                aria-hidden="true"
+              />
+
+              <div className="mt-3.5 pt-3 border-t border-gold-400/20 flex items-center justify-between">
+                <span className="text-[11px] uppercase tracking-[0.18em] text-gold-300 font-semibold flex items-center gap-1.5 group-hover:text-gold-200">
+                  Explore <ArrowRight size={13} className="group-hover:translate-x-1.5 transition-transform duration-300" />
                 </span>
 
                 <a
@@ -227,7 +245,7 @@ const MarqueeCard: React.FC<{ item: MarqueeJewelryItem }> = ({ item }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
-                  className="inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.15em] text-emerald-400 hover:text-emerald-300 font-medium"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-950/60 border border-emerald-500/40 rounded-full text-[10px] uppercase tracking-[0.16em] text-emerald-300 hover:text-emerald-200 hover:bg-emerald-900/80 transition-all duration-300 shadow-sm"
                 >
                   <MessageCircle size={12} /> WhatsApp
                 </a>
@@ -245,55 +263,55 @@ const DualRowJewelryMarquee: React.FC = () => {
   const prefersReducedMotion = useReducedMotion();
   const reducedMotion = reducedMotionStore || prefersReducedMotion;
 
-  // Duplicate items for continuous seamless 60fps infinite marquee loop
-  const rowOneLoop = [...ROW_ONE_ITEMS, ...ROW_ONE_ITEMS, ...ROW_ONE_ITEMS];
-  const rowTwoLoop = [...ROW_TWO_ITEMS, ...ROW_TWO_ITEMS, ...ROW_TWO_ITEMS];
+  // Quadruple items for continuous 60fps infinite marquee loop without blank space
+  const rowOneLoop = [...ROW_ONE_ITEMS, ...ROW_ONE_ITEMS, ...ROW_ONE_ITEMS, ...ROW_ONE_ITEMS];
+  const rowTwoLoop = [...ROW_TWO_ITEMS, ...ROW_TWO_ITEMS, ...ROW_TWO_ITEMS, ...ROW_TWO_ITEMS];
 
   return (
     <section
       className="section-padding relative overflow-hidden bg-[#07040B] border-y border-gold-400/15"
       aria-label="Jewellery in Motion — Dual Direction Interactive Showcase"
     >
-      {/* Background Ambient Gold Lighting */}
+      {/* Background Ambient Champagne Gold Radial Glow */}
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[40vw] rounded-full opacity-[0.06] blur-[150px] pointer-events-none"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[75vw] h-[45vw] rounded-full opacity-[0.07] blur-[160px] pointer-events-none"
         style={{ background: 'radial-gradient(circle, #D4AF37 0%, transparent 70%)' }}
       />
 
-      <div className="container relative mb-10 sm:mb-14 text-center">
+      <div className="container relative mb-11 sm:mb-16 text-center">
         <SectionTitle
-          label="CREATIONS IN MOTION"
-          title="Artistry in Every Detail"
-          subtitle="Explore our signature handcrafted 22K gold & diamond jewellery in continuous motion."
+          label="ARTISTRY IN MOTION"
+          title="Creations Moving in Harmony"
+          subtitle="Experience our handcrafted 22K BIS hallmarked gold & diamond jewellery in continuous dual motion."
           align="center"
         />
       </div>
 
-      {/* Main Interactive Marquee Outer Wrapper */}
+      {/* Main Interactive Marquee Outer Container */}
       <div className="relative w-full overflow-hidden group-pause select-none">
         {/* Left Edge Luxury Gradient Fade Mask */}
         <div
-          className="absolute inset-y-0 left-0 w-16 sm:w-32 md:w-44 z-20 pointer-events-none"
+          className="absolute inset-y-0 left-0 w-20 sm:w-36 md:w-52 z-20 pointer-events-none"
           style={{
             background:
-              'linear-gradient(to right, rgba(7,4,11,1) 0%, rgba(7,4,11,0.85) 40%, transparent 100%)',
+              'linear-gradient(to right, rgba(7,4,11,1) 0%, rgba(7,4,11,0.85) 45%, transparent 100%)',
           }}
         />
 
         {/* Right Edge Luxury Gradient Fade Mask */}
         <div
-          className="absolute inset-y-0 right-0 w-16 sm:w-32 md:w-44 z-20 pointer-events-none"
+          className="absolute inset-y-0 right-0 w-20 sm:w-36 md:w-52 z-20 pointer-events-none"
           style={{
             background:
-              'linear-gradient(to left, rgba(7,4,11,1) 0%, rgba(7,4,11,0.85) 40%, transparent 100%)',
+              'linear-gradient(to left, rgba(7,4,11,1) 0%, rgba(7,4,11,0.85) 45%, transparent 100%)',
           }}
         />
 
         {/* ROW 1 — Moving Left ⬅️ */}
-        <div className="flex w-full overflow-hidden mb-5 sm:mb-6">
+        <div className="flex w-full overflow-hidden mb-6 sm:mb-8">
           <div
             className={cn(
-              'flex py-2',
+              'flex py-3',
               reducedMotion ? 'overflow-x-auto w-full justify-start' : 'animate-marquee-left'
             )}
           >
@@ -307,7 +325,7 @@ const DualRowJewelryMarquee: React.FC = () => {
         <div className="flex w-full overflow-hidden">
           <div
             className={cn(
-              'flex py-2',
+              'flex py-3',
               reducedMotion ? 'overflow-x-auto w-full justify-start' : 'animate-marquee-right'
             )}
           >

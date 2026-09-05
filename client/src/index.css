@@ -538,14 +538,14 @@
   .animate-marquee-left {
     display: flex;
     width: max-content;
-    animation: marquee-left 42s linear infinite;
+    animation: marquee-left 50s linear infinite;
     will-change: transform;
   }
 
   .animate-marquee-right {
     display: flex;
     width: max-content;
-    animation: marquee-right 42s linear infinite;
+    animation: marquee-right 50s linear infinite;
     will-change: transform;
   }
 
