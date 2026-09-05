@@ -114,7 +114,10 @@ export function Navbar() {
             aria-label="SSKK — Shubham Swarn Kala Kendra"
           >
             <div className="flex flex-col">
-              <span className="font-serif text-gold-gradient text-lg sm:text-xl md:text-2xl font-medium tracking-wide leading-tight group-hover:scale-[1.01] transition-transform duration-300">
+              <span className="block sm:hidden font-serif text-gold-gradient text-xl font-bold tracking-[0.24em] leading-tight">
+                SSKK
+              </span>
+              <span className="hidden sm:block font-serif text-gold-gradient text-xl md:text-2xl font-medium tracking-wide leading-tight group-hover:scale-[1.01] transition-transform duration-300">
                 Shubham Swarn Kala Kendra
               </span>
               <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.32em] text-text-muted/80 font-sans hidden sm:block">
