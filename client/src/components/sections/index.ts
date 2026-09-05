@@ -22,3 +22,14 @@ export * from './FrameSequenceShowcase';
 export { default as FrameSequenceShowcase } from './FrameSequenceShowcase';
 export * from './TrustBar';
 export { default as TrustBar } from './TrustBar';
+export * from './CatalogueBanner';
+export { default as CatalogueBanner } from './CatalogueBanner';
+export * from './BrandStory';
+export { default as BrandStory } from './BrandStory';
+export * from './CraftsmanshipSection';
+export { default as CraftsmanshipSection } from './CraftsmanshipSection';
+export * from './ShowroomSection';
+export { default as ShowroomSection } from './ShowroomSection';
+export * from './JewelryExperience';
+export { default as JewelryExperience } from './JewelryExperience';
+

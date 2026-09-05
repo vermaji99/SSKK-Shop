@@ -105,23 +105,25 @@ export function Navbar() {
             : 'max(calc(env(safe-area-inset-top) + 0.75rem), 0.75rem)',
         }}
       >
-        <nav className="container flex items-center justify-between gap-2 sm:gap-4">
+        <nav className="container flex items-center justify-between gap-4 md:gap-6">
           <Link
             to="/"
-            className="flex-shrink-0 min-w-0 pr-1.5"
+            className="flex-shrink-0 min-w-0 pr-2 group"
             data-cursor="hover"
             onClick={closeMobileMenu}
             aria-label="SSKK — Shubham Swarn Kala Kendra"
           >
-            <h1 className="font-serif text-gold-gradient tracking-wide leading-tight whitespace-nowrap transition-transform duration-300 hover:scale-[1.01]">
-              <span className="hidden sm:inline text-[1.05rem] md:text-xl lg:text-2xl">
+            <div className="flex flex-col">
+              <span className="font-serif text-gold-gradient text-lg sm:text-xl md:text-2xl font-medium tracking-wide leading-tight group-hover:scale-[1.01] transition-transform duration-300">
                 Shubham Swarn Kala Kendra
               </span>
-              <span className="sm:hidden text-2xl font-semibold">SSKK</span>
-            </h1>
+              <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.32em] text-text-muted/80 font-sans hidden sm:block">
+                BIS Hallmarked Gold & Diamonds
+              </span>
+            </div>
           </Link>
 
-          <div className="hidden lg:flex items-center justify-center gap-7 xl:gap-9">
+          <div className="hidden lg:flex items-center justify-center gap-6 xl:gap-8 2xl:gap-9">
             {navLinks.map((link) => {
               const active = isLinkActive(link.path);
               return (
@@ -131,7 +133,7 @@ export function Navbar() {
                   data-cursor="hover"
                   aria-current={active ? 'page' : undefined}
                   className={cn(
-                    'nav-underline relative text-text/90 hover:text-gold transition-colors duration-300 ease-out text-[11.5px] md:text-[12.5px] uppercase tracking-[0.2em] md:tracking-[0.22em] font-medium py-1.5',
+                    'nav-underline relative text-text/90 hover:text-gold transition-colors duration-300 ease-out text-[11px] xl:text-[12px] uppercase tracking-[0.22em] font-medium py-1.5 whitespace-nowrap',
                     active && 'is-active text-gold'
                   )}
                 >
@@ -141,7 +143,7 @@ export function Navbar() {
             })}
           </div>
 
-          <div className="flex items-center gap-0.5 sm:gap-1 md:gap-2 shrink-0 pl-1">
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             <IconButton ariaLabel="Search" onClick={toggleSearch}>
               <Search size={18} strokeWidth={1.5} className="sm:w-[19px] sm:h-[19px]" />
             </IconButton>
@@ -172,22 +174,22 @@ export function Navbar() {
               aria-label="WhatsApp SSKK for jewellery enquiries"
               data-cursor="hover"
               className={cn(
-                'hidden md:inline-flex touch-target items-center gap-1.5 px-3 md:px-3.5 py-2 rounded-full',
-                'gold-gradient text-purple-900 font-semibold uppercase tracking-wider text-[10.5px] md:text-[11px]',
+                'hidden xl:inline-flex touch-target items-center gap-1.5 px-3.5 py-2 rounded-full',
+                'gold-gradient text-purple-900 font-semibold uppercase tracking-wider text-[10.5px]',
                 'shadow-gold-glow hover:shadow-gold-glow-lg transition-all duration-500 ease-out',
                 'hover:-translate-y-px active:translate-y-0 active:scale-[0.986]',
                 'ring-1 ring-gold-400/30'
               )}
             >
-              <MessageCircle size={15} strokeWidth={1.75} className="md:w-[16px] md:h-[16px]" />
-              <span className="whitespace-nowrap">WhatsApp</span>
+              <MessageCircle size={15} strokeWidth={1.75} />
+              <span className="whitespace-nowrap">WhatsApp Us</span>
             </a>
 
             <IconButton ariaLabel="Cart" onClick={openCart} badge={cartCount}>
               <ShoppingBag size={18} strokeWidth={1.5} className="sm:w-[19px] sm:h-[19px]" />
             </IconButton>
 
-            <div className="w-px h-5 mx-0.5 sm:mx-1 md:mx-2 bg-gold-400/[0.18] hidden sm:block" />
+            <div className="w-px h-5 mx-0.5 sm:mx-1 bg-gold-400/[0.18] hidden lg:block" />
 
             <button
               type="button"

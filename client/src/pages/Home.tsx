@@ -3,7 +3,13 @@ import { CinematicHero } from '@/components/sections/CinematicHero';
 import { TrustBar } from '@/components/sections/TrustBar';
 import { Categories } from '@/components/sections/Categories';
 import { FeaturedProducts } from '@/components/sections/FeaturedProducts';
+import { CatalogueBanner } from '@/components/sections/CatalogueBanner';
 import { BridalCollection } from '@/components/sections/BridalCollection';
+import { BrandStory } from '@/components/sections/BrandStory';
+import { CraftsmanshipSection } from '@/components/sections/CraftsmanshipSection';
+import { ShowroomSection } from '@/components/sections/ShowroomSection';
+import { WhyChooseUs } from '@/components/sections/WhyChooseUs';
+import { JewelryExperience } from '@/components/sections/JewelryExperience';
 import { HomeInquiry } from '@/components/sections/HomeInquiry';
 import SEO from '@/components/common/SEO';
 import InquiryModal from '@/components/common/InquiryModal';
@@ -36,9 +42,21 @@ export const Home: React.FC = () => {
         <FeaturedProducts />
       </section>
 
+      <CatalogueBanner />
+
       <section aria-label="Bridal collection — wedding jewellery editorial showcase" id="bridal">
         <BridalCollection />
       </section>
+
+      <BrandStory />
+
+      <CraftsmanshipSection />
+
+      <ShowroomSection />
+
+      <WhyChooseUs />
+
+      <JewelryExperience />
 
       <section aria-label="Home inquiry form — contact SSKK directly" id="home-inquiry">
         <HomeInquiry />

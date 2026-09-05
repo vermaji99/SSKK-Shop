@@ -7,20 +7,20 @@ const navigationLinks = [
   { name: 'Home', path: '/' },
   { name: 'Jewellery', path: '/collections' },
   { name: 'Bridal', path: '/collections/bridal' },
-  { name: 'About', path: '/about' },
+  { name: 'About Us', path: '/about' },
   { name: 'Our Story', path: '/about#story' },
-  { name: 'Visit Us', path: '/contact#visit' },
-  { name: 'Contact', path: '/contact#enquiry' },
+  { name: 'Visit Showroom', path: '/contact#visit' },
+  { name: 'Enquire', path: '/contact#enquiry' },
 ];
 
 const categoryLinks = [
   { name: 'Rings', path: '/collections/rings' },
   { name: 'Earrings', path: '/collections/earrings' },
   { name: 'Necklaces', path: '/collections/necklaces' },
-  { name: 'Chains', path: '/collections/chains' },
   { name: 'Bangles', path: '/collections/bangles' },
-  { name: 'Bridal', path: '/collections/bridal' },
-  { name: 'Nath', path: '/collections/nath' },
+  { name: 'Gold Chains', path: '/collections/chains' },
+  { name: 'Bridal Sets', path: '/collections/bridal' },
+  { name: 'Diamond Jewellery', path: '/collections/diamonds' },
 ];
 
 const WHATSAPP_FOOTER_PREFILL = encodeURIComponent(

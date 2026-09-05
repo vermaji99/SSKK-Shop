@@ -77,11 +77,11 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
   const endCallbackCooldownRef = React.useRef(false);
 
   const base = isMobile ? 'hero-mobile' : 'hero-desktop';
-  const posterWebp = posterWebpOverride === null ? '' : (posterWebpOverride ?? `/hero-video/${base}-poster.webp`);
-  const posterJpg = posterJpgOverride === null ? '' : (posterJpgOverride ?? `/hero-video/${base}-poster.jpg`);
-  const webmSrc = webmSrcOverride === null ? '' : (webmSrcOverride ?? `/hero-video/${base}.webm`);
-  const mp4Src = mp4SrcOverride === null ? '' : (mp4SrcOverride ?? `/hero-video/${base}.mp4`);
-  const sourceMp4Fallback = sourceMp4FallbackOverride === null ? '' : (sourceMp4FallbackOverride ?? `/hero-video/${base}-source.mp4`);
+  const posterWebp = posterWebpOverride ?? '';
+  const posterJpg = posterJpgOverride ?? `/Royal Ring.jpg`;
+  const webmSrc = webmSrcOverride ?? '';
+  const mp4Src = mp4SrcOverride || `/Jewellery_commercial_for_SSKK_202608271422.mp4`;
+  const sourceMp4Fallback = sourceMp4FallbackOverride || `/Jewellery_commercial_for_SSKK_202608271422.mp4`;
   const fallbackFrame = `/hero-frames/frame_006.jpg`;
 
   const isHoveredRef = React.useRef(false);
@@ -615,9 +615,9 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
         <video
           ref={videoRef}
           muted
-          loop={false}
+          loop
           playsInline
-          autoPlay={false}
+          autoPlay
           preload="auto"
           disablePictureInPicture
           controlsList="nodownload noplaybackrate noremoteplayback"
@@ -630,11 +630,10 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
             videoReady && !reducedMotion ? 'opacity-100' : 'opacity-0'
           )}
           style={{
-            width: 'auto',
-            height: 'auto',
+            width: '100%',
+            height: '100%',
             minWidth: '100%',
             minHeight: '100%',
-            maxWidth: 'none',
             objectFit: 'cover',
             imageRendering: 'auto',
           }}
@@ -642,8 +641,8 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
         >
           {!reducedMotion && (
             <>
-              {webmSrc && <source src={webmSrc} type="video/webm; codecs=vp9" />}
-              {mp4Src && <source src={mp4Src} type="video/mp4; codecs=avc1.64002a" />}
+              {mp4Src && <source src={mp4Src} type="video/mp4" />}
+              {webmSrc && <source src={webmSrc} type="video/webm" />}
               {sourceMp4Fallback && <source src={sourceMp4Fallback} type="video/mp4" />}
             </>
           )}
@@ -654,7 +653,8 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(ellipse 65% 60% at 50% 48%, transparent 0%, rgba(5,2,10,0.52) 55%, rgba(5,2,10,0.9) 100%)',
+            'linear-gradient(180deg, rgba(5,2,10,0.65) 0%, rgba(5,2,10,0.22) 40%, rgba(5,2,10,0.75) 100%), ' +
+            'linear-gradient(90deg, rgba(5,2,10,0.78) 0%, rgba(5,2,10,0.38) 45%, rgba(5,2,10,0.15) 100%)',
         }}
         aria-hidden="true"
       />

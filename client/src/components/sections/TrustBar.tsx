@@ -6,40 +6,43 @@ const trustItems: Array<{
   label: string;
   icon: React.ComponentType<any>;
 }> = [
-  { label: 'BIS Hallmarked', icon: Shield },
-  { label: 'Certified Diamonds', icon: Gem },
-  { label: '22K & 18K', icon: Award },
-  { label: 'Authentic Craftsmanship', icon: Sparkles },
-  { label: 'Custom Designs', icon: Compass },
+  { label: 'BIS HALLMARKED GOLD', icon: Shield },
+  { label: 'CERTIFIED DIAMONDS', icon: Gem },
+  { label: '22K & 18K GOLD', icon: Award },
+  { label: 'AUTHENTIC CRAFTSMANSHIP', icon: Sparkles },
+  { label: 'TRUSTED JEWELLERY SHOWROOM', icon: Compass },
 ];
 
-const ICON_CLASS = 'w-5 h-5 md:w-[22px] md:h-[22px] text-gold-400';
+const ICON_CLASS =
+  'w-[18px] h-[18px] sm:w-[19px] sm:h-[19px] md:w-[20px] md:h-[20px] text-gold-400/90 shrink-0';
 const ICON_STROKE = 1.5;
 
 export const TrustBar: React.FC = () => {
   return (
     <section
       aria-label="Trust markers — BIS hallmark, certified diamonds, purity and craftsmanship"
-      className="relative border-y border-gold-400/15 bg-background-secondary/60"
+      className="relative border-y border-gold-400/[0.14] bg-background-secondary/40"
     >
-      <div className="container py-5 md:py-6">
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-5 gap-y-5 gap-x-4 md:gap-0">
+      <div className="container py-4 sm:py-5 md:py-6">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-y-4 gap-x-3 sm:gap-x-4 md:gap-x-6 md:gap-y-0">
           {trustItems.map((item, idx) => {
             const Icon = item.icon;
-            const isLast = idx === trustItems.length - 1;
+            const last = idx === trustItems.length - 1;
             return (
               <div
                 key={item.label}
                 className={cn(
-                  'relative flex items-center justify-center gap-2.5 md:gap-3 py-1',
-                  'md:px-4 lg:px-2 xl:px-4',
-                  !isLast && 'md:after:content-[""] md:after:absolute md:after:top-1/2 md:after:right-0 md:after:-translate-y-1/2 md:after:w-px md:after:h-8 md:after:bg-gold-400/20 md:after:hidden lg:after:block'
+                  'relative flex items-center justify-center gap-2.5 sm:gap-3 py-1 sm:py-1.5 md:py-2 min-h-[44px] sm:min-h-[46px]',
+                  !last &&
+                    'md:after:content-[""] md:after:absolute md:after:top-1/2 md:after:right-0 md:after:-translate-y-1/2 md:after:w-px md:after:h-8 md:after:bg-gold-400/[0.16]'
                 )}
               >
                 <div className="flex items-center justify-center shrink-0">
                   <Icon className={ICON_CLASS} strokeWidth={ICON_STROKE} />
                 </div>
-                <span className="font-medium tracking-[0.18em] text-[11px] sm:text-[12px] md:text-[13px] uppercase text-cream/85 whitespace-nowrap md:whitespace-normal md:text-center">
+                <span
+                  className="font-medium tracking-[0.17em] md:tracking-[0.19em] text-[10.5px] sm:text-[11.5px] md:text-[12.5px] uppercase text-cream/[0.87] whitespace-nowrap md:whitespace-normal md:text-center leading-snug"
+                >
                   {item.label}
                 </span>
               </div>

@@ -54,38 +54,27 @@ const CinematicHero: React.FC = () => {
       <div className="absolute inset-0 z-0 w-full h-full">
         <HeroVideo
           reducedMotion={reducedMotion}
-          hoverPlay
+          hoverPlay={false}
           onPlaybackEnded={() => {}}
           restartToken={0}
-          ariaLabel="Jewellery cinematic showcase — hover desktop to play, tap on mobile"
-          webmSrcOverride={null}
-          mp4SrcOverride={null}
-          sourceMp4FallbackOverride={null}
+          ariaLabel="Jewellery commercial showcase — Shubham Swarn Kala Kendra"
+          mp4SrcOverride="/Jewellery_commercial_for_SSKK_202608271422.mp4"
+          sourceMp4FallbackOverride="/Jewellery_commercial_for_SSKK_202608271422_202608311433.mp4"
         />
       </div>
-
-      <div
-        className="absolute inset-0 z-[1] pointer-events-none"
-        aria-hidden="true"
-        style={{
-          background:
-            'radial-gradient(ellipse 65% 62% at 50% 46%, transparent 0%, rgba(5,2,10,0.58) 56%, rgba(5,2,10,0.94) 100%), ' +
-            'linear-gradient(90deg, rgba(5,2,10,0.55) 0%, rgba(5,2,10,0.22) 38%, rgba(5,2,10,0.0) 58%, rgba(5,2,10,0.14) 78%, rgba(5,2,10,0.62) 100%)',
-        }}
-      />
 
       <div className="absolute inset-0 z-[2] pointer-events-none">
         <div className="relative h-full w-full container flex items-start md:items-center justify-start pt-28 sm:pt-32 md:pt-20 pb-10 sm:pb-16 md:pb-12">
           <div
-            className="w-full max-w-none md:max-w-[78%] lg:max-w-[72%] xl:max-w-[68%] 2xl:max-w-[62%]"
-            style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 2.5rem)' }}
+            className="w-full max-w-none md:max-w-[75%] lg:max-w-[65%] xl:max-w-[58%] 2xl:max-w-[54%]"
+            style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 2rem)' }}
           >
             <motion.span
               {...fadeIn(10, 0)}
-              className="eyebrow inline-block mb-5 sm:mb-6"
-              style={{ letterSpacing: '0.32em' }}
+              className="eyebrow inline-block mb-3 sm:mb-4 text-gold-400"
+              style={{ letterSpacing: '0.36em', fontSize: 'clamp(0.65rem, 0.85vw, 0.75rem)' }}
             >
-              {BUSINESS.name.toUpperCase()}
+              FINE JEWELLERY & BRIDAL HERITAGE
             </motion.span>
 
             <motion.div
@@ -102,15 +91,15 @@ const CinematicHero: React.FC = () => {
               style={{
                 transformOrigin: 'left center',
                 height: '1.5px',
-                width: 'clamp(44px, 6vw, 62px)',
+                width: 'clamp(36px, 4.5vw, 52px)',
                 background:
-                  'linear-gradient(90deg, rgba(212,175,55,0.62) 0%, rgba(212,175,55,0.32) 100%)',
+                  'linear-gradient(90deg, rgba(212,175,55,0.85) 0%, rgba(212,175,55,0.2) 100%)',
               }}
               aria-hidden="true"
             />
 
             <h1
-              className="mt-5 sm:mt-7 whitespace-pre-line"
+              className="mt-4 sm:mt-5 whitespace-pre-line"
               aria-label="Crafted in Gold. Designed for Your Forever."
             >
               <motion.span
@@ -118,11 +107,11 @@ const CinematicHero: React.FC = () => {
                 className="block font-serif hero-gold-text hero-gold-sheen"
                 style={{
                   fontWeight: 500,
-                  lineHeight: 1.02,
-                  letterSpacing: '-0.018em',
-                  fontSize: 'clamp(2.1rem, 5.8vw, 5rem)',
+                  lineHeight: 1.06,
+                  letterSpacing: '-0.016em',
+                  fontSize: 'clamp(1.85rem, 4.2vw, 3.65rem)',
                   textShadow:
-                    '0 1px 22px rgba(5,2,10,0.86), 0 0 26px rgba(244,215,123,0.07)',
+                    '0 2px 20px rgba(5,2,10,0.9), 0 0 24px rgba(244,215,123,0.12)',
                 }}
               >
                 Crafted in Gold.
@@ -132,9 +121,9 @@ const CinematicHero: React.FC = () => {
                 className="block font-serif hero-cream-text mt-1 sm:mt-1.5"
                 style={{
                   fontWeight: 500,
-                  lineHeight: 1.04,
-                  letterSpacing: '-0.016em',
-                  fontSize: 'clamp(2rem, 5.55vw, 4.85rem)',
+                  lineHeight: 1.06,
+                  letterSpacing: '-0.014em',
+                  fontSize: 'clamp(1.75rem, 3.9vw, 3.45rem)',
                 }}
               >
                 Designed for Your Forever.
@@ -143,23 +132,24 @@ const CinematicHero: React.FC = () => {
 
             <motion.p
               {...fadeIn(10, 0.85, 0.88)}
-              className="mt-6 sm:mt-8 max-w-2xl lg:max-w-[560px] xl:max-w-[620px] text-cream/80 font-sans leading-relaxed"
+              className="mt-4 sm:mt-5 max-w-lg text-cream/90 font-sans leading-relaxed"
               style={{
-                fontSize: 'clamp(0.95rem, 1.38vw, 1.12rem)',
-                letterSpacing: '0.004em',
+                fontSize: 'clamp(0.92rem, 1.2vw, 1.05rem)',
+                letterSpacing: '0.005em',
+                textShadow: '0 1px 12px rgba(5,2,10,0.85)',
               }}
             >
-              Timeless jewellery crafted with precision, passion and trusted craftsmanship in Doharighat, Mau.
+              Timeless gold and diamond jewellery, thoughtfully crafted for life's most meaningful moments.
             </motion.p>
 
             <motion.div
               {...fadeIn(6, 1.05, 0.82)}
-              className="mt-4 sm:mt-5 flex items-center gap-2 text-cream/55"
-              style={{ fontSize: 'clamp(0.76rem, 1vw, 0.86rem)' }}
+              className="mt-3 sm:mt-4 flex items-center gap-2 text-cream/70"
+              style={{ fontSize: 'clamp(0.74rem, 0.9vw, 0.82rem)' }}
             >
-              <MapPin size={14} strokeWidth={1.5} className="text-gold-400/80 shrink-0" />
+              <MapPin size={14} strokeWidth={1.5} className="text-gold-400 shrink-0" />
               <span>
-                Sabji Mandi Road &middot; {BUSINESS.city} &middot; {BUSINESS.district}, UP
+                Showroom: Sabji Mandi Road &middot; {BUSINESS.city} &middot; {BUSINESS.district}, UP
               </span>
             </motion.div>
 
@@ -174,44 +164,47 @@ const CinematicHero: React.FC = () => {
                     ease: [0.22, 1, 0.36, 1],
                   }
               }
-              className="mt-8 sm:mt-10 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-start gap-3 sm:gap-4 max-w-[760px]"
+              className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-start gap-3 sm:gap-4 pointer-events-auto"
             >
               <Button
                 asChild
                 variant="primary"
                 size="lg"
-                className="w-full sm:w-auto sm:min-w-[220px]"
+                className="whitespace-nowrap px-7 py-3 text-xs tracking-[0.18em]"
               >
-                <Link to="/collections">EXPLORE JEWELLERY</Link>
+                <Link to="/collections" className="whitespace-nowrap">EXPLORE COLLECTION</Link>
               </Button>
               <Button
                 asChild
                 variant="secondary"
                 size="lg"
-                className="w-full sm:w-auto sm:min-w-[256px]"
+                className="whitespace-nowrap px-7 py-3 text-xs tracking-[0.18em]"
               >
-                <Link to="/contact#visit">BOOK A SHOWROOM VISIT</Link>
-              </Button>
-              <Button
-                asChild
-                variant="ghost"
-                size="lg"
-                className="w-full sm:w-auto sm:min-w-[204px] border border-gold-400/[0.32] hover:border-gold-400/[0.64] hover:bg-gold-400/[0.07]"
-              >
-                <a
-                  href={HERO_WHATSAPP_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="WhatsApp SSKK about jewellery collections"
-                >
-                  <MessageCircle size={16} strokeWidth={1.75} />
-                  WHATSAPP US
-                </a>
+                <Link to="/contact#visit" className="whitespace-nowrap">BOOK SHOWROOM VISIT</Link>
               </Button>
             </motion.div>
           </div>
         </div>
       </div>
+
+      {/* Subtle Scroll Indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.7 }}
+        transition={{ delay: 2, duration: 1 }}
+        className="absolute bottom-5 left-1/2 -translate-x-1/2 z-[3] hidden md:flex flex-col items-center gap-2 pointer-events-none"
+      >
+        <span className="text-[10px] uppercase tracking-[0.3em] text-text-muted font-sans">
+          Scroll to explore
+        </span>
+        <div className="w-5 h-8 border border-gold-400/40 rounded-full flex items-start justify-center p-1">
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            className="w-1 h-1.5 rounded-full bg-gold-400"
+          />
+        </div>
+      </motion.div>
     </section>
   );
 };
