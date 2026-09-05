@@ -1,677 +1,368 @@
-# SSKK Premium Redesign — Implementation Tasks
+# SSKK Part 1 — Implementation Tasks
 
-Task decomposition from spec.md Acceptance Criteria. Order = dependency order (vertical slices). Every completed task includes Completion Evidence: links to touched files, self-verification of TRs.
+## Overview
+All tasks focus on Foundation clean-up: bug fixes, Design System tokens, component consistency, Home placeholder removal, zero-duplicity trust consolidation. No new section content implementations (that is later phases).
 
-## Task 1: Config & SEO Update (business.ts + seo.ts + assets.ts)
-
-- **Priority**: high
-- **Status**: pending
-- **Depends on**: — (first task)
-- **Scope**:
-  - Add `TESTIMONIALS_EDITABLE` to `business.ts` with 0 or 1 clearly-marked editable example entry.
-  - Add 9-category static visual map in `assets.ts` (incl Mang Tikka + Custom Jewellery with fallbacks).
-  - Update `PAGE_SEO.home.title` and `PAGE_SEO.home.description` per FR-26.
-  - Ensure `BUSINESS` is the ONLY source of phone/address/hours strings — grep-copy any duplicate strings into references.
-- **Files touched**:
-  - `client/src/config/business.ts`
-  - `client/src/config/seo.ts`
-  - `client/src/config/assets.ts`
-- **Test Requirements (TR)**:
-  - **Rule TR-1.1**: `BUSINESS.whatsappPrimary` is used for ALL 5 WhatsApp links (derive prefill texts from helpers in business.ts if needed).
-  - **Rule TR-1.2**: `TESTIMONIALS_EDITABLE` exists and is exported; if non-empty, first entry has `/* EDITABLE — replace with verified reviews */` marker on name/quote fields.
-  - **Rule TR-1.3**: `CATEGORY_IMAGE_BY_SLUG` covers Mang Tikka (fallback to haarSet/bridal) and Custom Jewellery (fallback to birdLocket/showcase).
-  - **Rule TR-1.4**: `PAGE_SEO.home.title === "Shubham Swarn Kala Kendra | Premium Gold & Diamond Jewellery"` exactly.
-  - **Rule TR-1.5**: `PAGE_SEO.home.description` contains both "Doharighat" and "Mau".
-  - **Rubric TR-1.6 (0-2, threshold 2)**: No duplicated phone/address strings outside BUSINESS.ts (scan codebase). 2 = zero dups; 1 = <3; 0 = many.
-- **Completion Evidence**: Diff of 3 config files; grep result showing zero stray address strings.
+Dependency order: T1 (runtime bugs & Home clean-up → highest priority → T2 Design System Tailwind tokens → T3 component fixes → T4 remaining consistency/SEO/accessibility.
 
 ---
 
-## Task 2: Global Design Tokens & CSS Cleanup (tailwind + index.css)
+## Task 1: Runtime Bug Fixes + Home Zero-Duplicity Cleanup
+**Status: pending**
+**Priority: high**
+**Depends on:** none
+**Blocks:** T2, T3, T4, T5, T6, T7, T8, T9, T10, T11
 
-- **Priority**: high
-- **Status**: pending
-- **Depends on**: Task 1
-- **Scope**:
-  - Adjust `box-shadow` gold-glow values to stay in 0.10–0.22 opacity range (`gold-glow-xl` max 0.22).
-  - Ensure shimmer keyframes cycle ≥ 12s, sheen sweep ≥ 14s.
-  - Verify all `@media (prefers-reduced-motion: reduce)` blocks cover new animations.
-  - Add any new utility classes needed for the 9 sections: `faq-accordion`, `journey-line`, `editorial-grid` etc.
-  - Audit hero height triple-fallback chain (100vh, 100svh, 100dvh) remains for hero + showcase.
-- **Files touched**:
-  - `client/tailwind.config.js`
-  - `client/src/index.css`
-- **Test Requirements (TR)**:
-  - **Rule TR-2.1**: All gold-glow box-shadow rgba opacities are ≤ 0.22 (scan tailwind.config).
-  - **Rule TR-2.2**: `@keyframes shimmer` duration ≥ 12s (8s in original; increase).
-  - **Rule TR-2.3**: `prefers-reduced-motion: reduce` block at top of index.css → selector scope matches new reveal/journey classes.
-  - **Rubric TR-2.4 (0-2, threshold 2)**: CSS architecture — no new global `overflow-x: hidden`; all containment via layout. 2 = compliant; 1 = one minor violation; 0 = global hack.
-- **Completion Evidence**: CSS file diff; opacity scan output.
+### Objective
+Fix the critical undefined PlaceholderTrustBar render bug. Remove 6 placeholder sections and WhyChooseUs from Home.tsx render per zero-duplicity project_memory mandate. Render correct TrustBar immediately after Hero only.
 
----
+### Scope
+- Files: `client/src/pages/Home.tsx` (only)
+- **Remove undefined ref:** PlaceholderTrustBar → replace with `<TrustBar />` import → render immediately after `CinematicHero`
+- **Remove from Home render (not delete component files):**
+  - WhyChooseUs section + 6 placeholder components (OurStory, CustomerJourney, CustomCTA, Showroom, Testimonials, FAQ) — delete Placeholder component functions from Home.tsx file as they are only there as scaffolding — not used elsewhere.
+- Home sections order AFTER Task 1 render:
+  1. CinematicHero
+  2. TrustBar
+  3. Categories
+  4. FeaturedProducts
+  5. BridalCollection
+  6. HomeInquiry
+  7. InquiryModal (keep modal)
 
-## Task 3: Navbar + Layout Audit (active underline + WhatsApp copy)
+### Test Requirements (TRs)
+#### RULE Type (TR)
+- TR-1.1: Rule — `Home.tsx` renders `TrustBar` (correct component not undefined placeholder reference). `tsc --noEmit` passes 0 TS errors. 0 undefined references.
+- TR-1.2: Rule — Grep Home.tsx: zero occurrences of `Placeholder` (all 6 PlaceholderX skeleton components removed from file).
+- TR-1.3: Rule — Zero-duplicity: Home.tsx does NOT import/render `WhyChooseUs`. Only `TrustBar` as trust section.
+- TR-1.4: Rule — Home sections count: Hero, TrustBar, Categories, Featured, Bridal, HomeInquiry. No scaffold/placeholder rendering.
 
-- **Priority**: high
-- **Status**: pending
-- **Depends on**: Task 1, 2
-- **Scope**:
-  - Navbar active state: set `is-active` class on the current link via `useLocation()`.
-  - Header WhatsApp pill prefill = FR-16#1 string from a BUSINESS helper.
-  - Ensure mobile hamburger aria-expanded toggles.
-  - Add `aria-current="page"` where applicable.
-- **Files touched**:
-  - `client/src/components/layout/Navbar.tsx`
-  - `client/src/components/layout/Layout.tsx` (quick CustomCursor touch-disable audit)
-- **Test Requirements (TR)**:
-  - **Rule TR-3.1**: On `/about`, the About navbar link has class `is-active`.
-  - **Rule TR-3.2**: Navbar WhatsApp href starts with `https://wa.me/919935178342?text=Hello%20SSKK%2C%20I%27d%20like%20to%20know%20more...`.
-  - **Rule TR-3.3**: CustomCursor on coarse pointers disabled (pointer: coarse media guard).
-  - **Rule TR-3.4**: Navbar scroll threshold 40px → transparent → glass; bottom border hairline visible when scrolled.
-- **Completion Evidence**: Navbar file diff; test URL navigation active state.
+#### RUBRIC Type
+- RU-1.1: Home visual polish (0-2): 0 = still render placeholders; 1 = placeholders removed but render order jarring; 2 = clean ordered render with zero placeholders → threshold ≥ 2
+
+**Completion Evidence:**
 
 ---
 
-## Task 4: Hero Section Redesign (CinematicHero.tsx) — Restrained Motion + New Copy
+## Task 2: Tailwind Design System — Color, Typography, Spacing, Container Foundation
+**Status: pending**
+**Priority: high**
+**Depends on:** T1
+**Blocks:** T3, T4, T5, T6, T7, T8, T9, T10, T11
 
-- **Priority**: high
-- **Status**: pending
-- **Depends on**: Task 2, 3
-- **Scope**:
-  - REMOVE letter-by-letter cycling brand animation (5.6s strobe).
-  - ADD single on-load fade-up of the 2 new lines.
-  - H1 = "Crafted in Gold.\nDesigned for Your Forever."
-  - Body = "Timeless jewellery crafted with precision, passion and trusted craftsmanship in Doharighat, Mau."
-  - CTA 1: `EXPLORE JEWELLERY` → `/collections`.
-  - CTA 2: `BOOK A SHOWROOM VISIT` → `/contact#visit`.
-  - Secondary WhatsApp CTA: Hero-specific prefill (FR-16#2).
-  - Shimmer 12s cycle; sheen sweep 14s (via CSS tokens from Task 2).
-  - Hero video: desktop `Jewellery_commercial_for_SSKK_202608271422.mp4`, mobile `..._202608311433.mp4`.
-  - Eyebrow: `SHUBHAM SWARN KALA KENDRA`.
-- **Files touched**:
-  - `client/src/components/sections/CinematicHero.tsx`
-- **Test Requirements (TR)**:
-  - **Rule TR-4.1**: H1 innerText when split by newline = `["Crafted in Gold.", "Designed for Your Forever."]`
-  - **Rule TR-4.2**: No `BRAND_ANIMATION_TOTAL_MS` or letter-per-char animation variants remain; grep 0 matches.
-  - **Rule TR-4.3**: 3 CTA buttons/links present (Explore, Book Visit, WhatsApp).
-  - **Rule TR-4.4**: Eyebrow = `SHUBHAM SWARN KALA KENDRA` uppercase, letter-spacing ≥ 0.28em.
-  - **Rubric TR-4.5 (0-5, threshold 4)**: Hero luxury feel (RU-06 proxy for hero). Evidence: screenshot at 1440w and 390w.
-- **Completion Evidence**: CinematicHero diff; screenshots.
+### Objective
+Formalize complete Luxury Design System tokens in `tailwind.config.js`: unified fluid typography scale, verified color tokens, spacing scale, 1440/1920 container breakpoints support. Remove conflicting `.container` CSS utility from `index.css`.
 
----
+### Scope
+Files: `client/tailwind.config.js` + `client/src/index.css`
 
-## Task 5: Trust Bar — Keep & Refine (shadows, labels, dividers)
+#### tailwind.config.js extends:
+- **theme.extend.fontSize** (add key — missing currently):
+  ```
+  display: clamp(3.5rem, 8.5vw, 7rem) with leading 1.02 tracking -0.024em
+  h1: clamp(2.5rem, 6.2vw, 5.5rem) leading 1.04 tracking -0.02em
+  h2: clamp(2rem, 4.5vw, 3.875rem) leading 1.08 tracking -0.016em
+  h3: clamp(1.5rem, 3.1vw, 2.5rem) leading 1.15 tracking -0.01em
+  'body-lg': clamp(1.05rem, 1.42vw, 1.25rem) leading 1.65
+  body: clamp(0.95rem, 1.18vw, 1.0625rem) leading 1.65
+  small: clamp(0.8125rem, 0.98vw, 0.9375rem) leading 1.5
+  label: clamp(0.6875rem, 0.92vw, 0.8125rem) leading 1.4 tracking 0.14em uppercase
+  button: clamp(0.75rem, 0.98vw, 0.875rem) leading 1 tracking 0.16em uppercase
+  ```
+- **theme.extend.spacing** (ensure 4/8px multiples: 4.5 (18px), 5.5 (22px), 6.5 (26px), 7.5 (30px), 8.5 (34px), 9.5 (38px), 10.5 (42px), 11.5 (46px), 12.5 (50px), 13 (52px), 14 (56px), 15 (60px), 16 (64px), 17 (68px), 18 (72px), 19 (76px), 21 (84px), 22 (88px), 25 (100px), 26 (104px), 30 (120px), 31 (124px), 34 (136px), 38 (152px), 46 (184px), 50 (200px), 62 (248px), 70 (280px), 88 (352px), 100 (400px), 104 (416px), 108 (432px), 112 (448px), 116 (464px), 120 (480px), 128 (512px), 144 (576px), 160 (640px), 200 (800px)
+- **theme.extend.screens** — Update container screens: keep sm, md, lg; update xl: 1280px (as-is); add '2xl': 1440px; add '3xl': 1920px
+- **theme.extend.container.screens — match screens to match screens above** {sm:640, md:768, lg:1024, xl:1280, '2xl':1440, '3xl':1920}
+- **theme.extend.boxShadow — Enforce luxury restraint: gold-glow → 0.18 opacity; gold-glow-lg 0.22; gold-glow-xl 0.26 opacity max (not >)
 
-- **Priority**: medium
-- **Status**: pending
-- **Depends on**: Task 2
-- **Scope**:
-  - TrustBar already has 5 items. Ensure labels exactly:
-    1. BIS Hallmarked Gold (not "BIS Hallmarked")
-    2. Certified Diamonds
-    3. 22K & 18K Gold (not "22K & 18K")
-    4. Authentic Craftsmanship
-    5. Custom Designs
-  - Tweak box-shadow / border-glow opacity per Task-2 tokens.
-  - Mobile: 2-col grid, tablet 3-col, md+ 5-col with hairline dividers.
-- **Files touched**:
-  - `client/src/components/sections/TrustBar.tsx`
-- **Test Requirements (TR)**:
-  - **Rule TR-5.1**: `trustItems.length === 5` and labels match FR-04 strings exactly.
-  - **Rule TR-5.2**: Each item has non-empty icon render + alt (decorative icons aria-hidden).
-  - **Rule TR-5.3**: Mobile view shows 2-col grid, no overflow, all labels readable.
-- **Completion Evidence**: TrustBar diff; responsive screenshot.
+#### index.css cleanup:
+- Remove `.container` and `.container-tight` CSS rules (lines 299-306 currently) they conflict with Tailwind's container. Use Tailwind container only.
+- Keep all other classes (.gold-gradient, .btn-primary, btn-secondary etc.) but ensure no `.container` utility collision.
+
+### TRs (Test Requirements):
+#### RULE Type
+- TR-2.1: Rule — tailwind.config.js contains complete `fontSize` with display/h1/h2/h3/body-lg/body/small/label/button keys with clamp() fluid responsive.
+- TR-2.2: Rule — tailwind.config.js spacing 4px/8px scale with 18px to 800px.
+- TR-2.3: Rule — container screens xl 1280 / 2xl 1440 / 3xl 1920
+- TR-2.4: Rule — index.css `.container` CSS rules deleted 0 occurrences.
+- TR-2.5: Rule — shadow gold-glow opacity ≤0.18, lg ≤ 0.22, xl ≤ 0.26
+
+#### RUBRIC
+- RU-2.1 Design System Tokens completeness 0-3): 0 missing; 1 some; 3 complete typography+spacing+screens+shadows → threshold ≥ 2
+- RU-2.2: Opacity Restraint (0-2): 0 excessive glow; 2: all opacities in spec range threshold ≥ 2
+
+**Completion Evidence:**
 
 ---
 
-## Task 6: Collections Section (9 Categories with fallback images)
+## Task 3: Badge Component Variants Visual Distinction
+**Status: pending**
+**Priority: high**
+**Depends on:** T1, T2
+**Blocks:** none
 
-- **Priority**: high
-- **Status**: pending
-- **Depends on**: Task 1, 2
-- **Scope**:
-  - Keep existing Categories component but:
-    a. Union fetched DB categories with a front-end 9-category static map (name, slug fallback, description, image override).
-    b. Cards use image zoom 1.038 hover + gold border.
-    c. Mang Tikka and Custom Jewellery always render (use asset fallbacks from Task-1 if not in DB).
-    d. Add a 1-line category description for each of 9.
-    e. "Explore →" link: if slug exists in DB go to `/collections/:slug`, else go to `/collections?category=:name`.
-  - Mobile: 2-col responsive grid (NOT horizontal scroll to avoid overflow — rule R-11).
-  - Subtitle real copy: reference Doharighat craftsmanship and BIS hallmark.
-- **Files touched**:
-  - `client/src/components/sections/Categories.tsx`
-- **Test Requirements (TR)**:
-  - **Rule TR-6.1**: 9 category cards render regardless of DB response.
-  - **Rule TR-6.2**: Each card has non-empty `img.alt`, name, description, Explore link.
-  - **Rule TR-6.3**: No horizontal scroll at 320w (R-11).
-  - **Rule TR-6.4**: "Explore Our Collections" title + real subtitle (no AI phrasing).
-- **Completion Evidence**: Categories diff; 9-card DOM snapshot.
+### Objective
+Empty variantStyles object is currently rendering every badge identically. Distinguish variants visually, consistent with luxury palette.
 
----
+### Scope
+File: `client/src/components/ui/Badge.tsx`
 
-## Task 7: Signature Pieces / Featured Products (Title + WhatsApp prefill)
+Implement `variantStyles`:
+- **featured:** gold-gradient (class) + text-purple-900 + border-gold-400/60 (high-contrast primary callout)
+- **bestseller:** background-purple-900/60 backdrop-blur + border-gold-400/40 + text-gold-300
+- **new:** background-emerald-500/18 backdrop-blur-sm + border-emerald-400/40 + text-emerald-300
 
-- **Priority**: high
-- **Status**: pending
-- **Depends on**: Task 1, 2
-- **Scope**:
-  - Title: "Signature Pieces" (was "Featured Jewellery").
-  - Subtitle: "Timeless designs created to become part of your story."
-  - ProductCard WhatsApp prefill updated to include SLUG/SKU per FR-06.
-  - Add optional "View All Jewellery" CTA to the right of title if not already.
-  - ProductCard: goldPurity shown if present, weight shown if present, "Contact for Price" when no price.
-  - Ensure no invented prices.
-- **Files touched**:
-  - `client/src/components/sections/FeaturedProducts.tsx`
-  - `client/src/components/ui/ProductCard.tsx`
-- **Test Requirements (TR)**:
-  - **Rule TR-7.1**: `h2.textContent` of section = "Signature Pieces".
-  - **Rule TR-7.2**: Subtitle matches FR-06 exactly.
-  - **Rule TR-7.3**: Product card WhatsApp href includes product name + `SKU` keyword.
-  - **Rule TR-7.4**: When `product.price` is missing, card shows "Contact for Price" (not ₹0).
-- **Completion Evidence**: FeaturedProducts + ProductCard diff; screenshot of card with hover state.
+### TRs
+#### RULE
+- TR-3.1: Badge featured/bestseller/new each unique bg/text/border combination (3 distinct visual styles; inspect)
+- TR-3.2: `tsc --noEmit` 0 TS errors.
+
+#### RUBRIC
+- RU-3.1 Variant clarity (0-2): 0 identical; 2 clearly visually distinct threshold ≥ 2
+
+**Completion Evidence:**
 
 ---
 
-## Task 8: Bridal Heritage Editorial Section (Asymmetric + Parallax)
+## Task 4: BridalCollection Grid Layout Math Fix
+**Status: pending**
+**Priority: high**
+**Depends on:** T1, T2
+**Blocks:** none
 
-- **Priority**: high
-- **Status**: pending
-- **Depends on**: Task 2
-- **Scope**:
-  - Keep existing component but rework copy + layout + bullets:
-    - Title: `"Bridal Heritage"`
-    - Copy: `"Jewellery designed to make your most unforgettable moments even more extraordinary."`
-    - 6 bullets: Necklaces, Earrings, Maang Tikka, Nath, Bangles, Bridal Sets
-    - CTA: `EXPLORE BRIDAL COLLECTION` → `/collections/bridal`
-  - Asymmetric grid (1 large + 4 small) already exists — polish with gold hairline dividers.
-  - Parallax y ±4% only, disabled on prefers-reduced-motion via `useReducedMotion()`.
-- **Files touched**:
-  - `client/src/components/sections/BridalCollection.tsx`
-- **Test Requirements (TR)**:
-  - **Rule TR-8.1**: Title, copy, CTA strings match spec exactly.
-  - **Rule TR-8.2**: 6 bullets rendered as list (ul).
-  - **Rule TR-8.3**: Parallax transform skips when `useReducedMotion()` returns true.
-  - **Rule TR-8.4**: 5 bridal images use bridalSet, haarSet, jhumkaAlt, pendantNath, bangleAlt from JEWELRY_IMAGES.
-- **Completion Evidence**: BridalCollection diff; screenshot.
+### Objective
+BridalCollection grid broken. 2 cols × 3 rows = 6 cells. First image takes 2x2=4 cells; remaining 4 images take 1 cell each = total 8 cells > 6 = overflow / broken. Fix grid definition.
 
----
+### Scope
+File: `client/src/components/sections/BridalCollection.tsx`
 
-## Task 9: Why Choose SSKK — Expand to 6 Features (Zero-Duplicity with About 4-Pillar)
+Corrected editorial grid proposal:
+- Grid = grid-cols-2 lg:grid-cols-3 (mobile: 2 cols; desktop: 3 cols) with `auto-rows-[140px] md:auto-rows-[170px] lg:auto-rows-[200px]`
+- Image 1 (bridalSet) = col-span-2 row-span-2 (large feature top-left)
+- Image 2 (jhumkaAlt) = col-span-1 row-span-1
+- Image 3 (haarSet) = col-span-1 row-span-2 (tall portrait right column desktop / col-span-1 row-span-1 mobile)
+- Image 4 (pendantNath) = col-span-1 row-span-1
+- Image 5 (bangleAlt) = col-span-1 row-span-1
 
-- **Priority**: high
-- **Status**: pending
-- **Depends on**: Task 1, 2
-- **Scope**:
-  - Rewrite WhyChooseUs Home to 6 numbered cards (01–06):
-    1. 01 — BIS Hallmarked Gold
-    2. 02 — Certified Diamonds
-    3. 03 — Expert Craftsmanship
-    4. 04 — Transparent Pricing (includes disclaimer: estimates based on live gold rates + making charges)
-    5. 05 — Custom Jewellery
-    6. 06 — Personalised Service
-  - Content must share 0 identical paragraphs with About's Four Pillars block.
-  - 6-item grid: 2 col mobile / 3 col md / 6 col xl.
-  - Numbered 01–06 (Playfair Display serif, gold faded large numerals).
-- **Files touched**:
-  - `client/src/components/sections/WhyChooseUs.tsx`
-- **Test Requirements (TR)**:
-  - **Rule TR-9.1**: 6 feature cards rendered.
-  - **Rule TR-9.2**: Card titles exactly match FR-08 list (6 items with 01–06 prefix UI).
-  - **Rule TR-9.3**: Transparent Pricing card contains substring "live gold rates" and "making charges".
-  - **Rule TR-9.4**: Zero-duplicity: no feature description equals any line from About Four Pillars descriptions (R-15). Diff check.
-- **Completion Evidence**: WhyChooseUs diff; 6-card screenshot.
+OR alternative: grid-template `grid-cols-4` desktop with one 2x2, three 1x1 — any math-correct layout that shows 5 images without overflow, responsive & editorial.
+
+### TRs
+#### RULE
+- TR-4.1: Grid cell math correct: N cols × N rows ≥ sum individual image cells. All 5 images fully visible, no clipping.
+- TR-4.2: Mobile (<640px) 2-column grid layout works. No horizontal overflow. DevTools at 320/375/390/414 no overflow.
+- TR-4.3: 1024px+ works as editorial asymmetric layout.
+
+#### RUBRIC
+- RU-4.1 Editorial Quality (0-2): 0 broken layout; 2 visually pleasing asymmetric threshold ≥2
+
+**Completion Evidence:**
 
 ---
 
-## Task 10: Our Story Section (Art Behind Every Piece — NEW component)
+## Task 5: Button System Unification (Component + CSS Consistency)
+**Status: pending**
+**Priority: medium**
+**Depends on:** T1, T2
+**Blocks:** none
 
-- **Priority**: high
-- **Status**: pending
-- **Depends on**: Task 1, 2
-- **Scope**:
-  - Write a NEW `OurStory.tsx` component (in sections/).
-  - Split layout: left = collage (royalRing, birdLocket, showcase with 2 offset borders), right = copy + CTA.
-  - Heading: `"The Art Behind Every Piece"`.
-  - 3 short body paragraphs (not cliché) — focus on Doharighat showroom, BIS hallmarking, 22K & 18K, custom consultation.
-  - CTA: `"Discover Our Story →"` → `/about#story`.
-  - Scroll-reveal fade-up with sequential delay.
-- **Files touched**:
-  - `client/src/components/sections/OurStory.tsx` (NEW)
-  - `client/src/components/sections/index.ts` (export)
-  - `client/src/pages/Home.tsx` (replace placeholder)
-- **Test Requirements (TR)**:
-  - **Rule TR-10.1**: 3 body paragraphs exist, ZERO contain forbidden phrases (FR-27 blacklist).
-  - **Rule TR-10.2**: CTA link href === "/about#story".
-  - **Rule TR-10.3**: Left column collage uses ≥2 images from JEWELRY_IMAGES.
-  - **Rule TR-10.4**: Heading text === "The Art Behind Every Piece".
-- **Completion Evidence**: New component file; replace placeholder in Home; screenshot.
+### Objective
+Button.tsx component classes and CSS `.btn-primary` / `.btn-secondary` classes define overlapping padding, letter-spacing. Unify so Button component is the source of truth for button styling; keep CSS classes but ensure they do not produce inconsistent buttons when used via className vs `<Button variant>`.
 
----
+### Scope
+Files: `client/src/components/ui/Button.tsx` + `client/src/index.css` (btn-primary/secondary only, not removing them)
 
-## Task 11: 5-Step Customer Journey (NEW component)
+- Button.tsx `sizeClasses` align to Tailwind size: sm=px-5 py-2.5 text-[11px]; md=px-7 py-3 text-xs; lg=px-8 sm:px-10 py-3.5 sm:py-4 text-[13px]
+- Button.tsx `variantClasses`: Ensure 'primary' exactly matches gold-gradient text-purple-900 uppercase tracking-wider
+- index.css `.btn-primary`, `.btn-secondary` must use the same px/py/letterspacing values
+- Ensure the Button component `whileHover y:-2` uses duration / easing consistent with CSS transitions.
 
-- **Priority**: high
-- **Status**: pending
-- **Depends on**: Task 2
-- **Scope**:
-  - NEW `CustomerJourney.tsx` component in sections/.
-  - Steps: 01 Discover · 02 Consult · 03 Customize · 04 Craft · 05 Celebrate.
-  - Each step: eyebrow uppercase, heading, 1-line description.
-  - Vertical gold gradient connecting line on md+; horizontal on mobile.
-  - Sequential scroll-reveal fade-up.
-- **Files touched**:
-  - `client/src/components/sections/CustomerJourney.tsx` (NEW)
-  - `client/src/components/sections/index.ts`
-  - `client/src/pages/Home.tsx`
-- **Test Requirements (TR)**:
-  - **Rule TR-11.1**: 5 steps rendered; titles match FR-10 list exactly.
-  - **Rule TR-11.2**: Each step has a numbered numeral UI (01–05).
-  - **Rule TR-11.3**: Connector line rendered (vertical md+, horizontal mobile).
-- **Completion Evidence**: New component; Home screenshot.
+### TRs
+#### RULE
+- TR-5.1: Button primary variant lg has same padding, font-size, letter-spacing independent of usage (Button component vs .btn-primary class string). Inspect DOM: rendered `<button>` or `<a>` with identical styles both paths.
+- TR-5.2: All 4 variants (primary / secondary / ghost / outline-gold) render in Button.tsx without TS errors. 4 distinct visual outputs.
+- TR-5.3: tsc noEmit 0 errors.
+
+#### RUBRIC
+- RU-5.1 Button Coherence (0-2): 0 inconsistent; 2 identical rendering both paths threshold ≥2
+
+**Completion Evidence:**
 
 ---
 
-## Task 12: Custom Jewellery CTA Banner (NEW component)
+## Task 6: ProductCard Wishlist Single-Render Fix
+**Status: pending**
+**Priority: medium**
+**Depends on:** T1, T2
+**Blocks:** none
 
-- **Priority**: high
-- **Status**: pending
-- **Depends on**: Task 1, 2
-- **Scope**:
-  - NEW `CustomCTA.tsx` component.
-  - H2: `"Have Something Special in Mind?"`.
-  - Sub: `"Let our craftsmen turn your idea into a one-of-a-kind piece."`.
-  - Buttons:
-    1. `START YOUR CUSTOM DESIGN` → `/contact#enquiry` (opens contact form + set default category=Custom via searchParam state or initial value).
-    2. `WHATSAPP US` → FR-16#4 custom-design prefill.
-  - Background: dark purple radial gradient + existing showcase image as low-opacity overlay; gold hairline top/bottom.
-- **Files touched**:
-  - `client/src/components/sections/CustomCTA.tsx` (NEW)
-  - `client/src/components/sections/index.ts`
-  - `client/src/pages/Home.tsx`
-- **Test Requirements (TR)**:
-  - **Rule TR-12.1**: H2 and Sub strings exact match.
-  - **Rule TR-12.2**: Button 1 href ends with `/contact#enquiry`.
-  - **Rule TR-12.3**: Button 2 WhatsApp href contains prefill with substring "custom jewellery design".
-- **Completion Evidence**: New component; screenshot.
+### Objective
+Two wishlist buttons exist — one inside `<AnimatePresence isHovered>` + one outside `!isHovered`. On touch devices, `isHovered` is never reliable — produces UX inconsistency. Consolidate to single wishlist button that works reliably across hover + touch.
 
----
+### Scope
+File: `client/src/components/ui/ProductCard.tsx`
 
-## Task 13: Showroom Visit Section (NEW component) + Map + 3 CTAs
+Remove duplicated wishlist:
+- Keep single `<button>` wishlist always visible (top-right overlay opacity 0.75 → 1 hover)
+- Keep AnimatePresence for WhatsApp enquiry overlay only (Enquire on WhatsApp reveals on hover/tap-tap)
+- No duplicate rendering
 
-- **Priority**: high
-- **Status**: pending
-- **Depends on**: Task 1, 2
-- **Scope**:
-  - NEW `Showroom.tsx` component.
-  - H2: `"Visit SSKK in Doharighat"`.
-  - Two-column (lg+): left = glass location card (address · phone · WhatsApp · hours), right = map iframe.
-  - Single col on mobile: card first, then map (max 360px height on mobile).
-  - 3 Buttons (row md+, full-width mobile): GET DIRECTIONS, CALL US, WHATSAPP US.
-  - Google Directions link: use encoded BUSINESS.address query.
-- **Files touched**:
-  - `client/src/components/sections/Showroom.tsx` (NEW)
-  - `client/src/components/sections/index.ts`
-  - `client/src/pages/Home.tsx`
-- **Test Requirements (TR)**:
-  - **Rule TR-13.1**: 3 buttons present with correct hrefs (Directions = Google Maps search; Call = tel:91...; WhatsApp = wa.me...).
-  - **Rule TR-13.2**: Map iframe `title`, `loading="lazy"`, `height` responsive.
-  - **Rule TR-13.3**: Address pulled from BUSINESS.address (no duplication).
-  - **Rule TR-13.4**: Hours substring match BUSINESS.hours.
-- **Completion Evidence**: New component; screenshot at 1440w and 390w.
+### TRs
+#### RULE
+- TR-6.1: ProductCard wishlist button appears exactly once per card in both hover (mouse) & touch (390px devtools tap simulation). Only 1 wishlist `<button>` in DOM.
+- TR-6.2: tsc noEmit 0 errors.
+
+#### RUBRIC
+- RU-6.1 Hover+Touch reliability 0-2: 0 duplicated or broken; 2 works both interactions threshold ≥2
+
+**Completion Evidence:**
 
 ---
 
-## Task 14: Testimonials Section (SAFE — NEW component with editable watermark)
+## Task 7: WhatsApp Prefill Consistency + FloatingContact Luxury Restraint
+**Status: pending**
+**Priority: medium**
+**Depends on:** T1, T2
+**Blocks:** none
 
-- **Priority**: medium
-- **Status**: pending
-- **Depends on**: Task 1, 2
-- **Scope**:
-  - NEW `Testimonials.tsx` component.
-  - Consumes `TESTIMONIALS_EDITABLE` from business.ts.
-  - If array empty → show ONE placeholder card with:
-    - Quote: `"Replace this text with a verified customer testimonial."`
-    - Name: `"Customer Name"` with `[EDITABLE]` watermark text
-    - Location: `"Doharighat, Mau"`
-    - 5 gold stars
-    - Visible "Example · Edit in BUSINESS.ts" banner badge across card.
-  - Carousel: prev/next arrow buttons + dot indicators; auto-advance disabled or 8s.
-  - Keyboard: arrows navigate, Esc defocuses.
-- **Files touched**:
-  - `client/src/components/sections/Testimonials.tsx` (NEW)
-  - `client/src/components/sections/index.ts`
-  - `client/src/pages/Home.tsx`
-- **Test Requirements (TR)**:
-  - **Rule TR-14.1**: Renders structure even with TESTIMONIALS_EDITABLE = [] (no crash, no "undefined").
-  - **Rule TR-14.2**: No fabricated customers/quotes outside editable array (R-13).
-  - **Rule TR-14.3**: Prev/Next + dots interactive; aria-labels set.
-  - **Rule TR-14.4**: Editable watermark/badge visible when empty/using example.
-- **Completion Evidence**: New component; screenshots of both empty and 1-entry state.
+### Objective
+1) Eliminate floating inline whatsapp message encoding — every WhatsApp link uses unified `WHATSAPP_PREFILLS` from `business.ts` + `buildWhatsAppUrl` utility. 2) Remove `animate-ping` pulsing from FloatingContact desktop WhatsApp FAB. Replace with elegant subtle sheen.
 
----
+### Scope
+Files: `FloatingContact.tsx` + ensure `Navbar.tsx`/`Hero`/`ProductCard` already use WHATSAPP_PREFILLS correctly (verify + fix any stray)
 
-## Task 15: FAQ Accordion (NEW component — 7 questions)
+- FloatingContact.tsx: Replace current inline `whatsappGenericMsg` encode with `WHATSAPP_PREFILLS.floating` + `buildWhatsAppUrl`
+- FloatingContact.tsx desktop FAB: delete lines with `animate-ping` (`emerald-400/40 animate-ping` pulsing span). Subtle ring border only with subtle shadow.
+- Verify Navbar WhatsApp button uses HEADER_WHATSAPP_URL (already present)
 
-- **Priority**: high
-- **Status**: pending
-- **Depends on**: Task 2
-- **Scope**:
-  - NEW `FAQ.tsx` component.
-  - 7 items exactly (FR-14 list).
-  - Smooth max-height + opacity + rotate chevron (350ms).
-  - Keyboard: Enter/Space toggles summary; Tab through; aria-expanded.
-  - Answers grounded in BUSINESS data (e.g., hours, address, hallmark YES). No fabrication.
-- **Files touched**:
-  - `client/src/components/sections/FAQ.tsx` (NEW)
-  - `client/src/components/sections/index.ts`
-  - `client/src/pages/Home.tsx`
-- **Test Requirements (TR)**:
-  - **Rule TR-15.1**: Exactly 7 accordion items; questions match FR-14 list exactly.
-  - **Rule TR-15.2**: All 7 start closed; opening one does NOT auto-close others.
-  - **Rule TR-15.3**: Smooth height animation works (no jumps <350ms).
-  - **Rule TR-15.4**: Q2 answer includes substring "BIS hallmark" (or "Hallmark").
-  - **Rule TR-15.5**: Q4 answer includes BUSINESS.hours substring.
-- **Completion Evidence**: New component; FAQ screenshot with 2 items open.
+### TRs
+#### RULE
+- TR-7.1: FloatingContact.tsx uses `buildWhatsAppUrl(WHATSAPP_PREFILLS.floating)` exactly, 0 inline encodeURIComponent whatsapp message within FloatingContact file.
+- TR-7.2: FloatingContact desktop a-tag children `<div>` contains ZERO `animate-ping` class. Search `animate-ping` in FloatingContact.tsx = 0.
+
+#### RUBRIC
+- RU-7.1 Luxury Restraint FAB (0-2): 0 strobing ping; 2 elegant & minimal threshold ≥2
+
+**Completion Evidence:**
 
 ---
 
-## Task 16: Home Inquiry Form (Category required + validation polish)
+## Task 8: About & Contact Page Hero Visual Variation + About anchor + Title
+**Status: pending**
+**Priority: medium**
+**Depends on:** T1, T2
+**Blocks:** none
 
-- **Priority**: high
-- **Status**: pending
-- **Depends on**: Task 1, 2
-- **Scope**:
-  - Update HomeInquiry: Jewellery Category select becomes REQUIRED.
-  - Category options match FR-15 list: Ring, Earrings, Necklace, Bangles, Bridal, Custom Jewellery, Other.
-  - Add aria-describedby + aria-invalid on error states.
-  - Success: reset + inline green banner + toast.
-  - Error: inline messages red per field + toast.
-  - Loading: submit disabled, spinner.
-- **Files touched**:
-  - `client/src/components/sections/HomeInquiry.tsx`
-- **Test Requirements (TR)**:
-  - **Rule TR-16.1**: Form cannot submit when Category = "" (required).
-  - **Rule TR-16.2**: Category options 7 exactly match FR-15.
-  - **Rule TR-16.3**: Name empty → error shown. Phone non-10-digit → error shown. Message <10 → error shown.
-  - **Rule TR-16.4**: Valid submit POSTs to `/inquiries` (check network or preserved api call path).
-  - **Rule TR-16.5**: `aria-invalid="true"` present on errored fields.
-- **Completion Evidence**: HomeInquiry diff; screenshot of error state + success state.
+### Objective
+1) Add id="story" anchor on first content section of About page (nav /about#story scrolls correctly)
+2) Change About page hero H1 from "Our Showroom" → "About SSKK"
+3) Distinguish About vs Contact page heroes so they are not identical purple radial gradient patterns:
 
----
+### Scope
+Files: `About.tsx` + `Contact.tsx`
 
-## Task 17: Assemble Home.tsx (Replace 6 placeholders, order correct)
+- About.tsx:
+  - Add `id="story"` attr to second section (Craftsmanship, Purity, and Personal Care section wrapper 112 or after page hero)
+  - Hero H1 text replace: 'Our Showroom' → 'About SSKK'
+  - Hero gradient: Keep purple base but alter radial positions + opacity (about more warm gold gradient blend radial @ 60% 40% gold, contact richer deep purple blend)
+- Contact.tsx:
+  - Hero gradient deeper purple less gold
 
-- **Priority**: high
-- **Status**: pending
-- **Depends on**: Task 4–16 inclusive
-- **Scope**:
-  - Remove the 6 Placeholder* components from Home.tsx.
-  - Import & render 13 sections in FR-01 order (verified sequentially).
-  - Add section `aria-label`s and `id`s so in-page anchors work (#bridal, #why-sskk, #our-story-home, #customer-journey, #custom-cta, #showroom-visit, #testimonials-home, #faq-home, #home-inquiry, #hero, #categories, #signature-pieces).
-  - Remove leftover `PlaceholderTrustBar` (it was placeholder; real TrustBar already renders).
-- **Files touched**:
-  - `client/src/pages/Home.tsx`
-- **Test Requirements (TR)**:
-  - **Rule TR-17.1**: 13 sections in correct order in DOM (inspect order).
-  - **Rule TR-17.2**: Zero strings in Home matching `/Placeholder|Rendered in T\d+/i` (R-01).
-  - **Rule TR-17.3**: All section IDs match anchor strings from Navbar (Our Story → /about#story).
-- **Completion Evidence**: Home.tsx diff; scroll-through DOM order.
+### TRs
+#### RULE
+- TR-8.1: About.tsx contains element with id="story". URL /about#story scrolls to content.
+- TR-8.2: About.tsx H1 ≈ "About SSKK" not "Our Showroom".
+- TR-8.3: About.tsx hero background gradient CSS ≠ Contact.tsx hero gradient. (gradient strings visually different)
+- TR-8.4: tsc noEmit 0 errors.
+
+#### RUBRIC
+- RU-8.1 Hero visual variation 0-2): 0 identical; 2 visually distinct each page threshold ≥1
+
+**Completion Evidence:**
 
 ---
 
-## Task 18: Collections / Jewellery Page (Price Sort Disabled When No Price Data)
+## Task 9: HomeInquiry Category Select Consistent Styling + Accessible Input/Select
+**Status: pending**
+**Priority: medium**
+**Depends on:** T1, T2
+**Blocks:** none
 
-- **Priority**: medium
-- **Status**: pending
-- **Depends on**: Task 1, 2
-- **Scope**:
-  - In Collections page:
-    a. Add "Contact showroom for pricing" notice if no product with price found.
-    b. Price low/high sort options disabled (grey + aria-disabled) when no prices.
-    c. Add Mang Tikka to quick filters chip list in SearchOverlay too.
-    d. Ensure breadcrumbs are present.
-- **Files touched**:
-  - `client/src/pages/Collections.tsx`
-  - `client/src/components/common/SearchOverlay.tsx` (quick categories +9)
-- **Test Requirements (TR)**:
-  - **Rule TR-18.1**: Collections search overlay 9 quick chips include "Mang Tikka" and "Custom".
-  - **Rule TR-18.2**: With product.price missing on all items → price min/max inputs disabled and notice shown.
-  - **Rule TR-18.3**: Sort dropdown option for Price Low→High disabled when no price data.
-- **Completion Evidence**: Collections + SearchOverlay diff; screenshots of disabled state.
+### Objective
+HomeInquiry `<select>` category input currently inline className (lines 134-149) — not matching Contact form select styling (300-316). Both selects must use same exact className pattern from Contact for consistency + Accessibility.
 
----
+### Scope
+Files: `HomeInquiry.tsx` + optionally (optional) create reusable `<Select>` in Input.tsx but minimum both inline select style identical.
 
-## Task 19: Product Detail Page (Audit Gallery + Zoom + Related)
+- Both HomeInquiry `<select>` + Contact `<select>` have identical padding/background/border/focus/hover/ring tokens (same exact className string or same Input component wrapper pattern)
 
-- **Priority**: high
-- **Status**: pending
-- **Depends on**: Task 1
-- **Scope**:
-  - Read full ProductDetail.tsx (200 lines done; finish audit remainder).
-  - Ensure:
-    a. Thumbnails strip (vertical/horizontal), swipe (touch) on mobile.
-    b. Hover zoom (desktop) image lens with CSS.
-    c. Fullscreen viewing button or native.
-    d. WhatsApp action uses FR-06 prefill.
-    e. Related products: 4 tiles (exclude self) from same category.
-    f. Pricing disclaimer if price present ("Prices are estimates based on live gold rates and making charges. Contact showroom for final quote.")
-    g. If no price → "Contact for Price" badge + WhatsApp CTA prominent.
-- **Files touched**:
-  - `client/src/pages/ProductDetail.tsx` (full file)
-- **Test Requirements (TR)**:
-  - **Rule TR-19.1**: Price disclaimer OR Contact for Price present (one or the other).
-  - **Rule TR-19.2**: WhatsApp href uses product name + slug/SKU.
-  - **Rule TR-19.3**: Related grid contains 4 items max.
-  - **Rule TR-19.4**: Breadcrumb has Home/Collections/CategorySlug/Product (4 items).
-  - **Rubric TR-19.5 (0-5, threshold 4)**: Gallery feel — mobile swipe and desktop zoom usable.
-- **Completion Evidence**: ProductDetail diff; screenshot of gallery (desktop + mobile).
+### TRs
+#### RULE
+- TR-9.1: className select in HomeInquiry === className select in Contact.tsx (copied identical strings visual same)
+- TR-9.2: tsc noEmit 0 errors.
+- TR-9.3: Each select label htmlFor/id match (already yes, verify)
+
+#### RUBRIC
+- RU-9.1 Form visual coherence (0-2): 0 inconsistent; 2 identical styling threshold ≥2
+
+**Completion Evidence:**
 
 ---
 
-## Task 20: About Page (About → Our Story anchor + polish)
+## Task 10: Navbar Luxury Restraint — Consolidate WhatsApp to one CTA
+**Status: pending**
+**Priority: medium**
+**Depends on:** T1, T2, T7
+**Blocks:** none
 
-- **Priority**: medium
-- **Status**: pending
-- **Depends on**: Task 1, 2
-- **Scope**:
-  - Add `id="story"` to an appropriate section (second major block) so `/about#story` scrolls to it.
-  - Verify Four Pillars of Trust block REMAINS (4 items, not 6).
-  - Ensure copy: zero forbidden phrases.
-  - Polish hero banner (no cheap gradients).
-- **Files touched**:
-  - `client/src/pages/About.tsx`
-- **Test Requirements (TR)**:
-  - **Rule TR-20.1**: `document.getElementById('story')` exists on About page.
-  - **Rule TR-20.2**: Four Pillars count = 4 (unchanged, zero-duplicity with Home 6-item R-15).
-  - **Rule TR-20.3**: No forbidden phrases (blacklist scan).
-- **Completion Evidence**: About diff; anchor jump working from Home → About#story.
+### Objective
+Navbar currently contains inline-text WhatsApp button (gold-gradient, md+) + Mobile menu shows WhatsApp again via quick-link tile (mobile). Action row (Search, Wishlist, WhatsApp CTA, Cart, Menu) — one WhatsApp button is luxury minimal. Keep md+ desktop: one WhatsApp CTA button only. Remove duplicates.
 
----
+### Scope
+File: Navbar.tsx
 
-## Task 21: Contact Page (Form Category Required + id=visit + id=enquiry)
+Keep only ONE WhatsApp CTA in desktop header: keep the existing dedicated WhatsApp pill button (visible ≥ md). Ensure mobile menu 3-column grid still has WhatsApp quick-link Call/Wishlist/Cart; mobile bottom FloatingContact covers the WhatsApp quick-contact for <640px.
 
-- **Priority**: high
-- **Status**: pending
-- **Depends on**: Task 1, 2, 16
-- **Scope**:
-  - Add `id="visit"` to the map/showroom section.
-  - Add `id="enquiry"` to the form section.
-  - Update form category select options to FR-15; make Category required (consistent with Task 16).
-  - Add same aria-invalid + aria-describedby pattern as HomeInquiry.
-  - Form CTA label: `"SEND ENQUIRY"`.
-  - Pre-fill category=Custom if user came from CustomCTA (read query param / state if available).
-- **Files touched**:
-  - `client/src/pages/Contact.tsx`
-- **Test Requirements (TR)**:
-  - **Rule TR-21.1**: `id="visit"` and `id="enquiry"` exist.
-  - **Rule TR-21.2**: Category is required field (cannot submit blank).
-  - **Rule TR-21.3**: Submit button reads "SEND ENQUIRY" (case insensitive match of words).
-  - **Rule TR-21.4**: Map height responsive; no horizontal scroll on mobile.
-- **Completion Evidence**: Contact diff; scroll anchors work.
+### TRs
+#### RULE
+- TR-10.1: Navbar lg action area: exactly one WhatsApp button `<a>` visible desktop viewport.
+- TR-10.2: Mobile menu has WhatsApp quick-link OR FloatingContact covers it; not duplicates if redundant.
+
+#### RUBRIC
+- RU-10.1 Navbar minimalism 0-2): 0 multiple whatsapp buttons stacked; 2 single CTA clean threshold ≥2
+
+**Completion Evidence:**
 
 ---
 
-## Task 22: Floating Contact / Bottom Bar (mobile <640px exclusive)
+## Task 11: SEO Asset Cleanup + TESTIMONIALS_EDITABLE neutralization safe + Build/Typecheck
+**Status: pending**
+**Priority: medium**
+**Depends on:** T1-T10
+**Blocks:** Completion of all previous
 
-- **Priority**: medium
-- **Status**: pending
-- **Depends on**: Task 1, 2
-- **Scope**:
-  - Audit FloatingContact already handles the MOBILE_BREAKPOINT 639.98px switch.
-  - Ensure bottom bar and floating FAB are MUTUALLY EXCLUSIVE (no double-render).
-  - Bottom bar: Call | WhatsApp | Directions (3 tiles, full-width) — already there; ensure links match the 3 buttons used in Showroom section.
-  - Floating WhatsApp FAB: prefill matches FR-16#5 generic greeting.
-- **Files touched**:
-  - `client/src/components/layout/FloatingContact.tsx`
-- **Test Requirements (TR)**:
-  - **Rule TR-22.1**: At viewport 390w → bottom bar visible, floating FAB hidden.
-  - **Rule TR-22.2**: At viewport 768w → floating FAB visible, bottom bar hidden.
-  - **Rule TR-22.3**: Directions link on both uses Google Maps search URL with encoded BUSINESS.address.
-- **Completion Evidence**: FloatingContact diff; 2-width screenshots.
+### Objective
+1. index.html OG image — ensure uses path matching assets. Keep SEO_OG_IMAGE path consistent.
+2. business.ts TESTIMONIALS_EDITABLE must not accidentally propagate to live UI. Ensure empty safe array.
+3. Run `tsc --noEmit` lint script + `npm run build` success without errors.
 
----
+### Scope
+Files: `index.html`, `business.ts`, build run
 
-## Task 23: Footer Audit & Polish (Ensure 4 columns + Collections links)
+- business.ts TESTIMONIALS_EDITABLE: Keep array EMPTY if testimonials aren't rendered or replace with 0 items = `[]` (safe neutral — no fabrication).
+- index.html og:image path canonical matches asset URL without spaces (ensure it's encoded properly).
+- Run `npm run build` (inside client) — success with 0 TS errors.
 
-- **Priority**: medium
-- **Status**: pending
-- **Depends on**: Task 1, 2
-- **Scope**:
-  - Footer already has 4 columns. Verify:
-    - Col 1: brand, short description, 3 socials (Instagram / Facebook / WhatsApp).
-    - Col 2 (Quick Links): Home, Jewellery, Bridal, About, Our Story (#story), Visit Us (#visit), Contact (7 links).
-    - Col 3 (Collections): Rings, Earrings, Necklaces, Chains, Bangles, Bridal, Nath (7 links).
-    - Col 4 (Contact): Address, Phones ×2 linked, WhatsApp, Email linked.
-  - Bottom bar: Copyright left; Privacy · Terms · Crafted by Shubham Verma right.
-  - Year uses `new Date().getFullYear()`.
-- **Files touched**:
-  - `client/src/components/layout/Footer.tsx`
-- **Test Requirements (TR)**:
-  - **Rule TR-23.1**: 7 Quick Links + 7 Collections links (R-09).
-  - **Rule TR-23.2**: Footer Collections col has "Nath" link (not Nath + Mang Tikka combined since Mang Tikka is visual-only).
-  - **Rule TR-23.3**: Credit line reads "Crafted by Shubham Verma".
-  - **Rule TR-23.4**: All 7 footer category links actually route to `/collections/:slug` with slugs that exist in SEO config (R-09 200).
-- **Completion Evidence**: Footer diff; screenshot at 1440w.
+### TRs
+#### RULE
+- TR-11.1: business.ts TESTIMONIALS_EDITABLE contains 0 fake reviews (length 0 or 1 clearly neutral/placeholder but safe. No fabricated names/quotes as real).
+- TR-11.2: `npm run build` inside `client/` completes with exit code 0.
+- TR-11.3: `tsc --noEmit` inside `client/` → 0 errors.
+
+#### RUBRIC
+- RU-11.1 Build Quality (0-2): 0 build errors; 2 clean build + no warnings threshold ≥ 1
+
+**Completion Evidence:**
 
 ---
 
-## Task 24: Lint / Typecheck / Build + QA Script (Full Functionality Audit)
-
-- **Priority**: high
-- **Status**: pending
-- **Depends on**: Task 3–23 inclusive
-- **Scope**:
-  - Run `npm run lint` (tsc --noEmit) in client folder.
-  - Run `npm run build` — verify 0 TS errors, 0 fatal.
-  - Boot dev server (backend if present required for API /products fallback; or let ErrorState render gracefully).
-  - Manually audit FR-28 checklist (document as evidence).
-- **Test Requirements (TR)**:
-  - **Rule TR-24.1**: `tsc --noEmit` returns exit 0.
-  - **Rule TR-24.2**: `vite build` completes with 0 errors (warnings tolerated if ≥ moderate only).
-  - **Rule TR-24.3**: No console.error in 5-page walk (Home → Collections → About → Contact → a Product).
-  - **Rubric TR-24.4 (0-5, threshold 4)**: Functional completeness — FR-28 checklist items verified ×28. 5 = all verified; 4 = 1–2 minor warnings; 3 = missing features.
-- **Completion Evidence**: Build output log; QA checklist annotations.
-
----
-
-## Task 25: Accessibility + Contrast + Responsive Walkthrough (Document)
-
-- **Priority**: high
-- **Status**: pending
-- **Depends on**: Task 24
-- **Scope**:
-  - Run axe-core scan on homepage; fix any ≥ moderate issues.
-  - Verify focus visible ring 2px gold on every interactive.
-  - Resize 9 breakpoints (320, 375, 390, 414, 768, 1024, 1280, 1440, 1920) — screenshot each width + confirm scrollMaxX = 0.
-  - Toggle prefers-reduced-motion → no hero parallax, no shimmer sweep, no fade-up delays (instant opacity 1).
-- **Test Requirements (TR)**:
-  - **Rule TR-25.1**: axe ≥ moderate 0 or 1 only; if 1 explain and note.
-  - **Rule TR-25.2**: `window.scrollMaxX === 0` at every breakpoint (R-11).
-  - **Rule TR-25.3**: prefers-reduced-motion on → motion CSS animations all apply `animation: none` or instant opacity.
-  - **Rubric TR-25.4 (0-5, threshold 4)**: Overall accessibility (RU-04).
-- **Completion Evidence**: axe screenshot; 9 breakpoint image grid; reduced motion screenshot.
-
----
-
-## Task 26: Performance Lighthouse + Image Lazyload Audit
-
-- **Priority**: medium
-- **Status**: pending
-- **Depends on**: Task 24, 25
-- **Scope**:
-  - Run Lighthouse mobile, desktop on build output or `vite preview`.
-  - Target ≥ 80 perf mobile, ≥ 90 desktop.
-  - Ensure above-the-fold hero poster NOT lazy; everything below → lazy.
-  - Ensure SEO scores ≥ 95 (titles, meta, OG, canonical present).
-  - Check JS bundle size (homepage chunk). If > 600KB, note down and consider lazy-loading HeroVideo wrapper until near viewport.
-- **Test Requirements (TR)**:
-  - **Rule TR-26.1**: SEO score ≥ 95 (Lighthouse).
-  - **Rule TR-26.2**: All `<img>` tags below hero → `loading="lazy"` attribute present.
-  - **Rubric TR-26.3 (0-5, threshold 4)**: Lighthouse performance (RU-07 mobile).
-- **Completion Evidence**: Lighthouse HTML/JSON; bundle-size screenshot.
-
----
-
-## Task 27: Final Codebase Content Pass — Forbidden Phrase + Duplicity Sweep
-
-- **Priority**: medium
-- **Status**: pending
-- **Depends on**: Task 10, 14, 20, 24
-- **Scope**:
-  - Grep entire client/src for FR-27 forbidden phrases.
-  - Replace any remaining AI-sounding copy (e.g. "curated experience" → "hand-picked selection").
-  - Sweep for any stray fabricated years like "Since 1985".
-  - Run duplicity check: WhyChooseUs Home 6-item paragraphs × About 4-pillar paragraphs → 0 identical strings.
-- **Test Requirements (TR)**:
-  - **Rule TR-27.1**: Zero occurrences of 5 forbidden phrases (case-insensitive exact match).
-  - **Rule TR-27.2**: Zero strings like "Since \d\d\d\d" or "Est. \d\d\d\d" or "Established \d\d\d\d".
-  - **Rule TR-27.3**: Duplicity check: Home WhyChooseUs × About Four-Pillars — no paragraph share > 8 consecutive words (R-15).
-- **Completion Evidence**: Grep output showing 0 forbidden; duplicity diff.
-
----
-
-## Dependencies / Pipeline Graph (topological)
-
-```
-T1  ─┐
-T2  ─┼─ T3 ─ T4 ─┬─ T5 ─ T6 ─ T7 ─ T8 ─ T9 ─┬─ T10, T11, T12, T13, T14, T15, T16 ─┬─ T17 ─┬─ T18, T19, T20, T21, T22, T23 ─┬─ T24 ─┬─ T25 ─┬─ T26 ─ T27
-T1  ─┘              └───────────────────────────┘                                  │       │                                    │       │       │
-                                                                                     │       │                                    │       │       │
-                          (All 4–16 produce components needed by 17 Assemble)       │       │                                    │       │       │
-                                                                                     │       │                                    │       │       │
-                                                                                     ▼       ▼                                    ▼       ▼       ▼
-                                                                                   (17 joins pages)                            (24 QA) (25 A11y) (26 Perf)
-```
-
-## Task Dependencies Table (Quick Reference)
-
-| Task | Depends On |
-|---|---|
-| 1 Config & SEO | — |
-| 2 CSS Tokens | — |
-| 3 Navbar | 1, 2 |
-| 4 Hero | 2, 3 |
-| 5 Trust Bar | 2 |
-| 6 Collections | 1, 2 |
-| 7 Featured Products | 1, 2 |
-| 8 Bridal | 2 |
-| 9 Why Choose SSKK | 1, 2 |
-| 10 Our Story (NEW) | 1, 2 |
-| 11 Customer Journey (NEW) | 2 |
-| 12 Custom CTA (NEW) | 1, 2 |
-| 13 Showroom (NEW) | 1, 2 |
-| 14 Testimonials (NEW) | 1, 2 |
-| 15 FAQ (NEW) | 2 |
-| 16 Home Inquiry Form | 1, 2 |
-| 17 Assemble Home | 4–16 all |
-| 18 Collections/Search polish | 1, 2 |
-| 19 Product Detail audit | 1 |
-| 20 About polish | 1, 2 |
-| 21 Contact polish | 1, 2, 16 |
-| 22 Floating Contact | 1, 2 |
-| 23 Footer polish | 1, 2 |
-| 24 Build & QA Script | 3–23 |
-| 25 A11y & Responsive | 24 |
-| 26 Lighthouse Perf | 24, 25 |
-| 27 Content Final Sweep | 10, 14, 20, 24 |
+## Cross-Cutting Design System Visual Consistency
+T2 tokens must be used: heading sizes h2/h3 via text-h2 / text-h3 utility classes available after T2 in Tailwind. Use them in SectionTitle where possible.

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Search, Heart, ShoppingBag, Menu, X, Phone, MessageCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useUIStore } from '@/store/uiStore';
@@ -9,13 +9,13 @@ import { useWishlistStore } from '@/store/wishlistStore';
 import { BUSINESS, WHATSAPP_PREFILLS, buildWhatsAppUrl } from '@/config/business';
 
 const navLinks = [
-  { name: 'Home', path: '/' },
-  { name: 'Jewellery', path: '/collections' },
-  { name: 'Bridal', path: '/collections/bridal' },
-  { name: 'About', path: '/about' },
-  { name: 'Our Story', path: '/about#story' },
-  { name: 'Visit Us', path: '/contact#visit' },
-  { name: 'Contact', path: '/contact#enquiry' },
+  { name: 'Home', label: 'HOME', path: '/' },
+  { name: 'Jewellery', label: 'JEWELLERY', path: '/collections' },
+  { name: 'Bridal', label: 'BRIDAL', path: '/collections/bridal' },
+  { name: 'About', label: 'ABOUT', path: '/about' },
+  { name: 'Our Story', label: 'OUR STORY', path: '/about#story' },
+  { name: 'Visit Us', label: 'VISIT US', path: '/contact#visit' },
+  { name: 'Contact', label: 'CONTACT', path: '/contact#enquiry' },
 ];
 
 const HEADER_WHATSAPP_URL = buildWhatsAppUrl(WHATSAPP_PREFILLS.header);
@@ -53,15 +53,17 @@ const IconButton: React.FC<{
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const { mobileMenuOpen, toggleMobileMenu, toggleSearch, setMobileMenuOpen } =
+  const { mobileMenuOpen, toggleMobileMenu, toggleSearch, setMobileMenuOpen, reducedMotion: reducedMotionStore } =
     useUIStore();
   const { openCart, getTotalItems } = useCartStore();
   const { items: wishlistItems } = useWishlistStore();
   const location = useLocation();
+  const prefersReducedMotion = useReducedMotion();
+  const reducedMotion = reducedMotionStore || prefersReducedMotion;
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
+      setScrolled(window.scrollY > 24);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -88,19 +90,19 @@ export function Navbar() {
   return (
     <>
       <motion.header
-        initial={{ y: -100 }}
+        initial={reducedMotion ? { y: 0 } : { y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+        transition={reducedMotion ? { duration: 0.05 } : { duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
         className={cn(
-          'fixed top-0 left-0 right-0 z-50 transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)]',
+          'fixed top-0 left-0 right-0 z-50 transition-all duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)]',
           scrolled
-            ? 'glass border-b border-gold-400/[0.28] py-2.5 sm:py-3 shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)]'
-            : 'bg-transparent py-3.5 sm:py-4 sm:py-5 border-b border-transparent'
+            ? 'glass border-b border-gold-400/[0.18] py-2 sm:py-2.5 shadow-[0_8px_32px_-14px_rgba(0,0,0,0.62)]'
+            : 'bg-transparent py-3 sm:py-3.5 border-b border-transparent'
         )}
         style={{
           paddingTop: scrolled
-            ? 'max(calc(env(safe-area-inset-top) + 0.625rem), 0.625rem)'
-            : 'max(calc(env(safe-area-inset-top) + 0.875rem), 0.875rem)',
+            ? 'max(calc(env(safe-area-inset-top) + 0.5rem), 0.5rem)'
+            : 'max(calc(env(safe-area-inset-top) + 0.75rem), 0.75rem)',
         }}
       >
         <nav className="container flex items-center justify-between gap-2 sm:gap-4">
@@ -119,7 +121,7 @@ export function Navbar() {
             </h1>
           </Link>
 
-          <div className="hidden lg:flex items-center justify-center gap-8 xl:gap-10">
+          <div className="hidden lg:flex items-center justify-center gap-7 xl:gap-9">
             {navLinks.map((link) => {
               const active = isLinkActive(link.path);
               return (
@@ -129,11 +131,11 @@ export function Navbar() {
                   data-cursor="hover"
                   aria-current={active ? 'page' : undefined}
                   className={cn(
-                    'nav-underline relative text-text/90 hover:text-gold transition-colors duration-300 ease-out text-[12.5px] md:text-sm uppercase tracking-[0.18em] md:tracking-[0.22em] font-medium py-2',
+                    'nav-underline relative text-text/90 hover:text-gold transition-colors duration-300 ease-out text-[11.5px] md:text-[12.5px] uppercase tracking-[0.2em] md:tracking-[0.22em] font-medium py-1.5',
                     active && 'is-active text-gold'
                   )}
                 >
-                  <span className="relative inline-block">{link.name}</span>
+                  <span className="relative inline-block">{link.label}</span>
                 </Link>
               );
             })}
@@ -212,13 +214,16 @@ export function Navbar() {
       <AnimatePresence initial={false}>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ y: '-100%', opacity: 0.92 }}
+            initial={reducedMotion ? { y: 0, opacity: 1 } : { y: '-100%', opacity: 0.92 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: '-100%', opacity: 0.92 }}
-            transition={{
-              duration: 0.48,
-              ease: [0.77, 0, 0.175, 1],
-            }}
+            exit={reducedMotion ? { y: '-100%', opacity: 1 } : { y: '-100%', opacity: 0.92 }}
+            transition={reducedMotion
+              ? { duration: 0.05 }
+              : {
+                  duration: 0.48,
+                  ease: [0.77, 0, 0.175, 1],
+                }
+            }
             className="fixed inset-0 z-40 glass lg:hidden overflow-y-auto"
             style={{
               paddingTop: 'max(calc(env(safe-area-inset-top) + 5rem), 5rem)',
@@ -231,26 +236,29 @@ export function Navbar() {
                   return (
                     <motion.div
                       key={link.name}
-                      initial={{ opacity: 0, y: 18 }}
+                      initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
                       animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -16 }}
-                      transition={{
-                        delay: 0.12 + index * 0.085,
-                        duration: 0.46,
-                        ease: [0.22, 1, 0.36, 1],
-                      }}
+                      exit={reducedMotion ? { opacity: 0, y: 0 } : { opacity: 0, y: -16 }}
+                      transition={reducedMotion
+                        ? { duration: 0.05 }
+                        : {
+                            delay: 0.12 + index * 0.085,
+                            duration: 0.46,
+                            ease: [0.22, 1, 0.36, 1],
+                          }
+                      }
                     >
                       <Link
                         to={link.path}
                         onClick={closeMobileMenu}
                         aria-current={active ? 'page' : undefined}
                         className={cn(
-                          'group font-serif text-[1.55rem] sm:text-2xl md:text-3xl hover:text-gold-gradient transition-colors duration-300 block py-3.5 sm:py-4 border-b border-gold-400/[0.11] min-h-[56px] flex items-center',
+                          'group font-serif text-[1.55rem] sm:text-2xl md:text-3xl hover:text-gold-gradient transition-colors duration-300 block py-3.5 sm:py-4 border-b border-gold-400/[0.11] min-h-[60px] flex items-center touch-target',
                           active ? 'text-gold-gradient' : 'text-cream/92'
                         )}
                       >
                         <span className="flex items-center justify-between w-full">
-                          <span>{link.name}</span>
+                          <span>{link.label}</span>
                           <span className="text-gold-400/60 text-base sm:text-lg transform -translate-x-3 group-hover:translate-x-0 transition-transform duration-400 ease-out opacity-0 group-hover:opacity-100">
                             →
                           </span>
@@ -262,10 +270,13 @@ export function Navbar() {
               </nav>
 
               <motion.div
-                initial={{ opacity: 0, y: 22 }}
+                initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 22 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ delay: 0.68, duration: 0.52, ease: [0.22, 1, 0.36, 1] }}
+                exit={reducedMotion ? { opacity: 0, y: 0 } : { opacity: 0, y: -8 }}
+                transition={reducedMotion
+                  ? { duration: 0.05 }
+                  : { delay: 0.68, duration: 0.52, ease: [0.22, 1, 0.36, 1] }
+                }
                 className="mt-7 sm:mt-8 grid grid-cols-3 gap-2.5 sm:gap-3"
               >
                 <Link

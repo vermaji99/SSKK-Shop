@@ -49,12 +49,12 @@ const About = () => {
       />
     <div className="min-h-screen bg-background">
       <section className="relative min-h-[46vh] flex items-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-900 via-purple-800/60 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-purple-900 via-purple-800/50 to-background" />
         <div
-          className="absolute inset-0 opacity-28"
+          className="absolute inset-0 opacity-30"
           style={{
             backgroundImage:
-              'radial-gradient(ellipse at 30% 24%, rgba(212, 175, 55, 0.18) 0%, transparent 48%), radial-gradient(ellipse at 72% 82%, rgba(75, 31, 111, 0.42) 0%, transparent 52%)',
+              'radial-gradient(ellipse at 55% 18%, rgba(212, 175, 55, 0.22) 0%, transparent 50%), radial-gradient(ellipse at 18% 78%, rgba(75, 31, 111, 0.38) 0%, transparent 55%)',
           }}
         />
         <div className="relative container section-padding pt-40 pb-24 text-center">
@@ -78,7 +78,7 @@ const About = () => {
               className="heading-serif font-semibold text-gold-gradient leading-tight"
               style={{ fontSize: 'clamp(2.75rem, 7.2vw, 5.25rem)' }}
             >
-              Our Showroom
+              About SSKK
             </motion.h1>
             <motion.p
               variants={fadeInUp}
@@ -91,7 +91,7 @@ const About = () => {
         </div>
       </section>
 
-      <section className="container section-padding">
+      <section id="story" className="container section-padding">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-center">
           <motion.div
             initial={{ opacity: 0, x: -36 }}

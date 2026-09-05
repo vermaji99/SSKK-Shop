@@ -2,17 +2,14 @@ import React from 'react';
 import { Phone, MessageCircle, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
-import { BUSINESS } from '@/config/business';
+import { BUSINESS, WHATSAPP_PREFILLS, buildWhatsAppUrl } from '@/config/business';
 
 const MOBILE_BREAKPOINT = '(max-width: 639.98px)';
 
 export const FloatingContact: React.FC = () => {
   const isMobile = useMediaQuery(MOBILE_BREAKPOINT);
 
-  const whatsappGenericMsg = encodeURIComponent(
-    'Hello Shubham Swarn Kala Kendra, I would like to inquire about your gold & diamond jewellery collection.'
-  );
-  const whatsappUrl = `${BUSINESS.socials.whatsapp}?text=${whatsappGenericMsg}`;
+  const whatsappUrl = buildWhatsAppUrl(WHATSAPP_PREFILLS.floating);
 
   const callUrl = `tel:+91${BUSINESS.phonePrimary}`;
 
@@ -97,18 +94,13 @@ export const FloatingContact: React.FC = () => {
     >
       <div className="relative">
         <span
-          className="absolute inset-0 rounded-full bg-emerald-400/40 animate-ping"
-          style={{ animationDuration: '2.6s' }}
+          className="absolute -inset-1 rounded-full bg-emerald-500/14 blur-md"
           aria-hidden="true"
         />
-        <span
-          className="absolute -inset-1.5 rounded-full bg-emerald-400/20 blur-md"
-          aria-hidden="true"
-        />
-        <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center border border-emerald-300/30 shadow-[0_12px_32px_-8px_rgba(16,185,129,0.65)] transition-all duration-300 hover:shadow-[0_16px_42px_-6px_rgba(16,185,129,0.78)]">
-          <MessageCircle className="w-6.5 h-6.5 text-white" strokeWidth={2} />
+        <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center border border-emerald-300/30 shadow-[0_12px_32px_-10px_rgba(16,185,129,0.55)] transition-all duration-400 hover:shadow-[0_16px_42px_-8px_rgba(16,185,129,0.68)] hover:-translate-y-0.5">
+          <MessageCircle className="w-[26px] h-[26px] text-white" strokeWidth={2} />
         </div>
-        <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-emerald-300 border-2 border-[#05020A]" />
+        <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-300 border-2 border-[#05020A]" />
       </div>
     </motion.a>
   );

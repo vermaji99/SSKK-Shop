@@ -135,7 +135,7 @@ const HomeInquiry: React.FC = () => {
                   name="category"
                   value={form.category}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-background-secondary/80 text-text text-sm border border-purple-700/50 focus:border-gold-400 focus:outline-none focus:ring-1 focus:ring-gold-400/40"
+                  className="w-full px-4 py-3 bg-background-secondary/80 text-text placeholder-text-muted/60 font-sans text-sm transition-all duration-300 outline-none border border-purple-700/50 hover:border-purple-600/70 focus:border-gold-400 focus:ring-1 focus:ring-gold-400/40"
                 >
                   <option value="">Select category...</option>
                   <option value="Rings">Rings</option>

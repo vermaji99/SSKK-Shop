@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 
 const trustItems: Array<{
   label: string;
-  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  icon: React.ComponentType<any>;
 }> = [
   { label: 'BIS Hallmarked', icon: Shield },
   { label: 'Certified Diamonds', icon: Gem },

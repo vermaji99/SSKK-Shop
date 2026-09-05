@@ -25,19 +25,19 @@ export type ButtonProps = (AsChildProps | DefaultProps) & {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    'gold-gradient text-purple-900 font-semibold uppercase tracking-wider hover:shadow-gold-glow-lg hover:-translate-y-0.5',
+    'gold-gradient text-purple-900 font-semibold uppercase tracking-wider relative overflow-hidden hover:shadow-gold-glow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.986] transition-all duration-300 ease-out will-change-transform',
   secondary:
-    'bg-transparent border border-gold text-gold font-semibold uppercase tracking-wider hover:bg-gold hover:text-purple-900',
+    'bg-transparent border border-gold/50 text-gold font-semibold uppercase tracking-wider hover:bg-gold hover:text-purple-900 hover:border-gold/92 hover:-translate-y-0.5 hover:shadow-gold-glow active:translate-y-0 active:scale-[0.986] transition-all duration-300 ease-out will-change-transform',
   ghost:
-    'bg-transparent text-text hover:bg-purple-700/50 text-gold',
+    'bg-transparent text-gold font-medium hover:bg-purple-700/40 transition-colors duration-300',
   'outline-gold':
-    'bg-transparent border-2 border-gold-400 text-gold-300 hover:bg-gold-400/10 hover:border-gold-300 hover:shadow-gold-glow',
+    'bg-transparent border-2 border-gold-400/60 text-gold-300 hover:bg-gold-400/10 hover:border-gold-300 hover:shadow-gold-glow transition-all duration-300',
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
-  sm: 'px-4 py-2 text-xs',
-  md: 'px-6 py-3 text-sm',
-  lg: 'px-10 py-4 text-base',
+  sm: 'px-4 md:px-5 py-2 text-[11px] md:text-xs tracking-[0.14em]',
+  md: 'px-6 md:px-8 py-3 text-xs md:text-sm tracking-[0.14em] uppercase',
+  lg: 'px-8 md:px-10 py-3.5 md:py-4 text-sm md:text-base tracking-[0.14em] uppercase',
 };
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(

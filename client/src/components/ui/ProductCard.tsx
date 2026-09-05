@@ -91,63 +91,40 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className, onEnquire
             {product.isNewArrival && <Badge variant="new">New</Badge>}
           </div>
 
+          <button
+            onClick={handleWishlistToggle}
+            className={cn(
+              'absolute top-2.5 sm:top-3 right-2.5 sm:right-3 z-20 w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center backdrop-blur-md border transition-all duration-300 ease-out',
+              inWishlist
+                ? 'bg-gold-400/92 border-gold-300 text-purple-900 shadow-[0_6px_20px_-6px_rgba(212,175,55,0.45)]'
+                : 'bg-background-tertiary/82 border-gold-400/38 text-gold-300 hover:bg-gold-400/18 hover:border-gold-400/70 opacity-90 group-hover:opacity-100 group-hover:scale-[1.03]'
+            )}
+            aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+          >
+            <Heart
+              className={cn('w-[18px] h-[18px] sm:w-5 sm:h-5 transition-transform duration-300 hover:scale-110', inWishlist ? 'fill-current' : '')}
+            />
+          </button>
+
           <AnimatePresence initial={false}>
             {isHovered && (
-              <>
-                <motion.button
-                  initial={{ opacity: 0, scale: 0.82, y: -4 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.85, y: -2 }}
-                  transition={{ duration: 0.28, delay: 0.03, ease: [0.22, 1, 0.36, 1] }}
-                  onClick={handleWishlistToggle}
-                  className={cn(
-                    'absolute top-2.5 sm:top-3 right-2.5 sm:right-3 z-10 w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center backdrop-blur-md border transition-all duration-300',
-                    inWishlist
-                      ? 'bg-gold-400/92 border-gold-300 text-purple-900 shadow-[0_6px_20px_-6px_rgba(212,175,55,0.55)]'
-                      : 'bg-background-tertiary/82 border-gold-400/38 text-gold-300 hover:bg-gold-400/18 hover:border-gold-400/70'
-                  )}
-                  aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
-                >
-                  <Heart
-                    className={cn('w-[18px] h-[18px] sm:w-5 sm:h-5 transition-transform duration-300 hover:scale-110', inWishlist ? 'fill-current' : '')}
-                  />
-                </motion.button>
-
-                <motion.a
-                  href={whatsappHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={handleWhatsAppClick}
-                  initial={{ opacity: 0, y: 14 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.34, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute left-1/2 -translate-x-1/2 bottom-4 sm:bottom-5 z-10 w-[calc(100%-1.75rem)] sm:w-auto inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 bg-emerald-600/94 backdrop-blur-md border border-emerald-400/50 text-white text-[10px] sm:text-xs uppercase tracking-[0.18em] sm:tracking-[0.22em] font-semibold hover:bg-emerald-500 hover:border-emerald-300 hover:shadow-[0_10px_28px_-8px_rgba(16,185,129,0.55)] transition-all duration-300"
-                  aria-label={`Enquire about ${product.name} on WhatsApp`}
-                >
-                  <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" strokeWidth={2} />
-                  Enquire on WhatsApp
-                </motion.a>
-              </>
+              <motion.a
+                href={whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={handleWhatsAppClick}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.34, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute left-1/2 -translate-x-1/2 bottom-4 sm:bottom-5 z-10 w-[calc(100%-1.75rem)] sm:w-auto inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 bg-emerald-600/94 backdrop-blur-md border border-emerald-400/50 text-white text-[10px] sm:text-xs uppercase tracking-[0.18em] sm:tracking-[0.22em] font-semibold hover:bg-emerald-500 hover:border-emerald-300 hover:shadow-[0_10px_28px_-8px_rgba(16,185,129,0.55)] transition-all duration-300"
+                aria-label={`Enquire about ${product.name} on WhatsApp`}
+              >
+                <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" strokeWidth={2} />
+                Enquire on WhatsApp
+              </motion.a>
             )}
           </AnimatePresence>
-
-          {!isHovered && (
-            <button
-              onClick={handleWishlistToggle}
-              className={cn(
-                'absolute top-2.5 sm:top-3 right-2.5 sm:right-3 z-10 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center backdrop-blur-md border transition-all duration-400 ease-out',
-                inWishlist
-                  ? 'bg-gold-400/92 border-gold-300 text-purple-900 opacity-100'
-                  : 'bg-background-tertiary/82 border-gold-400/30 text-gold-300 hover:bg-gold-400/15 opacity-0 group-hover:opacity-100 translate-y-[-4px] group-hover:translate-y-0'
-              )}
-              aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
-            >
-              <Heart
-                className={cn('w-4 h-4 sm:w-[18px] sm:h-[18px]', inWishlist ? 'fill-current' : '')}
-              />
-            </button>
-          )}
         </div>
 
         <div className="relative flex-1 flex flex-col p-4 sm:p-5 md:p-6 gap-2 min-h-[9.5rem]">

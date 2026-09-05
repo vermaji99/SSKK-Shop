@@ -3,7 +3,7 @@ export type Testimonial = {
   name: string;
   location?: string;
   quote: string;
-  rating?: 5;
+  rating?: 1 | 2 | 3 | 4 | 5;
 };
 
 export const BUSINESS = {
@@ -49,12 +49,4 @@ export const buildWhatsAppUrl = (message: string): string =>
 
 export const GOOGLE_MAPS_SEARCH = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(BUSINESS.address)}`;
 
-export const TESTIMONIALS_EDITABLE: Testimonial[] = [
-  {
-    id: 'example-1',
-    name: 'Customer Name /* EDITABLE — replace with verified review */',
-    location: 'Doharighat, Mau',
-    quote: 'Replace this text with a verified customer testimonial shared by a real SSKK client.',
-    rating: 5,
-  },
-];
+export const TESTIMONIALS_EDITABLE: Testimonial[] = [];

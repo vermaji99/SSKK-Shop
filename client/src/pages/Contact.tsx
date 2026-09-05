@@ -138,12 +138,12 @@ const Contact = () => {
       />
     <div className="min-h-screen bg-background">
       <section className="relative min-h-[45vh] flex items-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-900 via-purple-800/80 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#160827] via-purple-900/70 to-background" />
         <div
-          className="absolute inset-0 opacity-40"
+          className="absolute inset-0 opacity-34"
           style={{
             backgroundImage:
-              'radial-gradient(ellipse at 40% 30%, rgba(212, 175, 55, 0.25) 0%, transparent 45%), radial-gradient(ellipse at 60% 70%, rgba(75, 31, 111, 0.4) 0%, transparent 50%)',
+              'radial-gradient(ellipse at 22% 62%, rgba(53, 16, 90, 0.55) 0%, transparent 55%), radial-gradient(ellipse at 80% 22%, rgba(75, 31, 111, 0.48) 0%, transparent 50%)',
           }}
         />
         <div className="relative container section-padding pt-40 pb-20 text-center">

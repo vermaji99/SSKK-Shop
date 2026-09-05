@@ -8,7 +8,7 @@ import { JEWELRY_IMAGES } from '@/config/assets';
 const bridalImages = [
   { src: JEWELRY_IMAGES.bridalSet, alt: 'Bridal gold necklace set with maang tikka', className: 'col-span-2 row-span-2' },
   { src: JEWELRY_IMAGES.jhumkaAlt, alt: 'Bridal gold jhumka earrings — alternate pair', className: 'col-span-1 row-span-1' },
-  { src: JEWELRY_IMAGES.haarSet, alt: 'Traditional bridal haar long necklace set', className: 'col-span-1 row-span-1' },
+  { src: JEWELRY_IMAGES.haarSet, alt: 'Traditional bridal haar long necklace set', className: 'col-span-1 row-span-2 lg:row-span-2' },
   { src: JEWELRY_IMAGES.pendantNath, alt: 'Traditional bridal nath with pendant nose ring', className: 'col-span-1 row-span-1' },
   { src: JEWELRY_IMAGES.bangleAlt, alt: 'Bridal gold bangles stack — pair set', className: 'col-span-1 row-span-1' },
 ];
@@ -37,7 +37,7 @@ const BridalCollection: React.FC = () => {
       <div className="container relative">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <motion.div style={{ y: parallaxY }} className="relative">
-            <div className="grid grid-cols-2 grid-rows-3 gap-3 md:gap-4 auto-rows-[140px] md:auto-rows-[180px]">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 auto-rows-[130px] md:auto-rows-[170px] lg:auto-rows-[200px]">
               {bridalImages.map((img, i) => (
                 <motion.div
                   key={i}
