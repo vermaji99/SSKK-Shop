@@ -3,6 +3,7 @@ import { CinematicHero } from '@/components/sections/CinematicHero';
 import { TrustBar } from '@/components/sections/TrustBar';
 import { Categories } from '@/components/sections/Categories';
 import { FeaturedProducts } from '@/components/sections/FeaturedProducts';
+import { DualRowJewelryMarquee } from '@/components/sections/DualRowJewelryMarquee';
 import { CatalogueBanner } from '@/components/sections/CatalogueBanner';
 import { BridalCollection } from '@/components/sections/BridalCollection';
 import { BrandStory } from '@/components/sections/BrandStory';
@@ -41,6 +42,8 @@ export const Home: React.FC = () => {
       <section aria-label="Signature pieces — featured jewellery collection highlights" id="signature-pieces">
         <FeaturedProducts />
       </section>
+
+      <DualRowJewelryMarquee />
 
       <CatalogueBanner />
 

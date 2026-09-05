@@ -516,6 +516,44 @@
     }
   }
 
+  /* Optimized GPU Marquee Animations */
+  @keyframes marquee-left {
+    0% {
+      transform: translate3d(0%, 0, 0);
+    }
+    100% {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  @keyframes marquee-right {
+    0% {
+      transform: translate3d(-50%, 0, 0);
+    }
+    100% {
+      transform: translate3d(0%, 0, 0);
+    }
+  }
+
+  .animate-marquee-left {
+    display: flex;
+    width: max-content;
+    animation: marquee-left 42s linear infinite;
+    will-change: transform;
+  }
+
+  .animate-marquee-right {
+    display: flex;
+    width: max-content;
+    animation: marquee-right 42s linear infinite;
+    will-change: transform;
+  }
+
+  .group-pause:hover .animate-marquee-left,
+  .group-pause:hover .animate-marquee-right {
+    animation-play-state: paused;
+  }
+
   .scroll-reveal {
     opacity: 0;
     transform: translateY(24px) translateZ(0);
