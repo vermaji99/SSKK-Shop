@@ -509,10 +509,24 @@
     }
   }
 
+  /* Mobile Smoothness & Touch Optimization */
+  html, body {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
   @media (hover: none) and (pointer: coarse) {
     .touch-target {
       min-height: 48px;
       min-width: 48px;
+      touch-action: manipulation;
+    }
+
+    /* Mobile GPU Hardware Acceleration */
+    .mobile-gpu {
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+      will-change: transform;
     }
   }
 
