@@ -198,7 +198,7 @@ const Categories: React.FC = () => {
           className="mb-12 md:mb-16"
         />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 md:gap-7">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6 md:gap-7">
           {CATEGORY_ITEMS.map((item, i) => (
             <CategoryTile key={item.slug} item={item} index={i} />
           ))}

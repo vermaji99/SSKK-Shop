@@ -139,7 +139,7 @@ export const BridalCollection: React.FC = () => {
             <div className="pt-4">
               <Link
                 to="/collections/bridal"
-                className="btn-primary inline-flex items-center gap-2"
+                className="btn-primary inline-flex items-center justify-center gap-2 w-full sm:w-auto text-center"
               >
                 EXPLORE BRIDAL JEWELLERY
                 <ArrowRight size={16} strokeWidth={1.75} />

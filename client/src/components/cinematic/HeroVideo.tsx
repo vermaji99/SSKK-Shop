@@ -16,7 +16,9 @@ interface HeroVideoProps {
   ariaLabel?: string;
   containerRef?: React.Ref<HTMLDivElement>;
   mp4SrcOverride?: string;
+  mp4SrcMobileOverride?: string;
   webmSrcOverride?: string;
+  webmSrcMobileOverride?: string;
   sourceMp4FallbackOverride?: string;
   posterWebpOverride?: string;
   posterJpgOverride?: string;
@@ -43,7 +45,9 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
   ariaLabel = 'Premium jewellery cinematic showcase',
   containerRef: containerRefProp,
   mp4SrcOverride,
+  mp4SrcMobileOverride,
   webmSrcOverride,
+  webmSrcMobileOverride,
   sourceMp4FallbackOverride,
   posterWebpOverride,
   posterJpgOverride,
@@ -78,12 +82,15 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
   const lastRestartTokenRef = React.useRef(restartToken);
   const endCallbackCooldownRef = React.useRef(false);
 
-  const base = isMobile ? 'hero-mobile' : 'hero-desktop';
-  const posterWebp = posterWebpOverride ?? '';
-  const posterJpg = posterJpgOverride ?? `/Royal Ring.jpg`;
-  const webmSrc = webmSrcOverride ?? '';
-  const mp4Src = mp4SrcOverride || `/Jewellery_commercial_for_SSKK_202608271422.mp4`;
-  const sourceMp4Fallback = sourceMp4FallbackOverride || `/Jewellery_commercial_for_SSKK_202608271422.mp4`;
+  const posterWebp = posterWebpOverride || (isMobile ? '/hero-video/hero-mobile-poster.webp' : '/hero-video/hero-desktop-poster.webp');
+  const posterJpg = posterJpgOverride || (isMobile ? '/hero-video/hero-mobile-poster.jpg' : '/hero-video/hero-desktop-poster.jpg');
+  const webmSrc = isMobile
+    ? (webmSrcMobileOverride || '/hero-video/hero-mobile.webm')
+    : (webmSrcOverride || '/hero-video/hero-desktop.webm');
+  const mp4Src = isMobile
+    ? (mp4SrcMobileOverride || '/hero-video/hero-mobile.mp4')
+    : (mp4SrcOverride || '/Jewellery_commercial_for_SSKK_202608271422.mp4');
+  const sourceMp4Fallback = sourceMp4FallbackOverride || (isMobile ? '/hero-video/hero-mobile-source.mp4' : '/Jewellery_commercial_for_SSKK_202608271422.mp4');
   const fallbackFrame = `/hero-frames/frame_006.jpg`;
 
   const isHoveredRef = React.useRef(false);
