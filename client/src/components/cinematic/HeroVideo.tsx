@@ -8,6 +8,7 @@ interface HeroVideoProps {
   reducedMotion?: boolean;
   hoverScrub?: boolean;
   hoverPlay?: boolean;
+  loop?: boolean;
   onProgress?: (progress: number) => void;
   onReady?: (duration: number) => void;
   onPlaybackEnded?: () => void;
@@ -34,6 +35,7 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
   reducedMotion = false,
   hoverScrub = false,
   hoverPlay = false,
+  loop = false,
   onProgress,
   onReady,
   onPlaybackEnded,
@@ -615,7 +617,7 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
         <video
           ref={videoRef}
           muted
-          loop
+          loop={loop}
           playsInline
           autoPlay
           preload="auto"
