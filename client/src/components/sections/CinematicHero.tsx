@@ -6,6 +6,7 @@ import { useUIStore } from '@/store/uiStore';
 import { HeroVideo } from '@/components/cinematic/HeroVideo';
 import { Button } from '@/components/ui/Button';
 import { BUSINESS } from '@/config/business';
+import { cn } from '@/lib/utils';
 
 const CinematicHero: React.FC = () => {
   const reducedMotionStore = useUIStore((s) => s.reducedMotion);
@@ -35,21 +36,52 @@ const CinematicHero: React.FC = () => {
   return (
     <section
       id="hero"
-      className="relative w-full hero-section-height bg-[#05020A] overflow-hidden isolate select-none"
+      className="relative w-full hero-section-height bg-[#07040B] overflow-hidden isolate select-none flex items-center justify-center"
       aria-label="Premium gold and diamond jewellery commercial showcase"
     >
-      {/* Background Commercial Video */}
-      <div className="absolute inset-0 z-0 w-full h-full">
-        <HeroVideo
-          reducedMotion={reducedMotion}
-          hoverPlay={false}
-          loop={false}
-          onPlaybackEnded={handleVideoEnded}
-          restartToken={restartToken}
-          ariaLabel="Jewellery commercial showcase — Shubham Swarn Kala Kendra"
-          mp4SrcOverride="/Jewellery_commercial_for_SSKK_202608271422.mp4"
-          sourceMp4FallbackOverride="/Jewellery_commercial_for_SSKK_202608271422_202608311433.mp4"
+      {/* Background Commercial Video Container - Smoothly Fades to Dark BG on Completion */}
+      <div className="absolute inset-0 z-0 w-full h-full bg-[#07040B]">
+        <div
+          className={cn(
+            'w-full h-full transition-all duration-1000 ease-in-out',
+            showContent ? 'opacity-0 scale-105 pointer-events-none' : 'opacity-100 scale-100'
+          )}
+        >
+          <HeroVideo
+            reducedMotion={reducedMotion}
+            hoverPlay={false}
+            loop={false}
+            onPlaybackEnded={handleVideoEnded}
+            restartToken={restartToken}
+            ariaLabel="Jewellery commercial showcase — Shubham Swarn Kala Kendra"
+            mp4SrcOverride="/Jewellery_commercial_for_SSKK_202608271422.mp4"
+            sourceMp4FallbackOverride="/Jewellery_commercial_for_SSKK_202608271422_202608311433.mp4"
+          />
+        </div>
+
+        {/* Dark Luxury Gradient Overlay */}
+        <div
+          className={cn(
+            'absolute inset-0 z-[1] transition-opacity duration-1000 ease-in-out pointer-events-none',
+            showContent ? 'opacity-100' : 'opacity-40'
+          )}
+          style={{
+            background: showContent
+              ? 'radial-gradient(ellipse 85% 85% at 50% 45%, rgba(18, 9, 28, 0.96) 0%, rgba(7, 4, 11, 0.99) 70%, rgba(5, 2, 8, 1) 100%)'
+              : 'linear-gradient(to bottom, rgba(5,2,10,0.2) 0%, rgba(5,2,10,0.55) 100%)',
+          }}
         />
+
+        {/* Subtle Ambient Gold Radial Lighting for Finished State */}
+        {showContent && (
+          <div
+            className="absolute inset-0 z-[1] pointer-events-none opacity-40 mix-blend-screen transition-opacity duration-1000"
+            style={{
+              background:
+                'radial-gradient(circle at 50% 40%, rgba(212, 175, 55, 0.22) 0%, rgba(212, 175, 55, 0.05) 45%, transparent 75%)',
+            }}
+          />
+        )}
       </div>
 
       {/* While Video Is Playing: Sleek Commercial Indicator */}
@@ -80,142 +112,145 @@ const CinematicHero: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* Animated Text Content Reveal (Once Video Ends or User Skips) */}
+      {/* Centered Luxury Text & CTA Reveal (Appears on Dark Background Once Video Ends) */}
       <AnimatePresence>
         {showContent && (
-          <div className="absolute inset-0 z-[2] pointer-events-none">
-            <div className="relative h-full w-full container flex items-start md:items-center justify-start pt-28 sm:pt-32 md:pt-20 pb-10 sm:pb-16 md:pb-12">
-              <motion.div
-                initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 30, filter: 'blur(10px)' }}
-                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                transition={{ duration: 0.95, ease: [0.22, 1, 0.36, 1] }}
-                className="w-full max-w-none md:max-w-[75%] lg:max-w-[65%] xl:max-w-[58%] 2xl:max-w-[54%]"
-                style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 2rem)' }}
+          <div className="relative z-[2] pointer-events-none w-full container flex items-center justify-center pt-24 sm:pt-28 md:pt-16 pb-12 sm:pb-16 text-center">
+            <motion.div
+              initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 30, filter: 'blur(10px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              transition={{ duration: 0.95, ease: [0.22, 1, 0.36, 1] }}
+              className="w-full max-w-3xl xl:max-w-4xl mx-auto flex flex-col items-center text-center px-4"
+              style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1.5rem)' }}
+            >
+              {/* Shop Name Eyebrow */}
+              <motion.span
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15, duration: 0.7 }}
+                className="eyebrow inline-block mb-3 sm:mb-4 text-gold-400 font-semibold tracking-[0.34em]"
+                style={{ fontSize: 'clamp(0.72rem, 0.95vw, 0.85rem)' }}
               >
-                {/* Shop Name requested explicitly by user */}
+                SHUBHAM SWARN KALA KENDRA
+              </motion.span>
+
+              {/* Centered Gold Accent Divider */}
+              <motion.div
+                initial={{ scaleX: 0, opacity: 0 }}
+                animate={{ scaleX: 1, opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+                className="mx-auto mb-4 sm:mb-5"
+                style={{
+                  transformOrigin: 'center center',
+                  height: '1.5px',
+                  width: 'clamp(40px, 5vw, 60px)',
+                  background:
+                    'linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.9) 50%, transparent 100%)',
+                }}
+                aria-hidden="true"
+              />
+
+              {/* Centered Main Headline */}
+              <h1
+                className="max-w-2xl lg:max-w-3xl mx-auto whitespace-pre-line"
+                aria-label="Crafted in Gold. Designed for Your Forever."
+              >
                 <motion.span
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.15, duration: 0.7 }}
-                  className="eyebrow inline-block mb-3 sm:mb-4 text-gold-400 font-semibold"
-                  style={{ letterSpacing: '0.36em', fontSize: 'clamp(0.7rem, 0.9vw, 0.82rem)' }}
-                >
-                  SHUBHAM SWARN KALA KENDRA
-                </motion.span>
-
-                <motion.div
-                  initial={{ scaleX: 0, opacity: 0 }}
-                  animate={{ scaleX: 1, opacity: 1 }}
-                  transition={{ delay: 0.3, duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
-                  style={{
-                    transformOrigin: 'left center',
-                    height: '1.5px',
-                    width: 'clamp(36px, 4.5vw, 52px)',
-                    background:
-                      'linear-gradient(90deg, rgba(212,175,55,0.9) 0%, rgba(212,175,55,0.2) 100%)',
-                  }}
-                  aria-hidden="true"
-                />
-
-                <h1
-                  className="mt-4 sm:mt-5 whitespace-pre-line"
-                  aria-label="Crafted in Gold. Designed for Your Forever."
-                >
-                  <motion.span
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.42, duration: 0.8 }}
-                    className="block font-serif hero-gold-text hero-gold-sheen"
-                    style={{
-                      fontWeight: 500,
-                      lineHeight: 1.06,
-                      letterSpacing: '-0.016em',
-                      fontSize: 'clamp(1.85rem, 4.2vw, 3.65rem)',
-                      textShadow:
-                        '0 2px 20px rgba(5,2,10,0.9), 0 0 24px rgba(244,215,123,0.12)',
-                    }}
-                  >
-                    Crafted in Gold.
-                  </motion.span>
-                  <motion.span
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.55, duration: 0.8 }}
-                    className="block font-serif hero-cream-text mt-1 sm:mt-1.5"
-                    style={{
-                      fontWeight: 500,
-                      lineHeight: 1.06,
-                      letterSpacing: '-0.014em',
-                      fontSize: 'clamp(1.75rem, 3.9vw, 3.45rem)',
-                    }}
-                  >
-                    Designed for Your Forever.
-                  </motion.span>
-                </h1>
-
-                <motion.p
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.7, duration: 0.8 }}
-                  className="mt-4 sm:mt-5 max-w-lg text-cream/90 font-sans leading-relaxed"
-                  style={{
-                    fontSize: 'clamp(0.92rem, 1.2vw, 1.05rem)',
-                    letterSpacing: '0.005em',
-                    textShadow: '0 1px 12px rgba(5,2,10,0.85)',
-                  }}
-                >
-                  Timeless gold and diamond jewellery, thoughtfully crafted for life's most meaningful moments.
-                </motion.p>
-
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.82, duration: 0.8 }}
-                  className="mt-3 sm:mt-4 flex items-center gap-2 text-cream/70"
-                  style={{ fontSize: 'clamp(0.74rem, 0.9vw, 0.82rem)' }}
-                >
-                  <MapPin size={14} strokeWidth={1.5} className="text-gold-400 shrink-0" />
-                  <span>
-                    Showroom: Sabji Mandi Road &middot; {BUSINESS.city} &middot; {BUSINESS.district}, UP
-                  </span>
-                </motion.div>
-
-                {/* Single-Line Action Buttons */}
-                <motion.div
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.95, duration: 0.85 }}
-                  className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-start gap-3 sm:gap-4 pointer-events-auto"
+                  transition={{ delay: 0.42, duration: 0.8 }}
+                  className="block font-serif hero-gold-text hero-gold-sheen"
+                  style={{
+                    fontWeight: 500,
+                    lineHeight: 1.08,
+                    letterSpacing: '-0.015em',
+                    fontSize: 'clamp(2rem, 4.5vw, 3.85rem)',
+                    textShadow:
+                      '0 4px 30px rgba(5,2,10,0.9), 0 0 30px rgba(244,215,123,0.15)',
+                  }}
                 >
-                  <Button
-                    asChild
-                    variant="primary"
-                    size="lg"
-                    className="whitespace-nowrap px-7 py-3 text-xs tracking-[0.18em]"
-                  >
-                    <Link to="/collections" className="whitespace-nowrap">EXPLORE COLLECTION</Link>
-                  </Button>
-                  <Button
-                    asChild
-                    variant="secondary"
-                    size="lg"
-                    className="whitespace-nowrap px-7 py-3 text-xs tracking-[0.18em]"
-                  >
-                    <Link to="/contact#visit" className="whitespace-nowrap">BOOK SHOWROOM VISIT</Link>
-                  </Button>
+                  Crafted in Gold.
+                </motion.span>
+                <motion.span
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.55, duration: 0.8 }}
+                  className="block font-serif hero-cream-text mt-1.5 sm:mt-2"
+                  style={{
+                    fontWeight: 500,
+                    lineHeight: 1.08,
+                    letterSpacing: '-0.012em',
+                    fontSize: 'clamp(1.85rem, 4.2vw, 3.55rem)',
+                  }}
+                >
+                  Designed for Your Forever.
+                </motion.span>
+              </h1>
 
-                  {/* Replay Video Action */}
-                  <button
-                    type="button"
-                    onClick={handleReplay}
-                    className="inline-flex items-center justify-center gap-1.5 px-4 py-3 border border-gold-400/30 hover:border-gold-400/60 text-gold-300 hover:text-gold text-xs uppercase tracking-[0.16em] transition-all bg-[#0B0515]/60 backdrop-blur-sm"
-                    aria-label="Replay commercial video"
-                  >
-                    <RotateCcw size={13} /> Replay
-                  </button>
-                </motion.div>
+              {/* Centered Subheadline Description */}
+              <motion.p
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7, duration: 0.8 }}
+                className="mt-4 sm:mt-5 max-w-xl mx-auto text-cream/90 font-sans leading-relaxed"
+                style={{
+                  fontSize: 'clamp(0.95rem, 1.25vw, 1.08rem)',
+                  letterSpacing: '0.005em',
+                }}
+              >
+                Timeless BIS hallmarked gold and certified diamond jewellery, thoughtfully crafted for life's most meaningful moments.
+              </motion.p>
+
+              {/* Centered Location Badge */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.82, duration: 0.8 }}
+                className="mt-4 flex items-center justify-center gap-2 text-cream/75"
+                style={{ fontSize: 'clamp(0.75rem, 0.95vw, 0.84rem)' }}
+              >
+                <MapPin size={14} strokeWidth={1.5} className="text-gold-400 shrink-0" />
+                <span>
+                  Showroom: Sabji Mandi Road &middot; {BUSINESS.city} &middot; {BUSINESS.district}, UP
+                </span>
               </motion.div>
-            </div>
+
+              {/* Centered Single-Line Action Bar */}
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.95, duration: 0.85 }}
+                className="mt-7 sm:mt-9 flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 pointer-events-auto w-full max-w-md sm:max-w-none"
+              >
+                <Button
+                  asChild
+                  variant="primary"
+                  size="lg"
+                  className="w-full sm:w-auto whitespace-nowrap px-8 py-3.5 text-xs tracking-[0.2em] shadow-lg hover:shadow-gold-400/20"
+                >
+                  <Link to="/collections" className="whitespace-nowrap">EXPLORE COLLECTION</Link>
+                </Button>
+
+                <Button
+                  asChild
+                  variant="secondary"
+                  size="lg"
+                  className="w-full sm:w-auto whitespace-nowrap px-8 py-3.5 text-xs tracking-[0.2em]"
+                >
+                  <Link to="/contact#visit" className="whitespace-nowrap">BOOK SHOWROOM VISIT</Link>
+                </Button>
+
+                {/* Replay Video Button */}
+                <button
+                  type="button"
+                  onClick={handleReplay}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 border border-gold-400/30 hover:border-gold-400/70 text-gold-300 hover:text-gold text-xs uppercase tracking-[0.18em] transition-all bg-[#0B0515]/70 backdrop-blur-md"
+                  aria-label="Replay commercial video"
+                >
+                  <RotateCcw size={13} /> Replay
+                </button>
+              </motion.div>
+            </motion.div>
           </div>
         )}
       </AnimatePresence>
@@ -244,3 +279,4 @@ const CinematicHero: React.FC = () => {
 
 export { CinematicHero };
 export default CinematicHero;
+
