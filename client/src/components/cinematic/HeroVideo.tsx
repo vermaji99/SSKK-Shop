@@ -85,12 +85,12 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
   const posterWebp = posterWebpOverride || (isMobile ? '/hero-video/hero-mobile-poster.webp' : '/hero-video/hero-desktop-poster.webp');
   const posterJpg = posterJpgOverride || (isMobile ? '/hero-video/hero-mobile-poster.jpg' : '/hero-video/hero-desktop-poster.jpg');
   const webmSrc = isMobile
-    ? (webmSrcMobileOverride || '/hero-video/hero-mobile.webm')
+    ? (webmSrcMobileOverride || '')
     : (webmSrcOverride || '/hero-video/hero-desktop.webm');
   const mp4Src = isMobile
-    ? (mp4SrcMobileOverride || '/hero-video/hero-mobile.mp4')
+    ? (mp4SrcMobileOverride || '/Jewellery_commercial_for_SSKK_202608271422_202608311433.mp4')
     : (mp4SrcOverride || '/Jewellery_commercial_for_SSKK_202608271422.mp4');
-  const sourceMp4Fallback = sourceMp4FallbackOverride || (isMobile ? '/hero-video/hero-mobile-source.mp4' : '/Jewellery_commercial_for_SSKK_202608271422.mp4');
+  const sourceMp4Fallback = sourceMp4FallbackOverride || (isMobile ? '/Jewellery_commercial_for_SSKK_202608271422_202608311433.mp4' : '/Jewellery_commercial_for_SSKK_202608271422.mp4');
   const fallbackFrame = `/hero-frames/frame_006.jpg`;
 
   const isHoveredRef = React.useRef(false);

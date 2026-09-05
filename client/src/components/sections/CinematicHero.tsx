@@ -55,8 +55,7 @@ const CinematicHero: React.FC = () => {
             restartToken={restartToken}
             ariaLabel="Jewellery commercial showcase — Shubham Swarn Kala Kendra"
             mp4SrcOverride="/Jewellery_commercial_for_SSKK_202608271422.mp4"
-            mp4SrcMobileOverride="/hero-video/hero-mobile.mp4"
-            webmSrcMobileOverride="/hero-video/hero-mobile.webm"
+            mp4SrcMobileOverride="/Jewellery_commercial_for_SSKK_202608271422_202608311433.mp4"
             sourceMp4FallbackOverride="/Jewellery_commercial_for_SSKK_202608271422_202608311433.mp4"
           />
         </div>
