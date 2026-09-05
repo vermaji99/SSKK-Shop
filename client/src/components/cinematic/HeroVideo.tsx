@@ -622,6 +622,7 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
 
       {!videoFallback && (
         <video
+          key={isMobile ? 'mobile-hero-video' : 'desktop-hero-video'}
           ref={videoRef}
           muted
           loop={loop}
