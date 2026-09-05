@@ -129,7 +129,7 @@ const CategoryTile: React.FC<{
             className="absolute inset-0 transition-opacity duration-700 ease-out pointer-events-none"
             style={{
               background:
-                'linear-gradient(180deg, rgba(5,2,10,0.0) 0%, rgba(5,2,10,0.35) 45%, rgba(5,2,10,0.94) 100%)',
+                'linear-gradient(180deg, rgba(5,2,10,0.0) 0%, rgba(5,2,10,0.15) 55%, rgba(5,2,10,0.92) 100%)',
             }}
             aria-hidden="true"
           />
@@ -144,10 +144,10 @@ const CategoryTile: React.FC<{
           />
         </div>
 
-        <div className="absolute inset-0 flex flex-col justify-end p-5 sm:p-6 lg:p-7 pointer-events-none">
+        <div className="absolute inset-0 flex flex-col justify-end p-3.5 sm:p-6 lg:p-7 pointer-events-none">
           <div className="pointer-events-auto">
             <h3
-              className="heading-serif font-medium text-cream leading-[1.08] mb-2 relative inline-block text-xl sm:text-2xl md:text-2xl"
+              className="heading-serif font-medium text-cream leading-[1.1] mb-1 sm:mb-2 relative inline-block text-sm sm:text-2xl md:text-2xl tracking-wide drop-shadow-md"
             >
               {item.name.toUpperCase()}
               <span
@@ -156,18 +156,18 @@ const CategoryTile: React.FC<{
               />
             </h3>
 
-            <p className="text-cream/75 text-xs sm:text-sm leading-relaxed mb-3.5 font-sans line-clamp-2">
+            <p className="hidden sm:block text-cream/75 text-xs sm:text-sm leading-relaxed mb-3.5 font-sans line-clamp-2">
               {item.description}
             </p>
 
             <span
-              className="inline-flex items-center gap-2 text-gold-400 uppercase font-semibold text-[11px] tracking-[0.2em] group-hover:text-gold-300 transition-colors"
+              className="inline-flex items-center gap-1 sm:gap-2 text-gold-400 uppercase font-semibold text-[9.5px] sm:text-[11px] tracking-[0.14em] sm:tracking-[0.2em] group-hover:text-gold-300 transition-colors mt-0.5 sm:mt-0"
             >
-              Explore Collection
+              Explore <span className="hidden sm:inline">Collection</span>
               <ArrowRight
-                size={14}
+                size={13}
                 strokeWidth={1.75}
-                className="transition-transform duration-300 ease-out group-hover:translate-x-1.5"
+                className="transition-transform duration-300 ease-out group-hover:translate-x-1.5 shrink-0"
               />
             </span>
           </div>

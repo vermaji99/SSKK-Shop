@@ -575,6 +575,20 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
     }
   }, [restartToken, emitProgress]);
 
+  React.useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true;
+    v.playsInline = true;
+    const p = v.play();
+    if (p && typeof p.then === 'function') {
+      p.then(() => {
+        isPlayingRef.current = true;
+        setVideoReady(true);
+      }).catch(() => {});
+    }
+  }, [mp4Src]);
+
   return (
     <div
       ref={containerRef}
